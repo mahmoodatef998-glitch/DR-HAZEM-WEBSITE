@@ -2,28 +2,30 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Dr. Hazem | Specialist Medical Consultant – Dubai, UAE",
+  title: "Medix Healthcare | Premium Imported Medicines – Dubai, UAE",
   description:
-    "Dr. Hazem is a leading specialist medical consultant based in Dubai, UAE. Trusted by thousands of patients. Book your consultation today.",
+    "Medix Healthcare imports certified, high-quality pharmaceuticals from licensed manufacturers in Spain and the United Kingdom. GCC approved, ISO certified. Dubai, UAE.",
   keywords: [
-    "Dr Hazem",
-    "medical consultant Dubai",
-    "specialist doctor UAE",
-    "healthcare Dubai",
-    "doctor consultation",
+    "Medix Healthcare",
+    "imported medicines Dubai",
+    "pharmaceutical import UAE",
+    "licensed medicines UAE",
+    "Spain UK medicines Dubai",
+    "GCC certified pharmaceuticals",
+    "medical import distribution",
   ],
   openGraph: {
-    title: "Dr. Hazem | Specialist Medical Consultant – Dubai, UAE",
+    title: "Medix Healthcare | Premium Imported Medicines – Dubai, UAE",
     description:
-      "Dr. Hazem is a leading specialist medical consultant based in Dubai, UAE. Trusted by thousands of patients.",
+      "Certified pharmaceuticals sourced directly from Spain and the United Kingdom. GCC approved, ISO certified. Based in Dubai, UAE.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dr. Hazem | Specialist Medical Consultant – Dubai, UAE",
+    title: "Medix Healthcare | Premium Imported Medicines – Dubai, UAE",
     description:
-      "Dr. Hazem is a leading specialist medical consultant based in Dubai, UAE.",
+      "Certified pharmaceuticals sourced directly from Spain and the United Kingdom. GCC approved. Dubai, UAE.",
   },
   robots: {
     index: true,

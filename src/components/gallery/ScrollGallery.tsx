@@ -81,25 +81,39 @@ function GalleryCard({
       }}
       className="cursor-pointer rounded-2xl overflow-hidden"
     >
-      {/* ── gradient fill ── */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient}`} />
-
-      {/* ── noise/grain texture for luxury depth ── */}
+      {/* ── LUXURY BLACK base background ── */}
       <div
-        className="absolute inset-0 opacity-[0.18] mix-blend-overlay pointer-events-none"
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(145deg, #0c0c0c 0%, #141414 50%, #0a0a0a 100%)",
+        }}
+      />
+
+      {/* ── very subtle product-color tint at bottom (5% max) ── */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-t ${product.gradient} opacity-[0.08]`}
+      />
+
+      {/* ── grain texture — premium paper feel ── */}
+      <div
+        className="absolute inset-0 opacity-[0.22] mix-blend-overlay pointer-events-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E")`,
         }}
       />
 
-      {/* ── subtle inner border ── */}
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/12 pointer-events-none" />
+      {/* ── thin product-color accent line at top ── */}
+      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${product.gradient}`} />
 
-      {/* ── active glow ring ── */}
+      {/* ── card border — barely visible, elegant ── */}
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.07] pointer-events-none" />
+
+      {/* ── active card: white glow ring ── */}
       <motion.div
         animate={{ opacity: isActive ? 1 : 0 }}
-        transition={{ duration: 0.4 }}
-        className="absolute -inset-px rounded-2xl ring-2 ring-white/30 pointer-events-none"
+        transition={{ duration: 0.5 }}
+        className="absolute -inset-px rounded-2xl pointer-events-none"
+        style={{ boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.18), 0 0 40px rgba(255,255,255,0.04)" }}
       />
 
       {/* ════════════════════════════════
@@ -125,31 +139,41 @@ function GalleryCard({
           )}
         </div>
 
-        {/* hero icon — big + glow */}
+        {/* hero icon — large, product-color glow on black ── */}
         <div className="flex-1 flex items-center justify-center">
           <div className="relative flex items-center justify-center">
-            {/* radial glow behind icon */}
+            {/* product-color radial glow  */}
             <div
-              className="absolute rounded-full"
+              className={`absolute rounded-full bg-gradient-to-br ${product.gradient}`}
               style={{
-                width: 140, height: 140,
-                background: "radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%)",
+                width: 130, height: 130,
+                filter: "blur(48px)",
+                opacity: 0.35,
               }}
             />
-            <span className="relative text-[72px] leading-none filter drop-shadow-2xl select-none">
-              {product.icon}
-            </span>
+            {/* icon circle */}
+            <div
+              className="relative flex items-center justify-center w-28 h-28 rounded-full"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <span className="text-[60px] leading-none filter drop-shadow-2xl select-none">
+                {product.icon}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* bottom info */}
         <div>
           {product.badge && (
-            <span className="inline-block text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full bg-white/15 border border-white/20 text-white mb-2">
+            <span className={`inline-block text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full mb-2 bg-gradient-to-r ${product.gradient} text-white`}>
               {product.badge}
             </span>
           )}
-          <p className="text-white/42 text-[9px] font-bold uppercase tracking-[0.18em] mb-1">
+          <p className="text-white/35 text-[9px] font-bold uppercase tracking-[0.2em] mb-1">
             {product.category}
           </p>
           <h3 className="text-white font-black text-[17px] leading-snug mb-3 line-clamp-2">
@@ -162,7 +186,7 @@ function GalleryCard({
                   {product.originalPrice}
                 </span>
               )}
-              <span className="text-white font-black text-2xl leading-none">
+              <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>
                 {product.price.split(" / ")[0]}
               </span>
             </div>

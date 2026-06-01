@@ -7,81 +7,47 @@ import {
   useTransform,
   useSpring,
 } from "framer-motion";
-import { ArrowRight, Star, Shield, Award, ChevronDown } from "lucide-react";
+import { ArrowRight, ShieldCheck, Globe2, BadgeCheck, PackageCheck, ChevronDown } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 
-const stats = [
-  { value: "15+", label: "Years Experience" },
-  { value: "12K+", label: "Patients Treated" },
-  { value: "98%", label: "Satisfaction Rate" },
-  { value: "50+", label: "Certifications" },
+const companyStats = [
+  { value: "200+",  label: "Products Available" },
+  { value: "UK · ES", label: "Licensed Sources" },
+  { value: "100%",  label: "Certified Quality" },
+  { value: "GCC",   label: "Approved Dist." },
+];
+
+const trustBadges = [
+  { icon: ShieldCheck, label: "GCC Approved",       color: "text-teal-400"  },
+  { icon: BadgeCheck,  label: "UK / Spain Licensed", color: "text-sky-400"   },
+  { icon: Globe2,      label: "ISO Certified Import", color: "text-amber-400" },
 ];
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  /* ── Scroll progress: 0 when hero top = viewport top
-         1 when hero bottom = viewport top  ── */
+  /* ── scroll-driven parallax (NO blur — removed per brief) ── */
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
 
-  /* ── Smooth spring wrapper so the effect doesn't feel jerky ── */
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 20,
-    restDelta: 0.001,
-  });
+  const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 20 });
 
-  /* ── Transform map ── */
+  /* content layer  — only opacity + y + scale (no filter) */
+  const opacity = useTransform(smooth, [0, 0.2, 0.85], [1, 1, 0]);
+  const scale   = useTransform(smooth, [0, 1], [1, 1.1]);
+  const y       = useTransform(smooth, [0, 1], ["0%", "-10%"]);
 
-  // Blur: 0 → 16px (kicks in after 10% scroll, done by 75%)
-  const filter = useTransform(
-    smoothProgress,
-    [0, 0.1, 0.75],
-    ["blur(0px)", "blur(0px)", "blur(16px)"]
-  );
+  /* background parallax */
+  const bgY = useTransform(smooth, [0, 1], ["0%", "28%"]);
 
-  // Opacity: stays at 1 until 20% scroll, then fades to 0 by 80%
-  const opacity = useTransform(
-    smoothProgress,
-    [0, 0.2, 0.85],
-    [1, 1, 0]
-  );
+  /* scroll-indicator fade */
+  const indicatorOpacity = useTransform(smooth, [0, 0.12], [1, 0]);
 
-  // Scale: subtle zoom-in as content blurs (Apple parallax feel)
-  const scale = useTransform(
-    smoothProgress,
-    [0, 1],
-    [1, 1.12]
-  );
-
-  // Y: content drifts slightly upward while scrolling
-  const y = useTransform(
-    smoothProgress,
-    [0, 1],
-    ["0%", "-12%"]
-  );
-
-  // Background parallax: moves slower than content (depth effect)
-  const bgY = useTransform(
-    smoothProgress,
-    [0, 1],
-    ["0%", "30%"]
-  );
-
-  // Scroll-indicator fades out quickly
-  const indicatorOpacity = useTransform(
-    smoothProgress,
-    [0, 0.12],
-    [1, 0]
-  );
-
-  const scrollToSection = (id: string) => {
+  const scrollTo = (id: string) =>
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section
@@ -89,211 +55,187 @@ export default function HeroSection() {
       id="home"
       className="relative min-h-screen flex items-center overflow-hidden"
     >
-      {/* ── Background layer (parallax — moves independently) ── */}
-      <motion.div
-        className="absolute inset-0"
-        style={{ y: bgY }}
-      >
+      {/* ── Background (parallax) ── */}
+      <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-sky-950 to-teal-900" />
 
-        {/* Orbs */}
+        {/* orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl animate-pulse" />
-          <div
-            className="absolute top-1/2 -left-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse"
-            style={{ animationDelay: "1s" }}
-          />
-          <div
-            className="absolute bottom-20 right-1/3 w-64 h-64 bg-sky-400/10 rounded-full blur-3xl animate-pulse"
-            style={{ animationDelay: "2s" }}
-          />
+          <div className="absolute top-1/2 -left-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+          <div className="absolute bottom-20 right-1/3 w-64 h-64 bg-sky-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
         </div>
 
-        {/* Grid pattern */}
+        {/* grid */}
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                              linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px)`,
             backgroundSize: "60px 60px",
           }}
         />
-
-        {/* Medical dot pattern */}
         <div className="absolute inset-0 opacity-5 medical-pattern" />
       </motion.div>
 
-      {/* ── Content layer (blur + opacity + scale + y on scroll) ── */}
+      {/* ── Content (opacity + y + scale only, no blur) ── */}
       <motion.div
         className="relative z-10 w-full"
-        style={{ filter, opacity, scale, y }}
+        style={{ opacity, scale, y }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-            {/* Left — text */}
+            {/* ── Left — Company copy ── */}
             <div className="space-y-8 hero-fade-left">
-              {/* Trust badge */}
-              <div className="flex items-center gap-3">
-                <Badge
-                  variant="teal"
-                  className="bg-teal-500/20 text-teal-300 border-teal-500/30"
-                >
-                  <Shield className="w-3 h-3" />
-                  Trusted Medical Expert
+              {/* company badge */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <Badge variant="teal" className="bg-teal-500/20 text-teal-300 border-teal-500/30">
+                  <PackageCheck className="w-3 h-3" />
+                  Medical Import &amp; Distribution
                 </Badge>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                  ))}
-                  <span className="text-white/60 text-xs ml-1">5.0 Rating</span>
-                </div>
+                <span className="text-white/50 text-xs font-semibold uppercase tracking-widest">
+                  Est. Dubai · UAE
+                </span>
               </div>
 
-              {/* Headline */}
+              {/* headline */}
               <div className="space-y-4">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] tracking-tight">
-                  Your Health
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-[64px] font-black text-white leading-[1.05] tracking-tight">
+                  Premium
                   <br />
                   <span className="bg-gradient-to-r from-sky-400 to-teal-400 bg-clip-text text-transparent">
-                    Deserves
+                    Imported
                   </span>
                   <br />
-                  Expert Care
+                  Medicines
                 </h1>
-                <p className="text-lg sm:text-xl text-white/70 leading-relaxed max-w-xl">
-                  Dr. Hazem combines 15+ years of specialist expertise with
-                  cutting-edge medical technology to deliver exceptional patient
-                  outcomes in Dubai &amp; UAE.
+                <p className="text-lg sm:text-xl text-white/68 leading-relaxed max-w-xl">
+                  Medix Healthcare brings you <strong className="text-white/90 font-semibold">licensed, certified
+                  pharmaceuticals</strong> sourced directly from authorised
+                  manufacturers in <strong className="text-white/90 font-semibold">Spain &amp; the United Kingdom</strong> —
+                  tested, documented, and GCC-approved.
                 </p>
               </div>
 
-              {/* CTA */}
+              {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   variant="primary"
                   size="lg"
-                  onClick={() => scrollToSection("#appointment")}
+                  onClick={() => scrollTo("#products")}
                   className="group"
                 >
-                  Book Consultation
+                  Explore Products
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
                 <Button
                   variant="outline"
                   size="lg"
-                  onClick={() => scrollToSection("#about")}
+                  onClick={() => scrollTo("#about")}
                 >
-                  Learn More
+                  Our Story
                 </Button>
               </div>
 
-              {/* Trust indicators */}
+              {/* trust indicators */}
               <div className="flex flex-wrap items-center gap-6 pt-2">
-                <div className="flex items-center gap-2 text-white/60 text-sm">
-                  <Award className="w-4 h-4 text-teal-400" />
-                  <span>Board Certified</span>
-                </div>
-                <div className="flex items-center gap-2 text-white/60 text-sm">
-                  <Shield className="w-4 h-4 text-sky-400" />
-                  <span>DHA Licensed</span>
-                </div>
-                <div className="flex items-center gap-2 text-white/60 text-sm">
-                  <Star className="w-4 h-4 text-amber-400" />
-                  <span>Top Rated Specialist</span>
-                </div>
+                {trustBadges.map(({ icon: Icon, label, color }, i) => (
+                  <div key={i} className="flex items-center gap-2 text-white/60 text-sm">
+                    <Icon className={`w-4 h-4 ${color}`} />
+                    <span>{label}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Right — card */}
+            {/* ── Right — Company stat card ── */}
             <div className="relative hero-fade-right">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-sky-500/30 to-teal-500/30 rounded-3xl blur-2xl scale-105" />
 
                 <div className="relative glass rounded-3xl p-8 border border-white/10">
-                  {/* Avatar */}
-                  <div className="relative mx-auto w-48 h-48 mb-6">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-400 to-teal-400 animate-pulse-ring" />
-                    <div className="relative w-full h-full rounded-full bg-gradient-to-br from-sky-500 to-teal-600 flex items-center justify-center shadow-2xl">
-                      <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="8" r="4" fill="white" opacity="0.9" />
-                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="white" opacity="0.9" />
-                        <path d="M16 3h2v2h2v2h-2v2h-2V7h-2V5h2V3z" fill="white" />
+                  {/* company logo placeholder */}
+                  <div className="relative mx-auto w-36 h-36 mb-6">
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-400 to-teal-400 animate-pulse-ring" />
+                    <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-sky-500 to-teal-600 flex items-center justify-center shadow-2xl">
+                      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        {/* pill / medicine icon */}
+                        <rect x="8" y="26" width="48" height="12" rx="6" fill="white" opacity="0.9" />
+                        <rect x="26" y="8" width="12" height="48" rx="6" fill="white" opacity="0.9" />
+                        <circle cx="32" cy="32" r="8" fill="white" opacity="0.4" />
                       </svg>
                     </div>
-                    <div className="absolute bottom-2 right-2 flex items-center gap-1.5 bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg whitespace-nowrap">
                       <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                      Available
+                      Active Imports
                     </div>
                   </div>
 
-                  {/* Name */}
+                  {/* name */}
                   <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold text-white">Dr. Hazem</h3>
-                    <p className="text-sky-300 text-sm font-medium">
-                      Medical Specialist &amp; Consultant
-                    </p>
-                    <p className="text-white/50 text-xs mt-1">Dubai, UAE</p>
+                    <h3 className="text-2xl font-black text-white tracking-tight">Medix Healthcare</h3>
+                    <p className="text-sky-300 text-sm font-semibold mt-0.5">Medical Import &amp; Distribution</p>
+                    <p className="text-white/45 text-xs mt-1">Dubai · UAE &nbsp;|&nbsp; Spain · UK Sourced</p>
                   </div>
 
-                  {/* Stats */}
+                  {/* company stats */}
                   <div className="grid grid-cols-2 gap-3">
-                    {stats.map((stat, i) => (
+                    {companyStats.map((stat, i) => (
                       <div
                         key={i}
                         className="bg-white/10 rounded-2xl p-4 text-center hover:bg-white/15 transition-colors duration-300 border border-white/10"
                       >
-                        <div className="text-2xl font-bold bg-gradient-to-r from-sky-400 to-teal-400 bg-clip-text text-transparent">
+                        <div className="text-xl font-black bg-gradient-to-r from-sky-400 to-teal-400 bg-clip-text text-transparent leading-tight">
                           {stat.value}
                         </div>
-                        <div className="text-white/60 text-xs font-medium mt-1">
-                          {stat.label}
-                        </div>
+                        <div className="text-white/55 text-[11px] font-medium mt-1">{stat.label}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Floating badge — top left */}
+                {/* floating badge — certification */}
                 <div className="absolute -top-4 -left-4 glass rounded-2xl px-4 py-3 border border-white/20 animate-float shadow-xl">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
-                      <Shield className="w-4 h-4 text-white" />
+                      <ShieldCheck className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-white text-xs font-bold">DHA Certified</p>
-                      <p className="text-white/50 text-xs">Dubai Health Authority</p>
+                      <p className="text-white text-xs font-bold">GCC Licensed</p>
+                      <p className="text-white/50 text-xs">Full Compliance</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Floating badge — bottom right */}
+                {/* floating badge — origin */}
                 <div
                   className="absolute -bottom-4 -right-4 glass rounded-2xl px-4 py-3 border border-white/20 shadow-xl"
                   style={{ animation: "float 3s ease-in-out infinite", animationDelay: "1.5s" }}
                 >
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                      <Award className="w-4 h-4 text-white" />
+                      <Globe2 className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-white text-xs font-bold">Top Specialist</p>
-                      <p className="text-white/50 text-xs">UAE 2024</p>
+                      <p className="text-white text-xs font-bold">UK &amp; Spain</p>
+                      <p className="text-white/50 text-xs">Certified Origin</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </motion.div>
 
-      {/* ── Scroll indicator (fades out on first scroll) ── */}
+      {/* ── Scroll indicator ── */}
       <motion.div
         style={{ opacity: indicatorOpacity }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/40 pointer-events-none"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/38 pointer-events-none"
       >
-        <span className="text-xs font-medium uppercase tracking-widest">Scroll</span>
+        <span className="text-xs font-semibold uppercase tracking-widest">Scroll</span>
         <ChevronDown className="w-5 h-5 animate-bounce" />
       </motion.div>
     </section>

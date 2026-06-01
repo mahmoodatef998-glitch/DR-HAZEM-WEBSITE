@@ -38,10 +38,10 @@ const credentials = [
 ];
 
 const achievementStats = [
-  { value: "15+", label: "Years of Excellence", sub: "In specialized practice" },
-  { value: "12K+", label: "Patients Treated", sub: "Across UAE & MENA" },
-  { value: "98%", label: "Satisfaction Rate", sub: "Verified patient reviews" },
-  { value: "50+", label: "Awards & Honors", sub: "Regional & international" },
+  { value: "200+",  label: "Products Portfolio",  sub: "Imported & certified"        },
+  { value: "UK·ES", label: "Origin Countries",    sub: "Spain & United Kingdom"      },
+  { value: "100%",  label: "Certified Quality",   sub: "Every batch documented"      },
+  { value: "GCC",   label: "Approved Dist.",       sub: "Full regulatory compliance"  },
 ];
 
 export default function AboutSection() {
@@ -59,10 +59,10 @@ export default function AboutSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <SectionHeader
-          badge="About Dr. Hazem"
-          title="A Dedication to "
-          highlight="Medical Excellence"
-          description="Combining world-class training with compassionate care, Dr. Hazem has built a reputation as one of the UAE's most trusted medical specialists."
+          badge="About Medix Healthcare"
+          title="Built on Science, "
+          highlight="Driven by Trust"
+          description="Medix Healthcare was founded with one purpose: to make premium, internationally certified medicines accessible to patients and healthcare providers across the GCC."
         />
 
         {/* Main content */}
@@ -90,29 +90,31 @@ export default function AboutSection() {
                 {/* Info */}
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-white">Dr. Hazem</h3>
-                  <p className="text-sky-400 font-semibold text-sm mt-0.5">Medical Specialist & Senior Consultant</p>
+                  <p className="text-sky-400 font-semibold text-sm mt-0.5">Founder &amp; Medical Director — Medix Healthcare</p>
                   <p className="text-white/50 text-sm mt-0.5">Dubai, United Arab Emirates</p>
                   <div className="flex flex-wrap gap-2 mt-3">
                     <span className="bg-sky-500/20 text-sky-300 text-xs px-3 py-1 rounded-full border border-sky-500/30">DHA Licensed</span>
                     <span className="bg-teal-500/20 text-teal-300 text-xs px-3 py-1 rounded-full border border-teal-500/30">Board Certified</span>
+                    <span className="bg-amber-500/20 text-amber-300 text-xs px-3 py-1 rounded-full border border-amber-500/30">Company Founder</span>
                   </div>
                 </div>
               </div>
 
               {/* Bio */}
               <p className="relative text-white/70 text-sm leading-relaxed mt-6">
-                With over 15 years of specialist practice, Dr. Hazem is renowned for his patient-centered approach,
-                diagnostic precision, and commitment to staying at the forefront of medical innovation. He has trained
-                at some of the world's most prestigious institutions and brings international expertise to every consultation.
+                Dr. Hazem founded Medix Healthcare after 15+ years of clinical practice, driven by a single observation:
+                patients in the GCC deserve direct access to the same high-quality pharmaceuticals available in Europe.
+                Today, the company sources only from <strong className="text-white/90">licensed manufacturers in Spain and the United Kingdom</strong>,
+                ensuring every product meets the strictest international standards before reaching your hands.
               </p>
 
               {/* Quote */}
               <div className="relative mt-6 pl-4 border-l-2 border-sky-500">
                 <p className="text-white/80 text-sm italic">
-                  "My mission is simple: to provide every patient with the highest quality care, treating them
-                  with the dignity and attention they deserve."
+                  "I built Medix Healthcare to bridge the gap between global pharmaceutical excellence and
+                  the patients and providers who need it most — right here in the UAE."
                 </p>
-                <p className="text-sky-400 text-xs font-semibold mt-1">— Dr. Hazem</p>
+                <p className="text-sky-400 text-xs font-semibold mt-1">— Dr. Hazem, Founder</p>
               </div>
             </div>
 
@@ -123,7 +125,7 @@ export default function AboutSection() {
               onClick={() => scrollToSection("#appointment")}
               className="group"
             >
-              Schedule a Consultation
+              Get in Touch
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
