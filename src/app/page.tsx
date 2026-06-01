@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/sections/HeroSection";
 import AboutSection from "@/sections/AboutSection";
 import ServicesSection from "@/sections/ServicesSection";
+import ProductsSection from "@/sections/ProductsSection";
 import TestimonialsSection from "@/sections/TestimonialsSection";
 import WhyChooseSection from "@/sections/WhyChooseSection";
 import AppointmentSection from "@/sections/AppointmentSection";
@@ -15,6 +16,7 @@ export default function Home() {
       <HeroSection />
       <AboutSection />
       <ServicesSection />
+      <ProductsSection />
       <TestimonialsSection />
       <WhyChooseSection />
       <AppointmentSection />
