@@ -342,7 +342,7 @@ export default function ScrollGallery() {
   /* ── scroll → activeIndex ── */
   const { scrollYProgress } = useScroll({ target: containerRef });
   const rawIndex = useTransform(scrollYProgress, [0, 1], [0, TOTAL - 1]);
-  const activeIndex = useSpring(rawIndex, { stiffness: 75, damping: 18, restDelta: 0.001 });
+  const activeIndex = useSpring(rawIndex, { stiffness: 160, damping: 28, restDelta: 0.001 });
 
   /* track displayed index for UI */
   useEffect(() => {
@@ -382,7 +382,7 @@ export default function ScrollGallery() {
     /* sticky scroll container — height drives how long we "stay" in the gallery */
     <div
       ref={containerRef}
-      style={{ height: `${TOTAL * 90}vh` }}
+      style={{ height: `${TOTAL * 50}vh` }}
       className="relative"
     >
       {/* ════════════════════════════════════════════
