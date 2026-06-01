@@ -21,7 +21,7 @@ import { products, type Product } from "@/data/products";
 const TOTAL       = products.length;           // 20
 const CARD_W      = 290;                       // px  card width
 const CARD_H      = 450;                       // px  card height
-const SPACING     = 360;                       // px  center-to-center
+const SPACING     = 180;                       // px  center-to-center
 const PERSPECTIVE = "1500px";
 const MAX_VISIBLE = 4;                         // cards visible on each side
 
