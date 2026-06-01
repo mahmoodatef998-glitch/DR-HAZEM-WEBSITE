@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ArrowRight, Star, Shield, Award, ChevronDown } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -13,12 +12,6 @@ const stats = [
 ];
 
 export default function HeroSection() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const scrollToSection = (id: string) => {
     const el = document.querySelector(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -35,8 +28,14 @@ export default function HeroSection() {
       {/* Animated gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-1/2 -left-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
-        <div className="absolute bottom-20 right-1/3 w-64 h-64 bg-sky-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
+        <div
+          className="absolute top-1/2 -left-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
+        <div
+          className="absolute bottom-20 right-1/3 w-64 h-64 bg-sky-400/10 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        />
       </div>
 
       {/* Medical pattern overlay */}
@@ -53,12 +52,9 @@ export default function HeroSection() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left Content */}
-          <div
-            className={`space-y-8 transition-all duration-1000 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-          >
+
+          {/* Left Content — CSS fade-up animation (no JS state = no hydration mismatch) */}
+          <div className="space-y-8 hero-fade-left">
             {/* Trust badge */}
             <div className="flex items-center gap-3">
               <Badge variant="teal" className="bg-teal-500/20 text-teal-300 border-teal-500/30">
@@ -86,7 +82,7 @@ export default function HeroSection() {
               </h1>
               <p className="text-lg sm:text-xl text-white/70 leading-relaxed max-w-xl">
                 Dr. Hazem combines 15+ years of specialist expertise with cutting-edge
-                medical technology to deliver exceptional patient outcomes in Dubai & UAE.
+                medical technology to deliver exceptional patient outcomes in Dubai &amp; UAE.
               </p>
             </div>
 
@@ -128,29 +124,23 @@ export default function HeroSection() {
           </div>
 
           {/* Right — Stats + Visual */}
-          <div
-            className={`relative transition-all duration-1000 delay-300 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-          >
-            {/* Main visual card */}
+          <div className="relative hero-fade-right">
             <div className="relative">
               {/* Glow behind card */}
               <div className="absolute inset-0 bg-gradient-to-br from-sky-500/30 to-teal-500/30 rounded-3xl blur-2xl scale-105" />
 
               {/* Card */}
               <div className="relative glass rounded-3xl p-8 border border-white/10">
-                {/* Doctor avatar placeholder */}
+                {/* Doctor avatar */}
                 <div className="relative mx-auto w-48 h-48 mb-6">
                   <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-400 to-teal-400 animate-pulse-ring" />
                   <div className="relative w-full h-full rounded-full bg-gradient-to-br from-sky-500 to-teal-600 flex items-center justify-center shadow-2xl">
                     <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="8" r="4" fill="white" opacity="0.9"/>
-                      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="white" opacity="0.9"/>
-                      <path d="M16 3h2v2h2v2h-2v2h-2V7h-2V5h2V3z" fill="white"/>
+                      <circle cx="12" cy="8" r="4" fill="white" opacity="0.9" />
+                      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="white" opacity="0.9" />
+                      <path d="M16 3h2v2h2v2h-2v2h-2V7h-2V5h2V3z" fill="white" />
                     </svg>
                   </div>
-                  {/* Status indicator */}
                   <div className="absolute bottom-2 right-2 flex items-center gap-1.5 bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
                     <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                     Available
@@ -160,7 +150,7 @@ export default function HeroSection() {
                 {/* Name */}
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-white">Dr. Hazem</h3>
-                  <p className="text-sky-300 text-sm font-medium">Medical Specialist & Consultant</p>
+                  <p className="text-sky-300 text-sm font-medium">Medical Specialist &amp; Consultant</p>
                   <p className="text-white/50 text-xs mt-1">Dubai, UAE</p>
                 </div>
 
@@ -180,7 +170,7 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Floating badges */}
+              {/* Floating badge — top left */}
               <div className="absolute -top-4 -left-4 glass rounded-2xl px-4 py-3 border border-white/20 animate-float shadow-xl">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
@@ -193,7 +183,11 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              <div className="absolute -bottom-4 -right-4 glass rounded-2xl px-4 py-3 border border-white/20 shadow-xl" style={{ animation: "float 3s ease-in-out infinite", animationDelay: "1.5s" }}>
+              {/* Floating badge — bottom right */}
+              <div
+                className="absolute -bottom-4 -right-4 glass rounded-2xl px-4 py-3 border border-white/20 shadow-xl"
+                style={{ animation: "float 3s ease-in-out infinite", animationDelay: "1.5s" }}
+              >
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
                     <Award className="w-4 h-4 text-white" />
