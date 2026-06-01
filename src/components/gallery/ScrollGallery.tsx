@@ -382,7 +382,7 @@ export default function ScrollGallery() {
     /* sticky scroll container — height drives how long we "stay" in the gallery */
     <div
       ref={containerRef}
-      style={{ height: `${TOTAL * 50}vh` }}
+      style={{ height: `${TOTAL * 25}vh` }}
       className="relative"
     >
       {/* ════════════════════════════════════════════
