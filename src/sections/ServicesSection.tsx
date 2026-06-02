@@ -126,7 +126,7 @@ export default function ServicesSection() {
                 }}
                 onMouseEnter={() => setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
-                className={`group relative bg-white rounded-3xl p-7 border-2 transition-all duration-400 cursor-default
+                className={`group relative bg-white rounded-3xl p-7 border-2 transition-all duration-[400ms] cursor-default
                   ${service.featured
                     ? "border-sky-200 shadow-xl shadow-sky-100/50 ring-2 ring-sky-500/20"
                     : isHovered
@@ -144,7 +144,7 @@ export default function ServicesSection() {
                 )}
 
                 {/* Gradient overlay on hover */}
-                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-400`} />
+                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-[400ms]`} />
 
                 {/* Icon */}
                 <div

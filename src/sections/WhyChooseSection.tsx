@@ -102,10 +102,10 @@ export default function WhyChooseSection() {
             return (
               <div
                 key={i}
-                className="group relative bg-white/5 backdrop-blur-sm rounded-3xl p-7 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 transition-all duration-400"
+                className="group relative bg-white/5 backdrop-blur-sm rounded-3xl p-7 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 transition-all duration-[400ms]"
               >
                 {/* Gradient accent */}
-                <div className={`absolute top-0 left-0 right-0 h-0.5 rounded-t-3xl bg-gradient-to-r ${reason.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-400`} />
+                <div className={`absolute top-0 left-0 right-0 h-0.5 rounded-t-3xl bg-gradient-to-r ${reason.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-[400ms]`} />
 
                 {/* Icon */}
                 <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${reason.gradient} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>

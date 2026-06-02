@@ -374,10 +374,6 @@ export default function ScrollGallery() {
     return () => window.removeEventListener("keydown", onKey);
   }, [displayIndex, scrollToIndex]);
 
-  /* ambient background color that shifts per card */
-  const ambientColor = products[displayIndex]?.gradient
-    .match(/from-(\w+-\d+)/)?.[1] ?? "sky-500";
-
   return (
     /* sticky scroll container — height drives how long we "stay" in the gallery */
     <div
