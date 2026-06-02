@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 ───────────────────────────────────────────────────────── */
 const CARD_W      = 290;
 const CARD_H      = 450;
-const SPACING     = 144;   // was 180 — reduced 20%
+const SPACING     = 108;   // was 144 — reduced 25%
 const PERSPECTIVE = "1500px";
 const MAX_VISIBLE = 4;
 
