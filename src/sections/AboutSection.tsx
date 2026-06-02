@@ -1,8 +1,10 @@
 "use client";
 
 import { Award, BookOpen, GraduationCap, Star, CheckCircle2, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Button from "@/components/ui/Button";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 
 const credentials = [
   {
@@ -67,8 +69,15 @@ export default function AboutSection() {
 
         {/* Main content */}
         <div className="mt-16 grid lg:grid-cols-2 gap-16 items-center">
+
           {/* Left — Bio + Photo */}
-          <div className="space-y-8">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="space-y-8"
+          >
             {/* Profile card */}
             <div className="relative bg-gradient-to-br from-slate-900 to-sky-950 rounded-3xl p-8 overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl" />
@@ -128,11 +137,10 @@ export default function AboutSection() {
               Get in Touch
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-          </div>
+          </motion.div>
 
-          {/* Right — Credentials + Stats */}
+          {/* Right — Credentials (staggered) */}
           <div className="space-y-6">
-            {/* Credentials */}
             {credentials.map((cred, i) => {
               const Icon = cred.icon;
               const colorMap: Record<string, string> = {
@@ -146,8 +154,16 @@ export default function AboutSection() {
                 indigo: "border-indigo-100 hover:border-indigo-200",
               };
               return (
-                <div
+                <motion.div
                   key={i}
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{
+                    duration: 0.65,
+                    delay: i * 0.14,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                   className={`bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 group ${borderMap[cred.color]}`}
                 >
                   <div className="flex items-center gap-3 mb-4">
@@ -164,25 +180,34 @@ export default function AboutSection() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
 
-        {/* Achievement Stats */}
+        {/* Achievement Stats — animated counters */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
           {achievementStats.map((stat, i) => (
-            <div
+            <motion.div
               key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{
+                duration: 0.6,
+                delay: i * 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
               className="text-center p-6 bg-gradient-to-br from-sky-50 to-teal-50 rounded-2xl border border-sky-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
             >
-              <div className="text-4xl font-black bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
-                {stat.value}
-              </div>
+              <AnimatedCounter
+                value={stat.value}
+                className="text-4xl font-black bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300 inline-block"
+              />
               <div className="text-slate-800 font-semibold text-sm mt-2">{stat.label}</div>
               <div className="text-slate-500 text-xs mt-1">{stat.sub}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

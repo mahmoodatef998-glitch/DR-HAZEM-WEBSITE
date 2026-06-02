@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { Star, Quote, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import SectionHeader from "@/components/ui/SectionHeader";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 
 const testimonials = [
   {
@@ -68,18 +70,49 @@ const testimonials = [
 ];
 
 const platformStats = [
-  { value: "4.9/5", label: "Average Rating", sub: "Across all platforms" },
-  { value: "500+", label: "Verified Reviews", sub: "From real patients" },
-  { value: "98%", label: "Would Recommend", sub: "To friends & family" },
+  { value: "4.9/5", label: "Average Rating",   sub: "Across all platforms" },
+  { value: "500+",  label: "Verified Reviews", sub: "From real patients"   },
+  { value: "98%",   label: "Would Recommend",  sub: "To friends & family"  },
 ];
+
+type BezierEase = [number, number, number, number];
+const E: BezierEase = [0.22, 1, 0.36, 1];
+
+const slideVariants: Variants = {
+  enter: (dir: number) => ({
+    x: dir > 0 ? 60 : -60,
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    transition: { duration: 0.45, ease: E },
+  },
+  exit: (dir: number) => ({
+    x: dir > 0 ? -60 : 60,
+    opacity: 0,
+    transition: { duration: 0.3, ease: E },
+  }),
+};
 
 export default function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
   const visibleCount = 3;
   const maxIndex = testimonials.length - visibleCount;
 
-  const prev = () => setActiveIndex((i) => Math.max(0, i - 1));
-  const next = () => setActiveIndex((i) => Math.min(maxIndex, i + 1));
+  const prev = () => {
+    setDirection(-1);
+    setActiveIndex((i) => Math.max(0, i - 1));
+  };
+  const next = () => {
+    setDirection(1);
+    setActiveIndex((i) => Math.min(maxIndex, i + 1));
+  };
+  const goTo = (i: number) => {
+    setDirection(i > activeIndex ? 1 : -1);
+    setActiveIndex(i);
+  };
 
   const visible = testimonials.slice(activeIndex, activeIndex + visibleCount);
 
@@ -101,92 +134,120 @@ export default function TestimonialsSection() {
           description="Thousands of patients across the UAE trust Dr. Hazem with their health. Here's what they say about their experience."
         />
 
-        {/* Platform stats */}
-        <div className="mt-10 flex flex-wrap justify-center gap-8 mb-14">
+        {/* Platform stats — animated counters */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-10 flex flex-wrap justify-center gap-8 mb-14"
+        >
           {platformStats.map((stat, i) => (
             <div key={i} className="text-center">
-              <div className="text-3xl font-black bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent">
-                {stat.value}
-              </div>
+              <AnimatedCounter
+                value={stat.value}
+                className="text-3xl font-black bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent"
+              />
               <div className="text-slate-700 font-semibold text-sm mt-1">{stat.label}</div>
               <div className="text-slate-400 text-xs">{stat.sub}</div>
             </div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {visible.map((t, i) => (
-            <div
-              key={activeIndex + i}
-              className="bg-white rounded-3xl p-7 shadow-lg shadow-slate-100/80 border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+        {/* Testimonials Grid — AnimatePresence slide */}
+        <div className="relative overflow-hidden">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={activeIndex}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="grid md:grid-cols-3 gap-6"
             >
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(t.rating)].map((_, j) => (
-                  <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
+              {visible.map((t, i) => (
+                <motion.div
+                  key={t.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white rounded-3xl p-7 shadow-lg shadow-slate-100/80 border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                >
+                  {/* Stars */}
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(t.rating)].map((_, j) => (
+                      <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
 
-              {/* Quote */}
-              <blockquote className="text-slate-600 text-sm leading-relaxed flex-1 mb-6">
-                &ldquo;{t.text}&rdquo;
-              </blockquote>
+                  {/* Quote */}
+                  <blockquote className="text-slate-600 text-sm leading-relaxed flex-1 mb-6">
+                    &ldquo;{t.text}&rdquo;
+                  </blockquote>
 
-              {/* Condition badge */}
-              <div className="mb-4">
-                <span className="inline-flex items-center gap-1.5 bg-sky-50 text-sky-600 text-xs font-semibold px-3 py-1.5 rounded-full border border-sky-100">
-                  <CheckCircle2 className="w-3 h-3" />
-                  {t.condition}
-                </span>
-              </div>
+                  {/* Condition badge */}
+                  <div className="mb-4">
+                    <span className="inline-flex items-center gap-1.5 bg-sky-50 text-sky-600 text-xs font-semibold px-3 py-1.5 rounded-full border border-sky-100">
+                      <CheckCircle2 className="w-3 h-3" />
+                      {t.condition}
+                    </span>
+                  </div>
 
-              {/* Author */}
-              <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-white font-bold text-sm shadow-md`}>
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="font-bold text-slate-900 text-sm">{t.name}</p>
-                  <p className="text-slate-400 text-xs">{t.role} · {t.location}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+                  {/* Author */}
+                  <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+                    <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-white font-bold text-sm shadow-md`}>
+                      {t.initials}
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900 text-sm">{t.name}</p>
+                      <p className="text-slate-400 text-xs">{t.role} · {t.location}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         {/* Navigation */}
         <div className="mt-10 flex items-center justify-center gap-4">
-          <button
+          <motion.button
             onClick={prev}
             disabled={activeIndex === 0}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.93 }}
             className="w-12 h-12 rounded-full border-2 border-slate-200 flex items-center justify-center text-slate-600 hover:border-sky-400 hover:text-sky-600 hover:bg-sky-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300"
           >
             <ChevronLeft className="w-5 h-5" />
-          </button>
+          </motion.button>
 
           {/* Dots */}
           <div className="flex gap-2">
-            {Array.from({ length: testimonials.length - visibleCount + 1 }).map((_, i) => (
-              <button
+            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+              <motion.button
                 key={i}
-                onClick={() => setActiveIndex(i)}
-                className={`rounded-full transition-all duration-300 ${
-                  i === activeIndex
-                    ? "w-8 h-2.5 bg-sky-500"
-                    : "w-2.5 h-2.5 bg-slate-200 hover:bg-sky-300"
-                }`}
+                onClick={() => goTo(i)}
+                animate={{
+                  width: i === activeIndex ? 28 : 10,
+                  backgroundColor:
+                    i === activeIndex ? "rgb(14 165 233)" : "rgb(226 232 240)",
+                }}
+                transition={{ duration: 0.3 }}
+                className="h-2.5 rounded-full"
               />
             ))}
           </div>
 
-          <button
+          <motion.button
             onClick={next}
             disabled={activeIndex === maxIndex}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.93 }}
             className="w-12 h-12 rounded-full border-2 border-slate-200 flex items-center justify-center text-slate-600 hover:border-sky-400 hover:text-sky-600 hover:bg-sky-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300"
           >
             <ChevronRight className="w-5 h-5" />
-          </button>
+          </motion.button>
         </div>
       </div>
     </section>

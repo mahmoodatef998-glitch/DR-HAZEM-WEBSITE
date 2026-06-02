@@ -2,15 +2,9 @@
 
 import { useState } from "react";
 import {
-  Heart,
-  Brain,
-  Activity,
-  Eye,
-  Microscope,
-  Stethoscope,
-  ArrowRight,
-  CheckCircle2,
+  Heart, Brain, Activity, Eye, Microscope, Stethoscope, ArrowRight, CheckCircle2,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Button from "@/components/ui/Button";
 
@@ -113,15 +107,23 @@ export default function ServicesSection() {
           description="From preventive care to specialized treatment, Dr. Hazem offers a full spectrum of medical services designed around your unique health needs."
         />
 
-        {/* Services Grid */}
+        {/* Services Grid — staggered whileInView */}
         <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, i) => {
             const Icon = service.icon;
             const isHovered = hoveredIdx === i;
 
             return (
-              <div
+              <motion.div
                 key={i}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  duration: 0.6,
+                  delay: (i % 3) * 0.12,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 onMouseEnter={() => setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 className={`group relative bg-white rounded-3xl p-7 border-2 transition-all duration-400 cursor-default
@@ -187,13 +189,19 @@ export default function ServicesSection() {
                   Book This Service
                   <ArrowRight className="w-4 h-4" />
                 </button>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-14 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-14 text-center"
+        >
           <p className="text-slate-500 text-sm mb-4">
             Not sure which service you need?{" "}
             <span className="font-semibold text-sky-600">
@@ -204,7 +212,7 @@ export default function ServicesSection() {
             Request Your Appointment
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
