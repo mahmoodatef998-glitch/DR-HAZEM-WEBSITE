@@ -21,9 +21,10 @@ import { cn } from "@/lib/utils";
 ───────────────────────────────────────────────────────── */
 const CARD_W      = 290;
 const CARD_H      = 450;
-const SPACING     = 108;   // was 144 — reduced 25%
+const SPACING     = 162;   // increased 50%
+const STEP_Y      = 65;    // vertical rise per card step (staircase effect)
 const PERSPECTIVE = "1500px";
-const MAX_VISIBLE = 4;
+const MAX_VISIBLE = 5;     // show more steps of the staircase
 
 /* ─────────────────────────────────────────────────────────
    GALLERY CARD  – large portrait card with cross-fade hover
@@ -41,13 +42,14 @@ function GalleryCard({
 
   const offset  = useTransform(activeIndex, (v) => index - v);
   const x       = useTransform(offset, (v) => v * SPACING);
-  const z       = useTransform(offset, (v) => -Math.abs(v) * 220);
-  const rotateY = useTransform(offset, (v) => v * -22);  // was -13 — more "on edge"
+  const y       = useTransform(offset, (v) => -v * STEP_Y); // staircase: each step higher
+  const z       = useTransform(offset, (v) => -Math.abs(v) * 140);
+  const rotateY = useTransform(offset, (v) => v * -9);      // subtle tilt to complement stairs
   const opacity = useTransform(offset, (v) =>
-    Math.abs(v) > MAX_VISIBLE + 0.5 ? 0 : Math.max(0, 1 - Math.abs(v) * 0.21)
+    Math.abs(v) > MAX_VISIBLE + 0.5 ? 0 : Math.max(0, 1 - Math.abs(v) * 0.18)
   );
   const scale   = useTransform(offset, (v) =>
-    Math.max(0.68, 1 - Math.abs(v) * 0.075)
+    Math.max(0.65, 1 - Math.abs(v) * 0.07)
   );
 
   const [isActive, setIsActive] = useState(index === 0);
@@ -67,7 +69,7 @@ function GalleryCard({
       onHoverStart={() => setHovered(true)}
       onHoverEnd={()  => setHovered(false)}
       style={{
-        x, z, rotateY, opacity, scale,
+        x, y, z, rotateY, opacity, scale,
         position : "absolute",
         left     : "50%",
         top      : "50%",
