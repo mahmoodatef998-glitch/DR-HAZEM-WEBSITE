@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/contexts/LanguageContext";
 
 /* ─────────────────────────────────────────────────────────
    CONSTANTS  (layout — never change)
@@ -266,6 +267,7 @@ function GalleryCard({
    SCROLL GALLERY  –  sticky 3-D showcase driven by scroll
 ───────────────────────────────────────────────────────── */
 export default function ScrollGallery() {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [displayIndex, setDisplayIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState<ProductCategory>("All");
@@ -381,11 +383,11 @@ export default function ScrollGallery() {
             Dr. Hazem · Dubai UAE
           </p>
           <h2 className="text-white font-black leading-[0.92] tracking-tight">
-            <span className="block text-[28px] sm:text-[38px] md:text-[46px]">MEDICAL PACKAGES</span>
-            <span className="block text-[28px] sm:text-[38px] md:text-[46px] text-white/30">&amp; SERVICES</span>
+            <span className="block text-[28px] sm:text-[38px] md:text-[46px]">{t.products.heading}</span>
+            <span className="block text-[28px] sm:text-[38px] md:text-[46px] text-white/30">{t.products.headingSub}</span>
           </h2>
           <p className="text-white/22 text-xs font-bold uppercase tracking-[0.22em] mt-3">
-            ({String(TOTAL).padStart(2, "0")}) {activeCategory === "All" ? "TOTAL" : activeCategory.toUpperCase()}
+            ({String(TOTAL).padStart(2, "0")}) {activeCategory === "All" ? t.products.total : activeCategory.toUpperCase()}
           </p>
         </div>
 
@@ -491,7 +493,7 @@ export default function ScrollGallery() {
               />
             ))}
           </div>
-          <p className="text-white/22 text-[9px] font-black uppercase tracking-[0.24em]">SCROLL TO SURF</p>
+          <p className="text-white/22 text-[9px] font-black uppercase tracking-[0.24em]">{t.products.scrollToSurf}</p>
         </div>
 
         {/* ── hover hint ── */}
@@ -506,7 +508,7 @@ export default function ScrollGallery() {
               className="absolute top-1/2 left-1/2 -translate-x-1/2 z-20 pointer-events-none select-none"
               style={{ marginTop: CARD_H / 2 + 16 }}
             >
-              <p className="text-white/20 text-[9px] font-bold uppercase tracking-[0.22em]">HOVER TO REVEAL</p>
+              <p className="text-white/20 text-[9px] font-bold uppercase tracking-[0.22em]">{t.products.hoverReveal}</p>
             </motion.div>
           )}
         </AnimatePresence>

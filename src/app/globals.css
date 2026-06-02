@@ -23,6 +23,16 @@ body {
   overflow-x: hidden;
 }
 
+/* Arabic font — applied automatically when html dir=rtl */
+[dir="rtl"] body {
+  font-family: var(--font-cairo), 'Segoe UI', sans-serif;
+}
+
+/* RTL layout tweaks */
+[dir="rtl"] .section-padding {
+  direction: rtl;
+}
+
 html {
   /* Lenis handles smooth scroll */
 }
