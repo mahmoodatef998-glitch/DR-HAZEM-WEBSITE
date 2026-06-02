@@ -126,7 +126,7 @@ export default function ServicesSection() {
                 }}
                 onMouseEnter={() => setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
-                className={`group relative bg-white rounded-3xl p-7 border-2 transition-all duration-[400ms] cursor-default
+                className={`group relative bg-white rounded-3xl p-7 border-2 transition-[transform,box-shadow,border-color] duration-[400ms] cursor-default
                   ${service.featured
                     ? "border-sky-200 shadow-xl shadow-sky-100/50 ring-2 ring-sky-500/20"
                     : isHovered

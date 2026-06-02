@@ -342,7 +342,7 @@ export default function ScrollGallery() {
   /* ── scroll → activeIndex ── */
   const { scrollYProgress } = useScroll({ target: containerRef });
   const rawIndex = useTransform(scrollYProgress, [0, 1], [0, TOTAL - 1]);
-  const activeIndex = useSpring(rawIndex, { stiffness: 160, damping: 28, restDelta: 0.001 });
+  const activeIndex = useSpring(rawIndex, { stiffness: 280, damping: 38, restDelta: 0.01 });
 
   /* track displayed index for UI */
   useEffect(() => {

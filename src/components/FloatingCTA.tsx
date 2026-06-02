@@ -34,7 +34,7 @@ export default function FloatingCTA() {
       >
         <a
           href="tel:+971500000000"
-          className="flex items-center gap-3 bg-white text-slate-800 px-5 py-3 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 text-sm font-semibold whitespace-nowrap"
+          className="flex items-center gap-3 bg-white text-slate-800 px-5 py-3 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 hover:shadow-2xl hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300 text-sm font-semibold whitespace-nowrap"
         >
           <div className="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center">
             <Phone className="w-4 h-4 text-sky-600" />
@@ -47,7 +47,7 @@ export default function FloatingCTA() {
             if (el) el.scrollIntoView({ behavior: "smooth" });
             setExpanded(false);
           }}
-          className="flex items-center gap-3 bg-white text-slate-800 px-5 py-3 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 text-sm font-semibold whitespace-nowrap"
+          className="flex items-center gap-3 bg-white text-slate-800 px-5 py-3 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 hover:shadow-2xl hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300 text-sm font-semibold whitespace-nowrap"
         >
           <div className="w-8 h-8 rounded-xl bg-teal-100 flex items-center justify-center">
             <MessageCircle className="w-4 h-4 text-teal-600" />

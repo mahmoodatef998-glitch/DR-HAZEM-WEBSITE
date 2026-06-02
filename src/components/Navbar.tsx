@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
 
@@ -36,7 +37,7 @@ export default function Navbar() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+          "fixed top-0 left-0 right-0 z-50 transition-[background-color,padding,box-shadow,backdrop-filter] duration-500",
           scrolled
             ? "bg-white/95 backdrop-blur-xl shadow-lg shadow-slate-200/50 py-3"
             : "bg-transparent py-5"
@@ -75,16 +76,24 @@ export default function Navbar() {
                   key={link.href}
                   onClick={() => handleNavClick(link.href)}
                   className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                    "relative px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200",
                     activeLink === link.href
-                      ? scrolled
-                        ? "bg-sky-50 text-sky-600"
-                        : "bg-white/20 text-white"
+                      ? scrolled ? "text-sky-600" : "text-white"
                       : scrolled
-                      ? "text-slate-600 hover:text-sky-600 hover:bg-sky-50"
-                      : "text-white/80 hover:text-white hover:bg-white/10"
+                      ? "text-slate-600 hover:text-sky-600"
+                      : "text-white/80 hover:text-white"
                   )}
                 >
+                  {activeLink === link.href && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      className={cn(
+                        "absolute inset-0 rounded-full -z-10",
+                        scrolled ? "bg-sky-50" : "bg-white/20"
+                      )}
+                      transition={{ type: "spring", stiffness: 380, damping: 35 }}
+                    />
+                  )}
                   {link.label}
                 </button>
               ))}

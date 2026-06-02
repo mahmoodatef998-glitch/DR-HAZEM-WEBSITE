@@ -1,7 +1,7 @@
 "use client";
 
+import { useReducedMotion, motion, type Variants } from "framer-motion";
 import { ArrowRight, ShieldCheck, Globe2, BadgeCheck, PackageCheck, ChevronDown } from "lucide-react";
-import { motion, type Variants } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 
@@ -14,10 +14,9 @@ const trustBadges = [
 type BezierEase = [number, number, number, number];
 const E: BezierEase = [0.22, 1, 0.36, 1];
 
-/* ── animation variants ── */
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.11, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
 };
 
 const fadeUp: Variants = {
@@ -27,10 +26,25 @@ const fadeUp: Variants = {
 
 const fadeLeft: Variants = {
   hidden: { opacity: 0, x: -28 },
-  show:   { opacity: 1, x: 0,  transition: { duration: 0.65, ease: E } },
+  show:   { opacity: 1, x: 0, transition: { duration: 0.65, ease: E } },
 };
 
 export default function HeroSection() {
+  const prefersReduced = useReducedMotion();
+
+  /* ── luxury line-reveal variants (defined here to read prefersReduced) ── */
+  const lineReveal: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.09 } },
+  };
+  const lineMask: Variants = {
+    hidden: { y: prefersReduced ? 0 : "110%" },
+    show: {
+      y: "0%",
+      transition: { duration: prefersReduced ? 0.01 : 0.82, ease: E },
+    },
+  };
+
   const scrollTo = (id: string) =>
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
 
@@ -42,21 +56,21 @@ export default function HeroSection() {
       {/* ── Static background ── */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-sky-950 to-teal-900" />
 
-      {/* ── Floating orbs (Framer Motion) ── */}
+      {/* ── Floating orbs — respect prefers-reduced-motion ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute -top-40 -right-40 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }}
+          animate={prefersReduced ? {} : { scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute top-1/2 -left-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.1, 1], opacity: [0.6, 0.9, 0.6] }}
+          animate={prefersReduced ? {} : { scale: [1, 1.1, 1], opacity: [0.6, 0.9, 0.6] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
         <motion.div
           className="absolute bottom-20 right-1/3 w-64 h-64 bg-sky-400/10 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.85, 0.5] }}
+          animate={prefersReduced ? {} : { scale: [1, 1.15, 1], opacity: [0.5, 0.85, 0.5] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
       </div>
@@ -72,7 +86,7 @@ export default function HeroSection() {
       />
       <div className="absolute inset-0 opacity-5 medical-pattern" />
 
-      {/* ── Staggered content ── */}
+      {/* ── Content ── */}
       <div className="relative z-10 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
           <div className="flex justify-center">
@@ -94,29 +108,42 @@ export default function HeroSection() {
                 </span>
               </motion.div>
 
-              {/* Headline */}
-              <motion.div variants={fadeUp} className="space-y-4">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-[64px] font-black text-white leading-[1.05] tracking-tight">
-                  Premium
-                  <br />
-                  <span className="bg-gradient-to-r from-sky-400 to-teal-400 bg-clip-text text-transparent">
-                    Imported
-                  </span>
-                  <br />
-                  Medicines
-                </h1>
-                <p className="text-lg sm:text-xl text-white/68 leading-relaxed max-w-xl">
-                  Medix Healthcare brings you{" "}
-                  <strong className="text-white/90 font-semibold">
-                    licensed, certified pharmaceuticals
-                  </strong>{" "}
-                  sourced directly from authorised manufacturers in{" "}
-                  <strong className="text-white/90 font-semibold">
-                    Spain &amp; the United Kingdom
-                  </strong>{" "}
-                  — tested, documented, and GCC-approved.
-                </p>
-              </motion.div>
+              {/* ── H1: luxury line-by-line reveal ── */}
+              <motion.h1
+                variants={lineReveal}
+                className="text-4xl sm:text-5xl lg:text-6xl xl:text-[64px] font-black text-white leading-[1.05] tracking-tight"
+              >
+                <span className="block overflow-hidden">
+                  <motion.span variants={lineMask} className="block">
+                    Premium
+                  </motion.span>
+                </span>
+                <span className="block overflow-hidden">
+                  <motion.span variants={lineMask} className="block">
+                    <span className="bg-gradient-to-r from-sky-400 to-teal-400 bg-clip-text text-transparent">
+                      Imported
+                    </span>
+                  </motion.span>
+                </span>
+                <span className="block overflow-hidden">
+                  <motion.span variants={lineMask} className="block">
+                    Medicines
+                  </motion.span>
+                </span>
+              </motion.h1>
+
+              {/* Paragraph */}
+              <motion.p variants={fadeUp} className="text-lg sm:text-xl text-white/68 leading-relaxed max-w-xl">
+                Medix Healthcare brings you{" "}
+                <strong className="text-white/90 font-semibold">
+                  licensed, certified pharmaceuticals
+                </strong>{" "}
+                sourced directly from authorised manufacturers in{" "}
+                <strong className="text-white/90 font-semibold">
+                  Spain &amp; the United Kingdom
+                </strong>{" "}
+                — tested, documented, and GCC-approved.
+              </motion.p>
 
               {/* Buttons */}
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4">
@@ -166,7 +193,7 @@ export default function HeroSection() {
       >
         <span className="text-xs font-semibold uppercase tracking-widest">Scroll</span>
         <motion.div
-          animate={{ y: [0, 6, 0] }}
+          animate={prefersReduced ? {} : { y: [0, 6, 0] }}
           transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
         >
           <ChevronDown className="w-5 h-5" />
