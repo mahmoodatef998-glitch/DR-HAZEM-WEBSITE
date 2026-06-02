@@ -1,11 +1,11 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/sections/HeroSection";
-import AboutSection from "@/sections/AboutSection";
-import ServicesSection from "@/sections/ServicesSection";
+import TrustBarSection from "@/sections/TrustBarSection";
 import ProductsSection from "@/sections/ProductsSection";
+import HowToOrderSection from "@/sections/HowToOrderSection";
+import AboutSection from "@/sections/AboutSection";
 import TestimonialsSection from "@/sections/TestimonialsSection";
-import WhyChooseSection from "@/sections/WhyChooseSection";
-import AppointmentSection from "@/sections/AppointmentSection";
+import WhatsAppCTASection from "@/sections/WhatsAppCTASection";
 import FooterSection from "@/sections/FooterSection";
 import FloatingCTA from "@/components/FloatingCTA";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
@@ -16,12 +16,12 @@ export default function Home() {
       <ScrollProgressBar />
       <Navbar />
       <HeroSection />
-      <AboutSection />
-      <ServicesSection />
+      <TrustBarSection />
       <ProductsSection />
+      <HowToOrderSection />
+      <AboutSection />
       <TestimonialsSection />
-      <WhyChooseSection />
-      <AppointmentSection />
+      <WhatsAppCTASection />
       <FooterSection />
       <FloatingCTA />
     </main>

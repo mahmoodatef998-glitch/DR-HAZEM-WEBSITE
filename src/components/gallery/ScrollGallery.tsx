@@ -13,7 +13,7 @@ import {
   Star, Clock, CheckCircle2, ArrowRight,
   Flame, ChevronLeft, ChevronRight,
 } from "lucide-react";
-import { products, CATEGORIES, type Product, type ProductCategory } from "@/data/products";
+import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
 import { cn } from "@/lib/utils";
 
 /* ─────────────────────────────────────────────────────────
@@ -59,9 +59,12 @@ function GalleryCard({
 
   const numStr = String(index + 1).padStart(2, "0");
 
+  const WHATSAPP_NUMBER = "971500000000";
+
   const handleBook = (e: React.MouseEvent) => {
     e.stopPropagation();
-    document.querySelector("#appointment")?.scrollIntoView({ behavior: "smooth" });
+    const msg = encodeURIComponent(`Hello Dr. Hazem, I'm interested in ordering: ${product.name} (${product.brand})`);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
   return (
@@ -114,12 +117,16 @@ function GalleryCard({
       >
         <div className="flex items-start justify-between">
           <span className="font-mono text-white/35 text-[11px] font-bold tracking-[0.2em]">{numStr}</span>
-          {product.popular && (
-            <div className="flex items-center gap-1 bg-amber-400/18 border border-amber-400/35 rounded-full px-2 py-0.5">
-              <Flame className="w-2.5 h-2.5 text-amber-400" />
-              <span className="text-amber-300 text-[8px] font-black uppercase tracking-widest">Hot</span>
-            </div>
-          )}
+          <div className="flex items-center gap-1.5">
+            {/* Country badge */}
+            <span className="text-[15px]">{product.origin === "ES" ? "🇪🇸" : "🇮🇹"}</span>
+            {product.popular && (
+              <div className="flex items-center gap-1 bg-amber-400/18 border border-amber-400/35 rounded-full px-2 py-0.5">
+                <Flame className="w-2.5 h-2.5 text-amber-400" />
+                <span className="text-amber-300 text-[8px] font-black uppercase tracking-widest">Hot</span>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex-1 flex items-center justify-center">
@@ -184,8 +191,11 @@ function GalleryCard({
                   {product.icon}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-white/40 text-[8px] font-bold uppercase tracking-[0.18em]">{product.category}</p>
+                  <p className="text-white/40 text-[8px] font-bold uppercase tracking-[0.18em]">
+                    {product.origin === "ES" ? "🇪🇸" : "🇮🇹"} {ORIGIN_LABEL[product.origin]} · {product.category}
+                  </p>
                   <h3 className="text-white font-black text-[13px] leading-tight line-clamp-2">{product.name}</h3>
+                  <p className="text-white/30 text-[9px] mt-0.5">{product.brand}</p>
                 </div>
                 {product.badge && (
                   <span className="text-[7px] font-black uppercase tracking-widest px-2 py-1 rounded-full bg-white/12 border border-white/18 text-white flex-shrink-0">
@@ -238,9 +248,9 @@ function GalleryCard({
                   transition={{ delay: 0.28, duration: 0.2 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`w-full py-2.5 rounded-xl bg-gradient-to-r ${product.gradient} text-white text-[11px] font-black flex items-center justify-center gap-2 shadow-xl tracking-wide uppercase`}
+                  className={`w-full py-2.5 rounded-xl bg-[#25D366] text-white text-[11px] font-black flex items-center justify-center gap-2 shadow-xl tracking-wide uppercase`}
                 >
-                  Book This Service
+                  Order on WhatsApp
                   <ArrowRight className="w-3.5 h-3.5" />
                 </motion.button>
               </div>

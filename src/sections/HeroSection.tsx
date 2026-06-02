@@ -1,14 +1,17 @@
 "use client";
 
 import { useReducedMotion, motion, type Variants } from "framer-motion";
-import { ArrowRight, ShieldCheck, Globe2, BadgeCheck, PackageCheck, ChevronDown } from "lucide-react";
+import { ArrowRight, ShieldCheck, BadgeCheck, Package, Truck } from "lucide-react";
 import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+
+const WHATSAPP_NUMBER = "971500000000"; // TODO: replace with real number
+const WHATSAPP_MSG = encodeURIComponent("Hello Dr. Hazem, I'd like to inquire about your products.");
 
 const trustBadges = [
-  { icon: ShieldCheck, label: "GCC Approved",        color: "text-teal-400"  },
-  { icon: BadgeCheck,  label: "UK / Spain Licensed",  color: "text-sky-400"   },
-  { icon: Globe2,      label: "ISO Certified Import", color: "text-amber-400" },
+  { icon: ShieldCheck, label: "GCC Approved",           color: "text-teal-400"  },
+  { icon: BadgeCheck,  label: "Licensed Importer · UAE", color: "text-sky-400"   },
+  { icon: Package,     label: "Direct from Manufacturer", color: "text-amber-400" },
+  { icon: Truck,       label: "Fast UAE Delivery",        color: "text-emerald-400" },
 ];
 
 type BezierEase = [number, number, number, number];
@@ -18,64 +21,52 @@ const container: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
 };
-
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 36 },
   show:   { opacity: 1, y: 0, transition: { duration: 0.75, ease: E } },
 };
-
 const fadeLeft: Variants = {
-  hidden: { opacity: 0, x: -28 },
-  show:   { opacity: 1, x: 0, transition: { duration: 0.65, ease: E } },
+  hidden: { opacity: 0, x: -24 },
+  show:   { opacity: 1, x: 0,  transition: { duration: 0.65, ease: E } },
 };
+
+const WhatsAppIcon = () => (
+  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+);
 
 export default function HeroSection() {
   const prefersReduced = useReducedMotion();
 
-  /* ── luxury line-reveal variants (defined here to read prefersReduced) ── */
   const lineReveal: Variants = {
     hidden: {},
     show: { transition: { staggerChildren: 0.09 } },
   };
   const lineMask: Variants = {
     hidden: { y: prefersReduced ? 0 : "110%" },
-    show: {
-      y: "0%",
-      transition: { duration: prefersReduced ? 0.01 : 0.82, ease: E },
-    },
+    show:   { y: "0%", transition: { duration: prefersReduced ? 0.01 : 0.82, ease: E } },
   };
 
   const scrollTo = (id: string) =>
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex items-center overflow-hidden"
-    >
-      {/* ── Static background ── */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-sky-950 to-teal-900" />
+    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
 
-      {/* ── Floating orbs — respect prefers-reduced-motion ── */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute -top-40 -right-40 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl"
-          animate={prefersReduced ? {} : { scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute top-1/2 -left-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl"
-          animate={prefersReduced ? {} : { scale: [1, 1.1, 1], opacity: [0.6, 0.9, 0.6] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-1/3 w-64 h-64 bg-sky-400/10 rounded-full blur-3xl"
-          animate={prefersReduced ? {} : { scale: [1, 1.15, 1], opacity: [0.5, 0.85, 0.5] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-      </div>
+      {/* ── Background ── */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-sky-950 to-slate-900" />
 
-      {/* grid overlay */}
+      {/* ── Europe map outline (decorative) ── */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 70% 40%, rgba(14,165,233,0.4) 0%, transparent 60%),
+                            radial-gradient(circle at 30% 60%, rgba(20,184,166,0.3) 0%, transparent 50%)`,
+        }}
+      />
+
+      {/* ── Grid ── */}
       <div
         className="absolute inset-0 opacity-[0.04]"
         style={{
@@ -84,12 +75,47 @@ export default function HeroSection() {
           backgroundSize: "60px 60px",
         }}
       />
-      <div className="absolute inset-0 opacity-5 medical-pattern" />
+
+      {/* ── Orbs ── */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute -top-40 -right-40 w-96 h-96 bg-sky-500/15 rounded-full blur-3xl"
+          animate={prefersReduced ? {} : { scale: [1, 1.12, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-20 -left-20 w-80 h-80 bg-teal-500/15 rounded-full blur-3xl"
+          animate={prefersReduced ? {} : { scale: [1, 1.1, 1], opacity: [0.5, 0.9, 0.5] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+        />
+      </div>
+
+      {/* ── Origin flags — large decorative ── */}
+      <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-6 pointer-events-none select-none z-10">
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1, duration: 1, ease: E }}
+          className="flex flex-col items-center gap-2"
+        >
+          <span className="text-6xl filter drop-shadow-2xl">🇪🇸</span>
+          <span className="text-white/30 text-[10px] font-black uppercase tracking-widest">Spain</span>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.2, duration: 1, ease: E }}
+          className="flex flex-col items-center gap-2"
+        >
+          <span className="text-6xl filter drop-shadow-2xl">🇮🇹</span>
+          <span className="text-white/30 text-[10px] font-black uppercase tracking-widest">Italy</span>
+        </motion.div>
+      </div>
 
       {/* ── Content ── */}
       <div className="relative z-10 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
-          <div className="flex justify-center">
+          <div className="flex justify-center xl:justify-start">
 
             <motion.div
               variants={container}
@@ -97,55 +123,46 @@ export default function HeroSection() {
               animate="show"
               className="space-y-8 max-w-3xl w-full"
             >
-              {/* Badge row */}
+              {/* Source badge */}
               <motion.div variants={fadeUp} className="flex items-center gap-3 flex-wrap">
-                <Badge variant="teal" className="bg-teal-500/20 text-teal-300 border-teal-500/30">
-                  <PackageCheck className="w-3 h-3" />
-                  Medical Import &amp; Distribution
-                </Badge>
-                <span className="text-white/50 text-xs font-semibold uppercase tracking-widest">
-                  Est. Dubai · UAE
+                <span className="inline-flex items-center gap-2 bg-white/8 border border-white/15 rounded-full px-4 py-1.5 text-xs font-semibold text-white/70 uppercase tracking-widest">
+                  <span>🇪🇸</span> Spain · <span>🇮🇹</span> Italy
+                  <span className="w-px h-3 bg-white/20" />
+                  Direct Import
+                </span>
+                <span className="text-white/40 text-xs font-semibold uppercase tracking-widest">
+                  Dubai · UAE
                 </span>
               </motion.div>
 
-              {/* ── H1: luxury line-by-line reveal ── */}
+              {/* H1 — luxury line reveal */}
               <motion.h1
                 variants={lineReveal}
                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-[64px] font-black text-white leading-[1.05] tracking-tight"
               >
                 <span className="block overflow-hidden">
-                  <motion.span variants={lineMask} className="block">
-                    Premium
-                  </motion.span>
+                  <motion.span variants={lineMask} className="block">Premium</motion.span>
                 </span>
                 <span className="block overflow-hidden">
                   <motion.span variants={lineMask} className="block">
                     <span className="bg-gradient-to-r from-sky-400 to-teal-400 bg-clip-text text-transparent">
-                      Imported
+                      European
                     </span>
                   </motion.span>
                 </span>
                 <span className="block overflow-hidden">
-                  <motion.span variants={lineMask} className="block">
-                    Medicines
-                  </motion.span>
+                  <motion.span variants={lineMask} className="block">Pharmaceuticals</motion.span>
                 </span>
               </motion.h1>
 
-              {/* Paragraph */}
-              <motion.p variants={fadeUp} className="text-lg sm:text-xl text-white/68 leading-relaxed max-w-xl">
-                Medix Healthcare brings you{" "}
-                <strong className="text-white/90 font-semibold">
-                  licensed, certified pharmaceuticals
-                </strong>{" "}
-                sourced directly from authorised manufacturers in{" "}
-                <strong className="text-white/90 font-semibold">
-                  Spain &amp; the United Kingdom
-                </strong>{" "}
-                — tested, documented, and GCC-approved.
+              {/* Description */}
+              <motion.p variants={fadeUp} className="text-lg sm:text-xl text-white/65 leading-relaxed max-w-xl">
+                Certified medicines and supplements imported{" "}
+                <strong className="text-white/90 font-semibold">directly from licensed manufacturers</strong>{" "}
+                in Spain &amp; Italy — fully documented, GCC-approved, and delivered fast across the UAE.
               </motion.p>
 
-              {/* Buttons */}
+              {/* CTAs */}
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4">
                 <Button
                   variant="primary"
@@ -153,33 +170,34 @@ export default function HeroSection() {
                   onClick={() => scrollTo("#products")}
                   className="group"
                 >
-                  Explore Products
+                  Browse Products
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => scrollTo("#about")}
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2.5 px-9 py-4 rounded-full bg-[#25D366] text-white font-semibold text-lg shadow-xl shadow-[#25D366]/30 hover:shadow-[#25D366]/50 hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300"
                 >
-                  Our Story
-                </Button>
+                  <WhatsAppIcon />
+                  Order on WhatsApp
+                </a>
               </motion.div>
 
               {/* Trust badges */}
-              <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-6 pt-2">
+              <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5 pt-2">
                 {trustBadges.map(({ icon: Icon, label, color }, i) => (
                   <motion.div
                     key={i}
                     variants={fadeLeft}
-                    className="flex items-center gap-2 text-white/60 text-sm"
+                    className="flex items-center gap-2 text-white/55 text-sm"
                   >
-                    <Icon className={`w-4 h-4 ${color}`} />
+                    <Icon className={`w-4 h-4 ${color} flex-shrink-0`} />
                     <span>{label}</span>
                   </motion.div>
                 ))}
               </motion.div>
             </motion.div>
-
           </div>
         </div>
       </div>
@@ -188,15 +206,16 @@ export default function HeroSection() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/38 pointer-events-none"
+        transition={{ delay: 1.4, duration: 0.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/30 pointer-events-none"
       >
-        <span className="text-xs font-semibold uppercase tracking-widest">Scroll</span>
+        <span className="text-[10px] font-black uppercase tracking-widest">Scroll</span>
         <motion.div
           animate={prefersReduced ? {} : { y: [0, 6, 0] }}
           transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+          className="w-5 h-8 rounded-full border border-white/20 flex items-start justify-center pt-1.5"
         >
-          <ChevronDown className="w-5 h-5" />
+          <div className="w-1 h-1.5 bg-white/50 rounded-full" />
         </motion.div>
       </motion.div>
     </section>

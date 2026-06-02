@@ -7,12 +7,12 @@ import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
 
 const navLinks = [
-  { label: "Home",         href: "#home"         },
-  { label: "Products",     href: "#products"     },
-  { label: "Services",     href: "#services"     },
-  { label: "About Us",     href: "#about"        },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Contact",      href: "#appointment"  },
+  { label: "Home",       href: "#home"          },
+  { label: "Products",   href: "#products"      },
+  { label: "How to Buy", href: "#how-to-order"  },
+  { label: "About",      href: "#about"         },
+  { label: "Reviews",    href: "#testimonials"  },
+  { label: "Contact",    href: "#contact"       },
 ];
 
 export default function Navbar() {
@@ -114,9 +114,9 @@ export default function Navbar() {
               <Button
                 variant={scrolled ? "primary" : "outline"}
                 size="sm"
-                onClick={() => handleNavClick("#appointment")}
+                onClick={() => handleNavClick("#contact")}
               >
-                Book Consultation
+                Order Now
               </Button>
             </div>
 
@@ -156,9 +156,9 @@ export default function Navbar() {
                 variant="primary"
                 size="md"
                 className="w-full"
-                onClick={() => handleNavClick("#appointment")}
+                onClick={() => handleNavClick("#contact")}
               >
-                Book Consultation
+                Order Now
               </Button>
             </div>
           </div>
