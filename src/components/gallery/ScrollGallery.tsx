@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 ───────────────────────────────────────────────────────── */
 const CARD_W      = 290;
 const CARD_H      = 450;
-const SPACING     = 180;
+const SPACING     = 144;   // was 180 — reduced 20%
 const PERSPECTIVE = "1500px";
 const MAX_VISIBLE = 4;
 
@@ -42,7 +42,7 @@ function GalleryCard({
   const offset  = useTransform(activeIndex, (v) => index - v);
   const x       = useTransform(offset, (v) => v * SPACING);
   const z       = useTransform(offset, (v) => -Math.abs(v) * 220);
-  const rotateY = useTransform(offset, (v) => v * -13);
+  const rotateY = useTransform(offset, (v) => v * -22);  // was -13 — more "on edge"
   const opacity = useTransform(offset, (v) =>
     Math.abs(v) > MAX_VISIBLE + 0.5 ? 0 : Math.max(0, 1 - Math.abs(v) * 0.21)
   );
