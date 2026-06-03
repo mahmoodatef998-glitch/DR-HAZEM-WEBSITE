@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
 import { useTranslation } from "@/contexts/LanguageContext";
@@ -68,12 +69,8 @@ export default function Navbar() {
 
             {/* Logo */}
             <a href="#home" onClick={(e) => { e.preventDefault(); handleNavClick("#home"); }} className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center shadow-lg shadow-sky-500/30 group-hover:scale-105 transition-transform duration-300">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <rect x="3" y="10" width="18" height="4" rx="2" fill="white" opacity="0.9"/>
-                  <rect x="10" y="3" width="4" height="18" rx="2" fill="white" opacity="0.9"/>
-                  <circle cx="12" cy="12" r="3" fill="white" opacity="0.35"/>
-                </svg>
+              <div className="w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                <Image src="/logo.png" alt="Medix Healthcare Trading" width={40} height={40} className="w-full h-full object-contain" priority />
               </div>
               <div>
                 <span className={cn("font-black text-base leading-none block transition-colors duration-300 tracking-tight", scrolled ? "text-slate-900" : "text-white")}>
