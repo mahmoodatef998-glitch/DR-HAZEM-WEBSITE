@@ -237,15 +237,16 @@ function SwipeCard({
 /* ─────────────────────────────────────────────────────────────────
    MOBILE GALLERY  – full-screen card deck
 ──────────────────────────────────────────────────────────────── */
-export default function MobileGallery() {
+export default function MobileGallery({ products: productsProp }: { products?: typeof products }) {
+  const allProducts = productsProp ?? products;
   const { t, isRTL } = useTranslation();
   const [index, setIndex]     = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [activeCategory, setActiveCategory] = useState<ProductCategory>("All");
 
   const filtered = activeCategory === "All"
-    ? products
-    : products.filter((p) => p.category === activeCategory);
+    ? allProducts
+    : allProducts.filter((p) => p.category === activeCategory);
   const total   = filtered.length;
   const current = filtered[index] ?? filtered[0];
 

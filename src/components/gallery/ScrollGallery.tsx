@@ -269,7 +269,8 @@ function GalleryCard({
 /* ─────────────────────────────────────────────────────────
    SCROLL GALLERY  –  sticky 3-D showcase driven by scroll
 ───────────────────────────────────────────────────────── */
-export default function ScrollGallery() {
+export default function ScrollGallery({ products: productsProp }: { products?: typeof products }) {
+  const allProducts = productsProp ?? products;
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [displayIndex, setDisplayIndex] = useState(0);
@@ -278,8 +279,8 @@ export default function ScrollGallery() {
   /* ── filtered products ── */
   const filteredProducts =
     activeCategory === "All"
-      ? products
-      : products.filter((p) => p.category === activeCategory);
+      ? allProducts
+      : allProducts.filter((p) => p.category === activeCategory);
   const TOTAL = filteredProducts.length;
 
   /* ── category change: reset index + scroll to section top ── */
