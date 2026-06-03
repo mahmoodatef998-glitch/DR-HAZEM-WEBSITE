@@ -62,12 +62,16 @@ function GalleryCard({
 
   const numStr = String(index + 1).padStart(2, "0");
 
-  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971556153629";
-  const { t: cardT } = useTranslation();
+  const WHATSAPP_NUMBER = "971556153629";
+  const { t: cardT, isRTL } = useTranslation();
 
   const handleBook = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const msg = encodeURIComponent(`${cardT.products.whatsappMsg} ${product.name} (${product.brand})`);
+    const msg = encodeURIComponent(
+      isRTL
+        ? `${cardT.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${product.price}`
+        : `${cardT.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${product.price}`
+    );
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 

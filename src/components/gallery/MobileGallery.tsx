@@ -12,13 +12,18 @@ const SWIPE_THRESHOLD = 30; // px — very snappy trigger
 
 /* ─── WhatsApp order button ─── */
 function OrderButton({ product }: { product: Product }) {
-  const { t } = useTranslation();
-  const msg = encodeURIComponent(`${t.products.whatsappMsg} ${product.name} (${product.brand})`);
+  const { t, isRTL } = useTranslation();
+  const msg = encodeURIComponent(
+    isRTL
+      ? `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${product.price}`
+      : `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${product.price}`
+  );
   return (
     <a
       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
       className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-[#25D366] text-white font-black text-sm shadow-lg shadow-[#25D366]/25 active:scale-95 transition-transform duration-100"
     >
       <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -86,7 +91,7 @@ function SwipeCard({
       exit={{ opacity: 0, x: direction > 0 ? -300 : 300 }}
       transition={{ type: "spring", stiffness: 480, damping: 40, mass: 0.5 }}
       style={{ x, rotate, willChange: "transform" }}
-      className="absolute inset-4 cursor-grab active:cursor-grabbing select-none touch-none rounded-3xl overflow-hidden"
+      className="absolute top-4 left-4 right-4 bottom-[100px] cursor-grab active:cursor-grabbing select-none touch-none rounded-3xl overflow-hidden"
       aria-label={`Product ${index + 1} of ${total}: ${product.name}`}
     >
       {/* ── Card shell — single layer, no filters ── */}
@@ -106,13 +111,13 @@ function SwipeCard({
       {/* They sit above the card but below the CTA button (z-20 vs z-30 for button) */}
       <div className="absolute inset-0 flex z-20 pointer-events-none">
         <div
-          className="w-[30%] h-[82%] pointer-events-auto cursor-pointer"
+          className="w-[30%] h-[72%] pointer-events-auto cursor-pointer"
           onClick={() => onSwipe(-1)}
           aria-label="Previous product"
         />
         <div className="flex-1" /> {/* centre — passthrough */}
         <div
-          className="w-[30%] h-[82%] pointer-events-auto cursor-pointer"
+          className="w-[30%] h-[72%] pointer-events-auto cursor-pointer"
           onClick={() => onSwipe(1)}
           aria-label="Next product"
         />
@@ -333,7 +338,7 @@ export default function MobileGallery() {
         {/* Peek card (static, no animation) */}
         {peekProduct && (
           <div
-            className="absolute inset-4 rounded-3xl overflow-hidden opacity-25"
+            className="absolute top-4 left-4 right-4 bottom-[100px] rounded-3xl overflow-hidden opacity-25"
             style={{
               transform: "scale(0.94) translateY(10px)",
               background: "#111",
