@@ -2,6 +2,7 @@
 
 import { ShieldCheck, BadgeCheck, Globe2, Award, CheckCircle2, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Button from "@/components/ui/Button";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
@@ -55,10 +56,10 @@ export default function AboutSection() {
                 "relative flex flex-col sm:flex-row gap-5 sm:gap-6 items-start",
                 isRTL && "sm:flex-row-reverse"
               )}>
-                {/* Avatar */}
+                {/* Logo */}
                 <div className="flex-shrink-0">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center shadow-xl shadow-sky-500/30 text-4xl">
-                    👨‍⚕️
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-xl shadow-sky-500/30 bg-white/10 flex items-center justify-center p-1">
+                    <Image src="/logo.png" alt="Medix Healthcare Trading" width={96} height={96} className="w-full h-full object-contain drop-shadow-lg" />
                   </div>
                   <div className="mt-3 flex items-center justify-center gap-1">
                     <span className="text-xs text-amber-400/80 font-semibold">🇪🇸 🇮🇹</span>
