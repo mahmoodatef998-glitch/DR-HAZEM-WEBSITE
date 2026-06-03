@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971500000000";
-const SWIPE_THRESHOLD = 40; // px — snappier swipe trigger
+const SWIPE_THRESHOLD = 30; // px — very snappy trigger
 
 /* ─── WhatsApp order button ─── */
 function OrderButton({ product }: { product: Product }) {
@@ -49,8 +49,8 @@ function SwipeCard({
   onSwipe: (dir: 1 | -1) => void;
 }) {
   const x = useMotionValue(0);
-  // Gentle tilt while dragging — stays on compositor thread
-  const rotate = useTransform(x, [-180, 0, 180], [-6, 0, 6]);
+  // Very subtle tilt — stays on compositor thread, doesn't fight the drag
+  const rotate = useTransform(x, [-200, 0, 200], [-4, 0, 4]);
   // Drag tint (green / red) — opacity only, no layout
   const greenTint = useTransform(x, [0, 100], [0, 0.07]);
   const redTint   = useTransform(x, [-100, 0], [0.07, 0]);
@@ -59,11 +59,11 @@ function SwipeCard({
     (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
       const isSwipe =
         Math.abs(info.offset.x) > SWIPE_THRESHOLD ||
-        Math.abs(info.velocity.x) > 350;
+        Math.abs(info.velocity.x) > 250; // lower velocity threshold too
 
       if (!isSwipe) {
-        // Snap back — no bounce (overdamped)
-        animate(x, 0, { type: "spring", stiffness: 700, damping: 55 });
+        // Ultra-fast snap back — instant, zero bounce
+        animate(x, 0, { type: "spring", stiffness: 1200, damping: 80 });
         return;
       }
       onSwipe((info.offset.x > 0 ? -1 : 1) as 1 | -1);
@@ -76,14 +76,15 @@ function SwipeCard({
   return (
     <motion.div
       drag="x"
-      dragConstraints={{ left: -300, right: 300 }}
-      dragElastic={0.05}
+      dragConstraints={{ left: -400, right: 400 }}
+      dragElastic={0}           // zero lag — card sticks to finger perfectly
+      dragMomentum={false}      // no coasting after lift — instant stop
       onDragEnd={handleDragEnd}
-      // Fast cubic-bezier — feels instant, no spring overshoot lag
-      initial={{ opacity: 0, x: direction > 0 ? 280 : -280 }}
+      // Spring transition: snappy arrival, no overshoot
+      initial={{ opacity: 0, x: direction > 0 ? 300 : -300 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: direction > 0 ? -280 : 280 }}
-      transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
+      exit={{ opacity: 0, x: direction > 0 ? -300 : 300 }}
+      transition={{ type: "spring", stiffness: 480, damping: 40, mass: 0.5 }}
       style={{ x, rotate, willChange: "transform" }}
       className="absolute inset-4 cursor-grab active:cursor-grabbing select-none touch-none rounded-3xl overflow-hidden"
       aria-label={`Product ${index + 1} of ${total}: ${product.name}`}
