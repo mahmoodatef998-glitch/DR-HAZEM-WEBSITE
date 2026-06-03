@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Star, Quote, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import SectionHeader from "@/components/ui/SectionHeader";
@@ -23,7 +23,16 @@ export default function TestimonialsSection() {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const visibleCount = 3;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const visibleCount = isMobile ? 1 : 3;
   const maxIndex = ts.items.length - visibleCount;
 
   const prev = () => { setDirection(-1); setActiveIndex(i => Math.max(0, i - 1)); };
@@ -68,7 +77,7 @@ export default function TestimonialsSection() {
             <motion.div
               key={activeIndex} custom={direction} variants={slideVariants}
               initial="enter" animate="center" exit="exit"
-              className="grid md:grid-cols-3 gap-6"
+              className={isMobile ? "grid grid-cols-1 gap-6" : "grid md:grid-cols-3 gap-6"}
             >
               {visible.map((item, i) => (
                 <motion.div

@@ -83,7 +83,7 @@ export default function FooterSection() {
                 {col.links.map((link) => (
                   <li key={link.label}>
                     <button onClick={() => scrollTo(link.href)}
-                      className={cn("text-slate-400 hover:text-sky-400 text-sm transition-colors duration-200 inline-block", isRTL ? "hover:-translate-x-1" : "hover:translate-x-1", "transition-transform")}>
+                      className={cn("text-slate-400 hover:text-sky-400 text-sm transition-all duration-200 inline-block", isRTL ? "hover:-translate-x-1" : "hover:translate-x-1")}>
                       {link.label}
                     </button>
                   </li>

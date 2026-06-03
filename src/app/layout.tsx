@@ -64,7 +64,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     /* lang/dir updated client-side by LanguageContext — suppressHydrationWarning prevents mismatch errors */
-    <html lang="en" dir="ltr" className={`${inter.variable} ${cairo.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang="en" dir="ltr" className={`${inter.variable} ${cairo.variable}`} suppressHydrationWarning>
       <body className={`${inter.className} antialiased`} suppressHydrationWarning>
         <JsonLd />
         <LanguageProvider>

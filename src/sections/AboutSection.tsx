@@ -50,10 +50,10 @@ export default function AboutSection() {
             className="space-y-8"
           >
             {/* Card */}
-            <div className="relative bg-gradient-to-br from-slate-900 to-sky-950 rounded-3xl p-8 overflow-hidden">
+            <div className="relative bg-gradient-to-br from-slate-900 to-sky-950 rounded-3xl p-5 sm:p-8 overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl" />
 
-              <div className="relative flex gap-6 items-start">
+              <div className="relative flex flex-col sm:flex-row gap-5 sm:gap-6 items-start">
                 {/* Avatar / Logo */}
                 <div className="flex-shrink-0">
                   <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center shadow-xl shadow-sky-500/30 text-4xl">
