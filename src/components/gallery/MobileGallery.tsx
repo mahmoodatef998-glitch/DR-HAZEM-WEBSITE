@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
 import { Star, CheckCircle2, ChevronLeft, ChevronRight, Flame } from "lucide-react";
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971500000000";
-const SWIPE_THRESHOLD = 60; // px to register a swipe — snappier
+const SWIPE_THRESHOLD = 40; // px — snappier swipe trigger
 
 /* ─── WhatsApp order button ─── */
 function OrderButton({ product }: { product: Product }) {
@@ -100,6 +100,22 @@ function SwipeCard({
       {/* Drag tint overlays — GPU: opacity only */}
       <motion.div className="absolute inset-0 bg-[#25D366] rounded-3xl pointer-events-none" style={{ opacity: greenTint }} />
       <motion.div className="absolute inset-0 bg-rose-500 rounded-3xl pointer-events-none"   style={{ opacity: redTint   }} />
+
+      {/* ── Tap zones (Instagram-style) — left 30% = prev, right 30% = next ── */}
+      {/* They sit above the card but below the CTA button (z-20 vs z-30 for button) */}
+      <div className="absolute inset-0 flex z-20 pointer-events-none">
+        <div
+          className="w-[30%] h-[82%] pointer-events-auto cursor-pointer"
+          onClick={() => onSwipe(-1)}
+          aria-label="Previous product"
+        />
+        <div className="flex-1" /> {/* centre — passthrough */}
+        <div
+          className="w-[30%] h-[82%] pointer-events-auto cursor-pointer"
+          onClick={() => onSwipe(1)}
+          aria-label="Next product"
+        />
+      </div>
 
       {/* ── Content ── */}
       <div className="relative h-full flex flex-col p-5 z-10">
@@ -208,8 +224,10 @@ function SwipeCard({
           </div>
         </div>
 
-        {/* CTA */}
-        <OrderButton product={product} />
+        {/* CTA — z-30 so it sits above the tap zones */}
+        <div className="relative z-30">
+          <OrderButton product={product} />
+        </div>
       </div>
     </motion.div>
   );
@@ -247,6 +265,13 @@ export default function MobileGallery() {
     setActiveCategory(cat);
     setIndex(0);
     setDirection(1);
+  }, []);
+
+  // Show tap-hint arrows briefly on first load
+  const [showHint, setShowHint] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setShowHint(false), 2200);
+    return () => clearTimeout(t);
   }, []);
 
   // Peek-card gradient (next card's colour tint) — no animation, instant
@@ -332,6 +357,35 @@ export default function MobileGallery() {
           />
         </AnimatePresence>
       </div>
+
+      {/* ── Tap hint arrows — fade out after 2.2s ── */}
+      <AnimatePresence>
+        {showHint && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0 top-14 z-25 flex items-center justify-between px-3 pointer-events-none"
+            aria-hidden="true"
+          >
+            <motion.div
+              animate={{ x: [0, -5, 0] }}
+              transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut" }}
+              className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center"
+            >
+              <ChevronLeft className="w-4 h-4 text-white/60" />
+            </motion.div>
+            <motion.div
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut" }}
+              className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center"
+            >
+              <ChevronRight className="w-4 h-4 text-white/60" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Bottom controls ── */}
       <div className="absolute bottom-0 left-0 right-0 z-30 px-5 pb-7 pt-3 bg-gradient-to-t from-black/70 to-transparent">
