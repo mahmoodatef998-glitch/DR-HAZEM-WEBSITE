@@ -39,20 +39,21 @@ function SwipeCard({
   onSwipe: (dir: 1 | -1) => void;
 }) {
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 0, 200], [-18, 0, 18]);
-  const opacity = useTransform(x, [-150, 0, 150], [0.5, 1, 0.5]);
-  const bgTint  = useTransform(x, [-120, 0, 120], [0.12, 0, 0.12]);
+  // subtle tilt — felt, not distracting
+  const rotate = useTransform(x, [-150, 0, 150], [-7, 0, 7]);
+  // pre-compute tint opacities at component level (avoids new MotionValue on each render)
+  const greenTint = useTransform(x, [0, 120],  [0, 0.08]);
+  const redTint   = useTransform(x, [-120, 0], [0.08, 0]);
 
-  const handleDragEnd = useCallback(async (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
-    const swipe = Math.abs(info.offset.x) > SWIPE_THRESHOLD || Math.abs(info.velocity.x) > 500;
-    if (!swipe) {
-      animate(x, 0, { type: "spring", stiffness: 400, damping: 30 });
+  const handleDragEnd = useCallback((_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
+    const isSwipe = Math.abs(info.offset.x) > SWIPE_THRESHOLD || Math.abs(info.velocity.x) > 400;
+    if (!isSwipe) {
+      // overdamped spring (ζ ≈ 1.02) → snaps back cleanly with zero bounce
+      animate(x, 0, { type: "spring", stiffness: 600, damping: 50 });
       return;
     }
-    const dir = info.offset.x > 0 ? -1 : 1;
-    await animate(x, dir > 0 ? -500 : 500, { duration: 0.25 });
-    onSwipe(dir as 1 | -1);
-    x.set(0);
+    // trigger immediately — AnimatePresence exit handles the fly-away animation
+    onSwipe((info.offset.x > 0 ? -1 : 1) as 1 | -1);
   }, [x, onSwipe]);
 
   const E = [0.22, 1, 0.36, 1] as const;
@@ -61,14 +62,16 @@ function SwipeCard({
   return (
     <motion.div
       drag="x"
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.4}
+      // wide constraints = card follows finger 1-to-1, no rubber-band lag
+      dragConstraints={{ left: -400, right: 400 }}
+      dragElastic={0.04}
       onDragEnd={handleDragEnd}
-      initial={{ opacity: 0, scale: 0.85, x: direction > 0 ? 400 : -400 }}
+      initial={{ opacity: 0.5, scale: 0.94, x: direction > 0 ? 340 : -340 }}
       animate={{ opacity: 1, scale: 1, x: 0 }}
-      exit={{ opacity: 0, scale: 0.85, x: direction > 0 ? -400 : 400 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      style={{ x, rotate, opacity }}
+      exit={{ opacity: 0, scale: 0.94, x: direction > 0 ? -340 : 340 }}
+      // overdamped (ζ ≈ 1.20) → smooth arrival, no overshoot
+      transition={{ type: "spring", stiffness: 380, damping: 44, mass: 0.88 }}
+      style={{ x, rotate }}
       className="absolute inset-4 cursor-grab active:cursor-grabbing select-none touch-none rounded-3xl overflow-hidden"
       aria-label={`Product ${index + 1} of ${total}: ${product.name}`}
     >
@@ -81,9 +84,9 @@ function SwipeCard({
       <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${product.gradient}`} />
       <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/[0.07] pointer-events-none" />
 
-      {/* Drag tint hint — green left, red right */}
-      <motion.div className="absolute inset-0 bg-[#25D366] pointer-events-none rounded-3xl" style={{ opacity: useTransform(x, [0, 120], [0, 0.08]) }} />
-      <motion.div className="absolute inset-0 bg-rose-500 pointer-events-none rounded-3xl" style={{ opacity: useTransform(x, [-120, 0], [0.08, 0]) }} />
+      {/* Drag tint hint — green = swipe right (prev), red = swipe left (next) */}
+      <motion.div className="absolute inset-0 bg-[#25D366] pointer-events-none rounded-3xl" style={{ opacity: greenTint }} />
+      <motion.div className="absolute inset-0 bg-rose-500 pointer-events-none rounded-3xl" style={{ opacity: redTint }} />
 
       {/* Content */}
       <div className="relative h-full flex flex-col p-6 z-10">
