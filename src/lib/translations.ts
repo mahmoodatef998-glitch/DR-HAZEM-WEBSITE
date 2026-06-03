@@ -29,6 +29,8 @@ const en = {
     total: "TOTAL", hoverReveal: "HOVER TO REVEAL",
     scrollToSurf: "SCROLL TO SURF", orderButton: "Order on WhatsApp",
     swipeHint: "SWIPE TO BROWSE",
+    all: "All",
+    whatsappMsg: "Hello Dr. Hazem, I'm interested in:",
   },
   howToOrder: {
     badge: "Simple Process", title: "How to ", titleHighlight: "Order",
@@ -147,6 +149,8 @@ const ar: typeof en = {
     total: "المجموع", hoverReveal: "مرّر لمزيد من التفاصيل",
     scrollToSurf: "مرّر للتصفح", orderButton: "اطلب عبر واتساب",
     swipeHint: "اسحب للتصفح",
+    all: "الكل",
+    whatsappMsg: "مرحبا د. حازم، أنا مهتم بـ:",
   },
   howToOrder: {
     badge: "عملية بسيطة", title: "كيفية ", titleHighlight: "الطلب",

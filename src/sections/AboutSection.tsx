@@ -5,56 +5,57 @@ import { motion } from "framer-motion";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Button from "@/components/ui/Button";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
+import { useTranslation } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 
-const guarantees = [
-  { icon: ShieldCheck, text: "Every batch comes with full EU certification documentation" },
-  { icon: BadgeCheck,  text: "All products are registered and approved for the GCC market" },
-  { icon: Globe2,      text: "Direct contracts with licensed manufacturers — no middlemen" },
-  { icon: Award,       text: "Cold-chain logistics maintained from EU warehouse to your door" },
-];
-
-const stats = [
-  { value: "200+", label: "Products Available",  sub: "Spain & Italy combined"       },
-  { value: "100%", label: "Certified Quality",    sub: "Every batch documented"       },
-  { value: "GCC",  label: "Market Approved",      sub: "Full regulatory compliance"   },
-  { value: "48h",  label: "UAE Delivery",          sub: "Dubai & Abu Dhabi"            },
-];
+/* Icons for the 4 guarantee items — order matches translations.ts guarantees array */
+const GUARANTEE_ICONS = [ShieldCheck, BadgeCheck, Globe2, Award];
 
 const E = [0.22, 1, 0.36, 1] as const;
 
 export default function AboutSection() {
+  const { t, isRTL } = useTranslation();
+  const a = t.about;
+
   const scrollTo = (id: string) =>
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <section id="about" className="section-padding bg-white relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-sky-50/60 to-transparent pointer-events-none" />
-      <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-teal-50 rounded-full blur-3xl pointer-events-none" />
+      {/* ── Background decorations ── */}
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-sky-50/60 to-transparent pointer-events-none" aria-hidden="true" />
+      <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-teal-50 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="About Medix Healthcare"
-          title="Your Trusted European "
-          highlight="Pharmaceutical Importer"
-          description="Medix Healthcare was founded with one clear mission: to give patients and healthcare providers in the UAE direct access to premium, certified pharmaceuticals from the best European manufacturers."
+          badge={a.badge}
+          title={a.title}
+          highlight={a.titleHighlight}
+          description={a.description}
+          className={isRTL ? "font-cairo" : undefined}
         />
 
         <div className="mt-16 grid lg:grid-cols-2 gap-16 items-center">
 
-          {/* Left — Profile card */}
+          {/* ─── Left column — Profile card ─── */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: isRTL ? 50 : -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: E }}
             className="space-y-8"
           >
-            {/* Card */}
-            <div className="relative bg-gradient-to-br from-slate-900 to-sky-950 rounded-3xl p-5 sm:p-8 overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl" />
+            {/* Dark profile card */}
+            <div className="relative bg-gradient-to-br from-slate-900 to-sky-950 rounded-3xl p-5 sm:p-8 overflow-hidden shadow-2xl shadow-slate-900/20">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
 
-              <div className="relative flex flex-col sm:flex-row gap-5 sm:gap-6 items-start">
-                {/* Avatar / Logo */}
+              {/* Profile header */}
+              <div className={cn(
+                "relative flex flex-col sm:flex-row gap-5 sm:gap-6 items-start",
+                isRTL && "sm:flex-row-reverse"
+              )}>
+                {/* Avatar */}
                 <div className="flex-shrink-0">
                   <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center shadow-xl shadow-sky-500/30 text-4xl">
                     👨‍⚕️
@@ -65,72 +66,87 @@ export default function AboutSection() {
                 </div>
 
                 {/* Info */}
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white">Dr. Hazem</h3>
-                  <p className="text-sky-400 font-semibold text-sm mt-0.5">Founder — Medix Healthcare</p>
-                  <p className="text-white/45 text-sm mt-0.5">Licensed Medical Importer · Dubai, UAE</p>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    <span className="bg-sky-500/20 text-sky-300 text-xs px-3 py-1 rounded-full border border-sky-500/30">DHA Licensed</span>
-                    <span className="bg-teal-500/20 text-teal-300 text-xs px-3 py-1 rounded-full border border-teal-500/30">GCC Approved</span>
-                    <span className="bg-amber-500/20 text-amber-300 text-xs px-3 py-1 rounded-full border border-amber-500/30">EU Partner</span>
+                <div className={cn("flex-1", isRTL && "text-right font-cairo")}>
+                  <h3 className="text-2xl font-bold text-white">{a.profileName}</h3>
+                  <p className="text-sky-400 font-semibold text-sm mt-0.5">{a.profileTitle}</p>
+                  <p className="text-white/45 text-sm mt-0.5">{a.profileSub}</p>
+                  <div className={cn("flex flex-wrap gap-2 mt-3", isRTL && "flex-row-reverse")}>
+                    <span className="bg-sky-500/20 text-sky-300 text-xs px-3 py-1 rounded-full border border-sky-500/30">
+                      {a.badges.dha}
+                    </span>
+                    <span className="bg-teal-500/20 text-teal-300 text-xs px-3 py-1 rounded-full border border-teal-500/30">
+                      {a.badges.gcc}
+                    </span>
+                    <span className="bg-amber-500/20 text-amber-300 text-xs px-3 py-1 rounded-full border border-amber-500/30">
+                      {a.badges.eu}
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Bio */}
-              <p className="relative text-white/65 text-sm leading-relaxed mt-6">
-                Dr. Hazem built Medix Healthcare after years of medical practice, driven by one observation:
-                the best European medicines were simply not available or accessible to patients in the GCC.
-                Today, we source exclusively from{" "}
-                <strong className="text-white/90">licensed manufacturers in Spain and Italy</strong>,
-                ensuring every product is authentic, certified, and delivered with full documentation.
+              <p className={cn(
+                "relative text-white/65 text-sm leading-relaxed mt-6",
+                isRTL && "text-right font-cairo"
+              )}>
+                {a.bio}
               </p>
 
               {/* Quote */}
-              <div className="relative mt-6 pl-4 border-l-2 border-sky-500">
-                <p className="text-white/75 text-sm italic">
-                  "I built Medix Healthcare so that every patient in the UAE could access the same
-                  high-quality pharmaceuticals available in European pharmacies — directly, affordably, and with confidence."
+              <div className={cn(
+                "relative mt-6 pl-4 border-l-2 border-sky-500",
+                isRTL && "pl-0 pr-4 border-l-0 border-r-2 text-right font-cairo"
+              )}>
+                <p className="text-white/75 text-sm italic leading-relaxed">
+                  {a.quote}
                 </p>
-                <p className="text-sky-400 text-xs font-semibold mt-1">— Dr. Hazem, Founder</p>
+                <p className="text-sky-400 text-xs font-semibold mt-2">{a.quoteAuthor}</p>
               </div>
             </div>
 
+            {/* CTA button */}
             <Button
               variant="primary"
               size="lg"
               onClick={() => scrollTo("#contact")}
-              className="group"
+              className={cn("group", isRTL && "flex-row-reverse font-cairo")}
             >
-              Get in Touch
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {a.cta}
+              <ArrowRight className={cn("w-5 h-5 group-hover:translate-x-1 transition-transform", isRTL && "rotate-180 group-hover:-translate-x-1 group-hover:translate-x-0")} />
             </Button>
           </motion.div>
 
-          {/* Right — Guarantees */}
+          {/* ─── Right column — Quality Promise ─── */}
           <div className="space-y-5">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">Our Quality Promise</h3>
-              <p className="text-slate-500 text-sm">Every product we import meets strict international standards before it reaches you.</p>
+            <div className={cn("mb-6", isRTL && "text-right font-cairo")}>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">{a.promiseTitle}</h3>
+              <p className="text-slate-500 text-sm">{a.promiseSub}</p>
             </div>
 
-            {guarantees.map((g, i) => {
-              const Icon = g.icon;
+            {a.guarantees.map((text, i) => {
+              const Icon = GUARANTEE_ICONS[i] ?? ShieldCheck;
               return (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, x: 40 }}
+                  initial={{ opacity: 0, x: isRTL ? -40 : 40 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
                   transition={{ duration: 0.6, delay: i * 0.12, ease: E }}
-                  className="flex items-start gap-4 p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
+                  className={cn(
+                    "flex items-start gap-4 p-5 bg-white border border-slate-100 rounded-2xl",
+                    "shadow-sm hover:shadow-md hover:-translate-y-0.5",
+                    "transition-all duration-300 group",
+                    isRTL && "flex-row-reverse text-right"
+                  )}
                 >
                   <div className="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center flex-shrink-0 group-hover:bg-sky-100 transition-colors duration-300">
-                    <Icon className="w-5 h-5 text-sky-600" />
+                    <Icon className="w-5 h-5 text-sky-600" aria-hidden="true" />
                   </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-slate-700 text-sm leading-relaxed">{g.text}</p>
+                  <div className={cn("flex items-start gap-2", isRTL && "flex-row-reverse")}>
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <p className={cn("text-slate-700 text-sm leading-relaxed", isRTL && "font-cairo")}>
+                      {text}
+                    </p>
                   </div>
                 </motion.div>
               );
@@ -138,9 +154,9 @@ export default function AboutSection() {
           </div>
         </div>
 
-        {/* Stats */}
+        {/* ─── Stats row ─── */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((stat, i) => (
+          {a.stats.map((stat, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 30 }}
@@ -153,8 +169,12 @@ export default function AboutSection() {
                 value={stat.value}
                 className="text-4xl font-black bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300 inline-block"
               />
-              <div className="text-slate-800 font-semibold text-sm mt-2">{stat.label}</div>
-              <div className="text-slate-500 text-xs mt-1">{stat.sub}</div>
+              <div className={cn("text-slate-800 font-semibold text-sm mt-2", isRTL && "font-cairo")}>
+                {stat.label}
+              </div>
+              <div className={cn("text-slate-500 text-xs mt-1", isRTL && "font-cairo")}>
+                {stat.sub}
+              </div>
             </motion.div>
           ))}
         </div>

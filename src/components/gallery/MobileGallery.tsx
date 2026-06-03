@@ -15,7 +15,7 @@ const SWIPE_THRESHOLD = 80; // px to register a swipe
 
 function OrderButton({ product }: { product: Product }) {
   const { t } = useTranslation();
-  const msg = encodeURIComponent(`Hello Dr. Hazem, I'm interested in: ${product.name} (${product.brand})`);
+  const msg = encodeURIComponent(`${t.products.whatsappMsg} ${product.name} (${product.brand})`);
   return (
     <a
       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`}
@@ -229,7 +229,7 @@ export default function MobileGallery() {
               {activeCategory === cat && (
                 <motion.span layoutId="mobile-filter-pill" className="absolute inset-0 rounded-full bg-white" transition={{ type: "spring", stiffness: 380, damping: 35 }} />
               )}
-              <span className="relative z-10">{cat === "All" ? t.products.orderButton === "اطلب عبر واتساب" ? "الكل" : "All" : cat}</span>
+              <span className="relative z-10">{cat === "All" ? t.products.all : cat}</span>
             </button>
           ))}
         </div>

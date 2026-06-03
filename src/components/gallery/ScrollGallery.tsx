@@ -34,10 +34,12 @@ function GalleryCard({
   product,
   index,
   activeIndex,
+  orderLabel,
 }: {
   product: Product;
   index: number;
   activeIndex: MotionValue<number>;
+  orderLabel: string;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -60,11 +62,12 @@ function GalleryCard({
 
   const numStr = String(index + 1).padStart(2, "0");
 
-  const WHATSAPP_NUMBER = "971500000000";
+  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971500000000";
+  const { t: cardT } = useTranslation();
 
   const handleBook = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const msg = encodeURIComponent(`Hello Dr. Hazem, I'm interested in ordering: ${product.name} (${product.brand})`);
+    const msg = encodeURIComponent(`${cardT.products.whatsappMsg} ${product.name} (${product.brand})`);
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
@@ -251,7 +254,7 @@ function GalleryCard({
                   whileTap={{ scale: 0.97 }}
                   className={`w-full py-2.5 rounded-xl bg-[#25D366] text-white text-[11px] font-black flex items-center justify-center gap-2 shadow-xl tracking-wide uppercase`}
                 >
-                  Order on WhatsApp
+                  {orderLabel}
                   <ArrowRight className="w-3.5 h-3.5" />
                 </motion.button>
               </div>
@@ -371,7 +374,7 @@ export default function ScrollGallery() {
                     transition={{ type: "spring", stiffness: 380, damping: 35 }}
                   />
                 )}
-                <span className="relative z-10">{cat}</span>
+                <span className="relative z-10">{cat === "All" ? t.products.all : cat}</span>
               </button>
             ))}
           </div>
@@ -424,6 +427,7 @@ export default function ScrollGallery() {
                 product={product}
                 index={index}
                 activeIndex={activeIndex}
+                orderLabel={t.products.orderButton}
               />
             ))}
           </div>
