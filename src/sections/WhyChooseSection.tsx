@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971500000000";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971556153629";
 const WHATSAPP_MSG = encodeURIComponent("Hello Dr. Hazem, I'd like to place an order.");
 
 /* Icons matching reason order */

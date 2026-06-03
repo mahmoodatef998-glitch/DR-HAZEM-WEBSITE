@@ -5,7 +5,7 @@ import { Search, MessageCircle, PackageCheck, ArrowRight } from "lucide-react";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971500000000";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971556153629";
 
 const STEP_META = [
   { step: "01", Icon: Search,        color: "from-sky-500 to-blue-600",       glow: "bg-sky-500/20"     },

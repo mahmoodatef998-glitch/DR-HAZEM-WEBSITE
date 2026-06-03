@@ -90,9 +90,9 @@ const en = {
     badge: "We reply instantly", title: "Ready to Order?", titleHighlight: "Message Us Now",
     description: "Just send the product name and quantity — we'll confirm price, availability, and delivery time within minutes.",
     cta: "Open WhatsApp Chat",
-    phone: "+971 50 000 0000 · Available Sun–Thu 9AM–8PM",
+    phone: "+971 55 615 3629 · Available Sun–Thu 9AM–8PM",
     contact: [
-      { label: "WhatsApp / Phone", value: "+971 50 000 0000", colorKey: "green" },
+      { label: "WhatsApp / Phone", value: "+971 55 615 3629", colorKey: "green" },
       { label: "Email", value: "info@drhazem.ae", colorKey: "sky" },
       { label: "Location", value: "Dubai, UAE", colorKey: "teal" },
       { label: "Working Hours", value: "Sun–Thu: 9AM–6PM", colorKey: "amber" },
@@ -207,9 +207,9 @@ const ar: typeof en = {
     badge: "نرد فوراً", title: "جاهز للطلب؟", titleHighlight: "راسلنا الآن",
     description: "فقط أرسل اسم المنتج والكمية — سنؤكد السعر والتوفر ووقت التوصيل في دقائق.",
     cta: "افتح محادثة واتساب",
-    phone: "+971 50 000 0000 · متاح الأحد–الخميس 9ص–8م",
+    phone: "+971 55 615 3629 · متاح الأحد–الخميس 9ص–8م",
     contact: [
-      { label: "واتساب / هاتف", value: "+971 50 000 0000", colorKey: "green" },
+      { label: "واتساب / هاتف", value: "+971 55 615 3629", colorKey: "green" },
       { label: "البريد الإلكتروني", value: "info@drhazem.ae", colorKey: "sky" },
       { label: "الموقع", value: "دبي، الإمارات", colorKey: "teal" },
       { label: "ساعات العمل", value: "الأحد–الخميس: 9ص–6م", colorKey: "amber" },
