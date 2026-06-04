@@ -1,6 +1,7 @@
 "use client";
 
-import { Phone, Mail, MapPin, ArrowUp, Heart } from "lucide-react";
+import { Phone, Mail, MapPin, ArrowUp, Heart, Settings } from "lucide-react";
+import Link from "next/link";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
@@ -100,8 +101,16 @@ export default function FooterSection() {
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 mx-1" aria-hidden="true" />
             {f.madeIn}
           </p>
-          <div className={cn("flex items-center gap-4", isRTL && "flex-row-reverse")}>
+          <div className={cn("flex items-center gap-3", isRTL && "flex-row-reverse")}>
             <span className="text-slate-600 text-xs">{f.dha}</span>
+            {/* Admin dashboard link — subtle, only visible on hover */}
+            <Link
+              href="/admin"
+              aria-label="Admin dashboard"
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-800 hover:text-slate-400 hover:bg-white/5 transition-all duration-300 opacity-30 hover:opacity-100"
+            >
+              <Settings className="w-3.5 h-3.5" />
+            </Link>
             <button onClick={scrollToTop} aria-label="Scroll to top"
               className="w-9 h-9 rounded-xl bg-sky-500/20 hover:bg-sky-500/40 border border-sky-500/20 flex items-center justify-center text-sky-400 hover:text-sky-300 transition-all duration-300 hover:-translate-y-1 group">
               <ArrowUp className="w-4 h-4 group-hover:scale-110 transition-transform" aria-hidden="true" />
