@@ -98,7 +98,7 @@ function SwipeCard({
           <img
             src={product.image_url}
             alt={product.name}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain"
             draggable={false}
           />
           {/* Scrim: heavy bottom for text, light top */}

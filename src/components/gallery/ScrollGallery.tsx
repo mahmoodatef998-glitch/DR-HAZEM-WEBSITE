@@ -100,7 +100,7 @@ function GalleryCard({
           <img
             src={product.image_url}
             alt={product.name}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain"
           />
           {/* Scrim: dark top + heavy bottom for text */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-black/50" />
