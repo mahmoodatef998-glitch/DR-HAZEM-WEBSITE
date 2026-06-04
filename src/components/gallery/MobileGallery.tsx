@@ -89,13 +89,29 @@ function SwipeCard({
       className="absolute inset-4 cursor-grab active:cursor-grabbing select-none touch-none rounded-3xl overflow-hidden"
       aria-label={`Product ${index + 1} of ${total}: ${product.name}`}
     >
-      {/* ── Card shell — single layer, no filters ── */}
+      {/* ── Card base ── */}
       <div className="absolute inset-0 bg-[#111111]" />
-      {/* Subtle colour tint from product gradient — low opacity, no blur */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-[0.07]`} />
-      {/* Top accent line */}
-      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${product.gradient}`} />
-      {/* Inner ring — compositor-safe */}
+
+      {/* Full-bleed image when available */}
+      {product.image_url ? (
+        <>
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            draggable={false}
+          />
+          {/* Scrim: heavy bottom for text, light top */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-black/45" />
+        </>
+      ) : (
+        <>
+          <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-[0.07]`} />
+          <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${product.gradient}`} />
+        </>
+      )}
+
+      {/* Inner ring */}
       <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/[0.06] pointer-events-none" />
 
       {/* Drag tint overlays — GPU: opacity only */}
@@ -119,7 +135,7 @@ function SwipeCard({
       </div>
 
       {/* ── Content ── */}
-      <div className="relative h-full flex flex-col p-5 z-10">
+      <div className={`relative h-full flex flex-col z-10 ${product.image_url ? "justify-between" : ""} p-5`}>
 
         {/* Top row: origin + counter */}
         <div className="flex items-center justify-between mb-3">
@@ -145,26 +161,18 @@ function SwipeCard({
           </div>
         </div>
 
-        {/* Icon / Image */}
-        <div className="flex items-center justify-center my-3">
-          <div className="relative w-20 h-20">
-            {product.image_url ? (
-              <img
-                src={product.image_url}
-                alt={product.name}
-                className="w-full h-full object-cover rounded-full ring-1 ring-white/10"
-              />
-            ) : (
-              <>
-                <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${product.gradient} opacity-20`} />
-                <div className="absolute inset-0 rounded-full ring-1 ring-white/[0.08]" />
-                <span className="absolute inset-0 flex items-center justify-center text-5xl leading-none" aria-hidden="true">
-                  {product.icon}
-                </span>
-              </>
-            )}
+        {/* Icon — only shown when no image */}
+        {!product.image_url && (
+          <div className="flex items-center justify-center my-3">
+            <div className="relative w-20 h-20">
+              <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${product.gradient} opacity-20`} />
+              <div className="absolute inset-0 rounded-full ring-1 ring-white/[0.08]" />
+              <span className="absolute inset-0 flex items-center justify-center text-5xl leading-none" aria-hidden="true">
+                {product.icon}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Badge + Category + Name */}
         <div className="text-center mb-2.5">
@@ -181,20 +189,24 @@ function SwipeCard({
           <h3 className="text-white font-black text-[18px] leading-snug">{product.name}</h3>
         </div>
 
-        {/* Description */}
-        <p className="text-white/50 text-[11px] leading-relaxed text-center line-clamp-2 mb-2.5">
-          {product.description}
-        </p>
+        {/* Description — hidden when image fills card */}
+        {!product.image_url && (
+          <p className="text-white/50 text-[11px] leading-relaxed text-center line-clamp-2 mb-2.5">
+            {product.description}
+          </p>
+        )}
 
-        {/* Features */}
-        <ul className="space-y-1.5 mb-3 flex-1">
-          {product.features.slice(0, 3).map((f, i) => (
-            <li key={i} className="flex items-start gap-2 text-white/55 text-[11px]">
-              <CheckCircle2 className="w-3 h-3 text-white/25 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <span>{f}</span>
-            </li>
-          ))}
-        </ul>
+        {/* Features — hidden when image fills card */}
+        {!product.image_url && (
+          <ul className="space-y-1.5 mb-3 flex-1">
+            {product.features.slice(0, 3).map((f, i) => (
+              <li key={i} className="flex items-start gap-2 text-white/55 text-[11px]">
+                <CheckCircle2 className="w-3 h-3 text-white/25 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        )}
 
         {/* Price + Stars */}
         <div className="flex items-center justify-between mb-3">

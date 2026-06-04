@@ -88,21 +88,30 @@ function GalleryCard({
       }}
       className="cursor-pointer rounded-2xl overflow-hidden"
     >
-      {/* ── LUXURY BLACK base ── */}
+      {/* ── Card base ── */}
       <div
         className="absolute inset-0"
         style={{ background: "linear-gradient(145deg, #0c0c0c 0%, #141414 50%, #0a0a0a 100%)" }}
       />
-      <div className={`absolute inset-0 bg-gradient-to-t ${product.gradient} opacity-[0.08]`} />
 
-      {/* grain texture */}
-      <div
-        className="absolute inset-0 opacity-[0.22] mix-blend-overlay pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E")`,
-        }}
-      />
-      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${product.gradient}`} />
+      {/* ── Full-bleed image (when available) ── */}
+      {product.image_url ? (
+        <>
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Scrim: dark top + heavy bottom for text */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-black/50" />
+        </>
+      ) : (
+        <>
+          <div className={`absolute inset-0 bg-gradient-to-t ${product.gradient} opacity-[0.08]`} />
+          <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${product.gradient}`} />
+        </>
+      )}
+
       <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.07] pointer-events-none" />
 
       {/* active glow ring */}
@@ -117,12 +126,12 @@ function GalleryCard({
       <motion.div
         animate={{ opacity: hovered ? 0 : 1 }}
         transition={{ duration: 0.18 }}
-        className="absolute inset-0 p-6 flex flex-col pointer-events-none"
+        className="absolute inset-0 flex flex-col pointer-events-none"
       >
-        <div className="flex items-start justify-between">
-          <span className="font-mono text-white/35 text-[11px] font-bold tracking-[0.2em]">{numStr}</span>
+        {/* Top row */}
+        <div className="flex items-start justify-between p-5">
+          <span className="font-mono text-white/50 text-[11px] font-bold tracking-[0.2em]">{numStr}</span>
           <div className="flex items-center gap-1.5">
-            {/* Country badge */}
             <span className="text-[15px]">{product.origin === "ES" ? "🇪🇸" : "🇮🇹"}</span>
             {product.popular && (
               <div className="flex items-center gap-1 bg-amber-400/18 border border-amber-400/35 rounded-full px-2 py-0.5">
@@ -133,39 +142,37 @@ function GalleryCard({
           </div>
         </div>
 
-        <div className="flex-1 flex items-center justify-center">
-          <div className="relative flex items-center justify-center">
-            {!product.image_url && (
+        {/* Centre — emoji only when no image */}
+        {!product.image_url && (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="relative flex items-center justify-center">
               <div
                 className={`absolute rounded-full bg-gradient-to-br ${product.gradient}`}
                 style={{ width: 130, height: 130, filter: "blur(48px)", opacity: 0.35 }}
               />
-            )}
-            <div
-              className="relative flex items-center justify-center w-28 h-28 rounded-full overflow-hidden"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-            >
-              {product.image_url ? (
-                <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
-              ) : (
+              <div
+                className="relative flex items-center justify-center w-28 h-28 rounded-full"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
                 <span className="text-[60px] leading-none select-none">{product.icon}</span>
-              )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        <div>
+        {/* Bottom text — pushed to bottom when image fills card */}
+        <div className={`p-5 ${product.image_url ? "mt-auto" : ""}`}>
           {product.badge && (
             <span className={`inline-block text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full mb-2 bg-gradient-to-r ${product.gradient} text-white`}>
               {product.badge}
             </span>
           )}
-          <p className="text-white/35 text-[9px] font-bold uppercase tracking-[0.2em] mb-1">{product.category}</p>
+          <p className="text-white/50 text-[9px] font-bold uppercase tracking-[0.2em] mb-1">{product.category}</p>
           <h3 className="text-white font-black text-[17px] leading-snug mb-3 line-clamp-2">{product.name}</h3>
           <div className="flex items-end justify-between">
             <div>
               {product.originalPrice && (
-                <span className="text-white/30 text-xs line-through block">{product.originalPrice}</span>
+                <span className="text-white/40 text-xs line-through block">{product.originalPrice}</span>
               )}
               <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>
                 {product.price.split(" / ")[0]}
@@ -177,7 +184,7 @@ function GalleryCard({
                   <Star key={i} className={`w-2.5 h-2.5 ${i < Math.round(product.rating) ? "fill-yellow-300 text-yellow-300" : "fill-white/18 text-white/18"}`} />
                 ))}
               </div>
-              <p className="text-white/32 text-[9px] mt-0.5 font-medium">{product.reviews} reviews</p>
+              <p className="text-white/40 text-[9px] mt-0.5 font-medium">{product.reviews} reviews</p>
             </div>
           </div>
         </div>
