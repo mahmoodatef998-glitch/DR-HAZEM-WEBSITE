@@ -122,18 +122,19 @@ export default function Navbar() {
               <Button variant={scrolled ? "primary" : "outline"} size="sm" onClick={() => handleNavClick("#contact")}>
                 {t.nav.orderNow}
               </Button>
-              {/* Admin button — subtle, only you know it's there */}
+              {/* Admin button */}
               <Link
                 href="/admin"
-                aria-label="Admin"
+                aria-label="Admin Dashboard"
                 className={cn(
-                  "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 opacity-20 hover:opacity-100",
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all duration-300",
                   scrolled
-                    ? "text-slate-400 hover:text-sky-600 hover:bg-sky-50"
-                    : "text-white/60 hover:text-white hover:bg-white/10"
+                    ? "border-slate-200 text-slate-500 hover:border-sky-400 hover:text-sky-600 hover:bg-sky-50"
+                    : "border-white/30 text-white/70 hover:border-white hover:text-white hover:bg-white/10"
                 )}
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-3.5 h-3.5" />
+                <span>Admin</span>
               </Link>
             </div>
 
@@ -173,10 +174,10 @@ export default function Navbar() {
               {/* Admin link — mobile */}
               <Link
                 href="/admin"
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-sky-600 hover:bg-sky-50 transition-colors duration-200 opacity-30 hover:opacity-100"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-sky-600 bg-sky-50 border border-sky-100 hover:bg-sky-100 transition-colors duration-200"
               >
                 <Settings className="w-4 h-4" />
-                <span>Admin</span>
+                <span>لوحة التحكم</span>
               </Link>
             </div>
           </div>
