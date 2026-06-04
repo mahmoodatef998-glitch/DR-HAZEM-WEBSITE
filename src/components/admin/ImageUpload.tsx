@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { Upload, Link2, X, Loader2, Image as ImageIcon, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -11,81 +10,85 @@ interface ImageUploadProps {
   folder?: string;
 }
 
-const BUCKET = "media";
+const CLOUD_NAME     = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
+const UPLOAD_PRESET  = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+const UPLOAD_URL     = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
-export default function ImageUpload({ value, onChange, folder = "general" }: ImageUploadProps) {
-  const [mode, setMode]         = useState<"upload" | "url">("upload");
-  const [urlInput, setUrlInput] = useState(value.startsWith("http") ? value : "");
+export default function ImageUpload({ value, onChange, folder = "dr-hazem" }: ImageUploadProps) {
+  const [mode, setMode]           = useState<"upload" | "url">("upload");
+  const [urlInput, setUrlInput]   = useState(value.startsWith("http") ? value : "");
   const [uploading, setUploading] = useState(false);
-  const [error, setError]       = useState("");
-  const [success, setSuccess]   = useState(false);
+  const [error, setError]         = useState("");
+  const [success, setSuccess]     = useState(false);
+  const [progress, setProgress]   = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  /* ── Upload to Cloudinary (unsigned) ── */
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate size (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setError("الصورة أكبر من 5MB — اختر صورة أصغر");
+    if (file.size > 10 * 1024 * 1024) {
+      setError("الصورة أكبر من 10MB");
       return;
     }
 
     setUploading(true);
     setError("");
     setSuccess(false);
+    setProgress(0);
 
     try {
-      const supabase = createClient();
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", UPLOAD_PRESET);
+      formData.append("folder", folder);
 
-      // Check if user is authenticated
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        setError("غير مسجّل الدخول — يرجى تسجيل الدخول أولاً");
-        setUploading(false);
-        return;
-      }
+      // Use XMLHttpRequest to track upload progress
+      const url = await new Promise<string>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
 
-      // Build unique file path
-      const ext      = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
-
-      // Upload — contentType explicit to avoid MIME mismatch
-      const { error: uploadError } = await supabase.storage
-        .from(BUCKET)
-        .upload(fileName, file, {
-          upsert:      true,
-          contentType: file.type || "image/jpeg",
+        xhr.upload.addEventListener("progress", (ev) => {
+          if (ev.lengthComputable) {
+            setProgress(Math.round((ev.loaded / ev.total) * 100));
+          }
         });
 
-      if (uploadError) {
-        // Helpful Arabic messages for common errors
-        if (uploadError.message.includes("Bucket not found")) {
-          setError('الـ Storage Bucket "media" غير موجود — أنشئه من Supabase → Storage');
-        } else if (uploadError.message.includes("security") || uploadError.message.includes("policy") || uploadError.message.includes("row")) {
-          setError("خطأ في الصلاحيات — تأكد إن Policies الـ storage مضبوطة (INSERT لـ authenticated)");
-        } else if (uploadError.message.includes("mime") || uploadError.message.includes("type")) {
-          setError("نوع الملف غير مدعوم — استخدم JPG أو PNG أو WEBP");
-        } else {
-          setError(`فشل الرفع: ${uploadError.message}`);
-        }
-        setUploading(false);
-        return;
-      }
+        xhr.addEventListener("load", () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const res = JSON.parse(xhr.responseText);
+            resolve(res.secure_url as string);
+          } else {
+            const res = JSON.parse(xhr.responseText);
+            reject(new Error(res.error?.message ?? `HTTP ${xhr.status}`));
+          }
+        });
 
-      // Get public URL
-      const { data } = supabase.storage.from(BUCKET).getPublicUrl(fileName);
-      onChange(data.publicUrl);
+        xhr.addEventListener("error", () => reject(new Error("فشل الاتصال بـ Cloudinary")));
+
+        xhr.open("POST", UPLOAD_URL);
+        xhr.send(formData);
+      });
+
+      onChange(url);
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      setTimeout(() => { setSuccess(false); setProgress(0); }, 3000);
 
     } catch (err: unknown) {
-      setError("خطأ غير متوقع: " + String(err));
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg.includes("Invalid upload preset")) {
+        setError("الـ Preset name غلط — تأكد من اسم الـ Preset في Cloudinary");
+      } else if (msg.includes("Unknown API key")) {
+        setError("الـ Cloud name غلط — تأكد من اسمه في Cloudinary Dashboard");
+      } else {
+        setError("فشل الرفع: " + msg);
+      }
     } finally {
       setUploading(false);
     }
   };
 
+  /* ── Save URL directly ── */
   const handleUrlSave = () => {
     const url = urlInput.trim();
     if (!url) return;
@@ -99,6 +102,7 @@ export default function ImageUpload({ value, onChange, folder = "general" }: Ima
     setUrlInput("");
     setError("");
     setSuccess(false);
+    setProgress(0);
     if (fileRef.current) fileRef.current.value = "";
   };
 
@@ -148,38 +152,50 @@ export default function ImageUpload({ value, onChange, folder = "general" }: Ima
         ))}
       </div>
 
-      {/* ── Upload ── */}
+      {/* ── File upload ── */}
       {mode === "upload" && (
-        <label className={cn(
-          "block w-full py-3 rounded-xl border text-center text-sm font-semibold transition-all duration-150",
-          uploading
-            ? "border-sky-500/30 text-sky-400/50 cursor-wait"
-            : "border-sky-500/40 text-sky-400 hover:bg-sky-500/10 cursor-pointer"
-        )}>
-          {uploading ? (
-            <span className="flex items-center justify-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              جاري الرفع...
-            </span>
-          ) : success ? (
-            <span className="flex items-center justify-center gap-2 text-emerald-400">
-              <CheckCircle2 className="w-4 h-4" /> تم الرفع بنجاح!
-            </span>
-          ) : (
-            "اختر صورة (JPG · PNG · WEBP)"
+        <div className="space-y-2">
+          <label className={cn(
+            "block w-full py-3 rounded-xl border text-center text-sm font-semibold transition-all duration-150",
+            uploading
+              ? "border-sky-500/30 text-sky-400/50 cursor-wait"
+              : "border-sky-500/40 text-sky-400 hover:bg-sky-500/10 cursor-pointer"
+          )}>
+            {uploading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                جاري الرفع {progress > 0 ? `${progress}%` : ""}...
+              </span>
+            ) : success ? (
+              <span className="flex items-center justify-center gap-2 text-emerald-400">
+                <CheckCircle2 className="w-4 h-4" /> تم الرفع بنجاح!
+              </span>
+            ) : (
+              "اختر صورة من جهازك (JPG · PNG · WEBP)"
+            )}
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+              className="hidden"
+              onChange={handleFile}
+              disabled={uploading}
+            />
+          </label>
+
+          {/* Progress bar */}
+          {uploading && progress > 0 && (
+            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-sky-500 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           )}
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-            className="hidden"
-            onChange={handleFile}
-            disabled={uploading}
-          />
-        </label>
+        </div>
       )}
 
-      {/* ── URL ── */}
+      {/* ── URL paste ── */}
       {mode === "url" && (
         <div className="flex gap-2">
           <input
@@ -194,9 +210,12 @@ export default function ImageUpload({ value, onChange, folder = "general" }: Ima
           <button
             type="button"
             onClick={handleUrlSave}
-            className="px-4 py-2.5 bg-sky-500 hover:bg-sky-400 text-white text-sm font-bold rounded-xl transition-colors"
+            className={cn(
+              "px-4 py-2.5 text-white text-sm font-bold rounded-xl transition-colors",
+              success ? "bg-emerald-500" : "bg-sky-500 hover:bg-sky-400"
+            )}
           >
-            حفظ
+            {success ? "✓" : "حفظ"}
           </button>
         </div>
       )}
