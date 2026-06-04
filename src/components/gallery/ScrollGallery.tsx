@@ -94,17 +94,13 @@ function GalleryCard({
         style={{ background: "linear-gradient(145deg, #0c0c0c 0%, #141414 50%, #0a0a0a 100%)" }}
       />
 
-      {/* ── Full-bleed image (when available) ── */}
+      {/* ── Full image (no overlay — stays clear) ── */}
       {product.image_url ? (
-        <>
-          <img
-            src={product.image_url}
-            alt={product.name}
-            className="absolute inset-0 w-full h-full object-contain"
-          />
-          {/* Scrim: dark top + heavy bottom for text */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-black/50" />
-        </>
+        <img
+          src={product.image_url}
+          alt={product.name}
+          className="absolute inset-0 w-full h-full object-contain"
+        />
       ) : (
         <>
           <div className={`absolute inset-0 bg-gradient-to-t ${product.gradient} opacity-[0.08]`} />
@@ -114,7 +110,7 @@ function GalleryCard({
 
       <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.07] pointer-events-none" />
 
-      {/* active glow ring */}
+      {/* Active glow ring */}
       <motion.div
         animate={{ opacity: isActive ? 1 : 0 }}
         transition={{ duration: 0.5 }}
@@ -128,66 +124,100 @@ function GalleryCard({
         transition={{ duration: 0.18 }}
         className="absolute inset-0 flex flex-col pointer-events-none"
       >
-        {/* Top row */}
-        <div className="flex items-start justify-between p-5">
-          <span className="font-mono text-white/50 text-[11px] font-bold tracking-[0.2em]">{numStr}</span>
-          <div className="flex items-center gap-1.5">
-            <span className="text-[15px]">{product.origin === "ES" ? "🇪🇸" : "🇮🇹"}</span>
-            {product.popular && (
-              <div className="flex items-center gap-1 bg-amber-400/18 border border-amber-400/35 rounded-full px-2 py-0.5">
-                <Flame className="w-2.5 h-2.5 text-amber-400" />
-                <span className="text-amber-300 text-[8px] font-black uppercase tracking-widest">Hot</span>
+        {product.image_url ? (
+          /* ── IMAGE MODE: badge top-right + name/price bottom ── */
+          <>
+            {/* Badge — top right */}
+            {product.badge && (
+              <div className="flex justify-end p-4">
+                <span className={`text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full bg-gradient-to-r ${product.gradient} text-white shadow-lg`}>
+                  {product.badge}
+                </span>
               </div>
             )}
-          </div>
-        </div>
 
-        {/* Centre — emoji only when no image */}
-        {!product.image_url && (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="relative flex items-center justify-center">
-              <div
-                className={`absolute rounded-full bg-gradient-to-br ${product.gradient}`}
-                style={{ width: 130, height: 130, filter: "blur(48px)", opacity: 0.35 }}
-              />
-              <div
-                className="relative flex items-center justify-center w-28 h-28 rounded-full"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-              >
-                <span className="text-[60px] leading-none select-none">{product.icon}</span>
+            {/* Name + Price — bottom with thin scrim */}
+            <div className="mt-auto">
+              <div className="bg-gradient-to-t from-black/85 to-transparent pt-10 pb-5 px-5">
+                <h3 className="text-white font-black text-[17px] leading-snug mb-2 line-clamp-2 drop-shadow-lg">
+                  {product.name}
+                </h3>
+                <div className="flex items-center justify-between">
+                  <div>
+                    {product.originalPrice && (
+                      <span className="text-white/50 text-xs line-through block leading-none mb-0.5">
+                        {product.originalPrice}
+                      </span>
+                    )}
+                    <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent drop-shadow-lg`}>
+                      {product.price.split(" / ")[0]}
+                    </span>
+                  </div>
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={`w-2.5 h-2.5 ${i < Math.round(product.rating) ? "fill-yellow-300 text-yellow-300" : "fill-white/20 text-white/20"}`} />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          </>
+        ) : (
+          /* ── EMOJI MODE: original layout ── */
+          <>
+            <div className="flex items-start justify-between p-5">
+              <span className="font-mono text-white/50 text-[11px] font-bold tracking-[0.2em]">{numStr}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[15px]">{product.origin === "ES" ? "🇪🇸" : "🇮🇹"}</span>
+                {product.popular && (
+                  <div className="flex items-center gap-1 bg-amber-400/18 border border-amber-400/35 rounded-full px-2 py-0.5">
+                    <Flame className="w-2.5 h-2.5 text-amber-400" />
+                    <span className="text-amber-300 text-[8px] font-black uppercase tracking-widest">Hot</span>
+                  </div>
+                )}
+              </div>
+            </div>
 
-        {/* Bottom text — pushed to bottom when image fills card */}
-        <div className={`p-5 ${product.image_url ? "mt-auto" : ""}`}>
-          {product.badge && (
-            <span className={`inline-block text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full mb-2 bg-gradient-to-r ${product.gradient} text-white`}>
-              {product.badge}
-            </span>
-          )}
-          <p className="text-white/50 text-[9px] font-bold uppercase tracking-[0.2em] mb-1">{product.category}</p>
-          <h3 className="text-white font-black text-[17px] leading-snug mb-3 line-clamp-2">{product.name}</h3>
-          <div className="flex items-end justify-between">
-            <div>
-              {product.originalPrice && (
-                <span className="text-white/40 text-xs line-through block">{product.originalPrice}</span>
+            <div className="flex-1 flex items-center justify-center">
+              <div className="relative flex items-center justify-center">
+                <div className={`absolute rounded-full bg-gradient-to-br ${product.gradient}`}
+                  style={{ width: 130, height: 130, filter: "blur(48px)", opacity: 0.35 }} />
+                <div className="relative flex items-center justify-center w-28 h-28 rounded-full"
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <span className="text-[60px] leading-none select-none">{product.icon}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-5">
+              {product.badge && (
+                <span className={`inline-block text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full mb-2 bg-gradient-to-r ${product.gradient} text-white`}>
+                  {product.badge}
+                </span>
               )}
-              <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>
-                {product.price.split(" / ")[0]}
-              </span>
-            </div>
-            <div className="text-right">
-              <div className="flex gap-0.5 justify-end">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`w-2.5 h-2.5 ${i < Math.round(product.rating) ? "fill-yellow-300 text-yellow-300" : "fill-white/18 text-white/18"}`} />
-                ))}
+              <p className="text-white/50 text-[9px] font-bold uppercase tracking-[0.2em] mb-1">{product.category}</p>
+              <h3 className="text-white font-black text-[17px] leading-snug mb-3 line-clamp-2">{product.name}</h3>
+              <div className="flex items-end justify-between">
+                <div>
+                  {product.originalPrice && (
+                    <span className="text-white/40 text-xs line-through block">{product.originalPrice}</span>
+                  )}
+                  <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>
+                    {product.price.split(" / ")[0]}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <div className="flex gap-0.5 justify-end">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={`w-2.5 h-2.5 ${i < Math.round(product.rating) ? "fill-yellow-300 text-yellow-300" : "fill-white/18 text-white/18"}`} />
+                    ))}
+                  </div>
+                  <p className="text-white/40 text-[9px] mt-0.5 font-medium">{product.reviews} reviews</p>
+                </div>
               </div>
-              <p className="text-white/40 text-[9px] mt-0.5 font-medium">{product.reviews} reviews</p>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </motion.div>
 
       {/* ── HOVER OVERLAY ── */}
