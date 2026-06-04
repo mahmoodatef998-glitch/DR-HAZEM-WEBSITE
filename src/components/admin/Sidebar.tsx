@@ -6,17 +6,17 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, Package, Image, Phone, User,
-  MessageSquare, Star, LogOut, ChevronRight,
+  MessageSquare, Star, LogOut, ChevronRight, ExternalLink,
 } from "lucide-react";
 
 const NAV = [
-  { href: "/admin",            label: "الرئيسية",        icon: LayoutDashboard },
-  { href: "/admin/products",   label: "المنتجات",         icon: Package         },
-  { href: "/admin/hero",       label: "الصفحة الرئيسية",  icon: Image           },
-  { href: "/admin/about",      label: "عن د. حازم",       icon: User            },
-  { href: "/admin/contact",    label: "بيانات التواصل",   icon: Phone           },
-  { href: "/admin/testimonials",label: "التقييمات",        icon: Star            },
-  { href: "/admin/why-choose", label: "لماذا نحن",        icon: MessageSquare   },
+  { href: "/admin",             label: "Dashboard",       icon: LayoutDashboard },
+  { href: "/admin/products",    label: "Products",        icon: Package         },
+  { href: "/admin/hero",        label: "Hero Section",    icon: Image           },
+  { href: "/admin/about",       label: "About",           icon: User            },
+  { href: "/admin/contact",     label: "Contact Info",    icon: Phone           },
+  { href: "/admin/testimonials",label: "Testimonials",    icon: Star            },
+  { href: "/admin/why-choose",  label: "Why Choose Us",   icon: MessageSquare   },
 ];
 
 export default function Sidebar() {
@@ -26,27 +26,25 @@ export default function Sidebar() {
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/admin/login");
+    router.push("/"); // → back to main site
     router.refresh();
   };
 
   return (
-    <aside
-      className="w-64 min-h-screen bg-slate-900 border-l border-white/8 flex flex-col"
-      dir="rtl"
-    >
+    <aside className="w-60 min-h-screen bg-slate-900 border-r border-white/8 flex flex-col flex-shrink-0">
+
       {/* Logo */}
-      <div className="px-6 py-6 border-b border-white/8">
+      <div className="px-5 py-5 border-b border-white/8">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center shadow-lg shadow-sky-500/20 flex-shrink-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center shadow-lg shadow-sky-500/20 flex-shrink-0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <rect x="3" y="10" width="18" height="4" rx="2" fill="white" opacity="0.9"/>
               <rect x="10" y="3" width="4" height="18" rx="2" fill="white" opacity="0.9"/>
             </svg>
           </div>
           <div>
             <p className="text-white font-bold text-sm leading-none">Medix Healthcare</p>
-            <p className="text-sky-400 text-[10px] mt-0.5">لوحة التحكم</p>
+            <p className="text-sky-400 text-[10px] mt-0.5 font-medium">Admin Panel</p>
           </div>
         </div>
       </div>
@@ -68,7 +66,7 @@ export default function Sidebar() {
                   : "text-white/50 hover:text-white/80 hover:bg-white/5"
               )}
             >
-              <Icon className={cn("w-4 h-4 flex-shrink-0", active ? "text-sky-400" : "text-white/40 group-hover:text-white/60")} />
+              <Icon className={cn("w-4 h-4 flex-shrink-0", active ? "text-sky-400" : "text-white/35 group-hover:text-white/60")} />
               <span className="flex-1">{label}</span>
               {active && <ChevronRight className="w-3 h-3 text-sky-400/60" />}
             </Link>
@@ -76,14 +74,26 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Logout */}
-      <div className="px-3 pb-6 border-t border-white/8 pt-4">
+      {/* Bottom actions */}
+      <div className="px-3 pb-5 space-y-1 border-t border-white/8 pt-4">
+        {/* View site */}
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-white/70 hover:bg-white/5 transition-all duration-150 group"
+        >
+          <ExternalLink className="w-4 h-4 flex-shrink-0 group-hover:text-white/60" />
+          <span>View Website</span>
+        </a>
+
+        {/* Logout */}
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-150 group"
         >
           <LogOut className="w-4 h-4 flex-shrink-0 group-hover:text-rose-400" />
-          <span>تسجيل الخروج</span>
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

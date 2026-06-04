@@ -135,15 +135,21 @@ function GalleryCard({
 
         <div className="flex-1 flex items-center justify-center">
           <div className="relative flex items-center justify-center">
+            {!product.image_url && (
+              <div
+                className={`absolute rounded-full bg-gradient-to-br ${product.gradient}`}
+                style={{ width: 130, height: 130, filter: "blur(48px)", opacity: 0.35 }}
+              />
+            )}
             <div
-              className={`absolute rounded-full bg-gradient-to-br ${product.gradient}`}
-              style={{ width: 130, height: 130, filter: "blur(48px)", opacity: 0.35 }}
-            />
-            <div
-              className="relative flex items-center justify-center w-28 h-28 rounded-full"
+              className="relative flex items-center justify-center w-28 h-28 rounded-full overflow-hidden"
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
             >
-              <span className="text-[60px] leading-none filter drop-shadow-2xl select-none">{product.icon}</span>
+              {product.image_url ? (
+                <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-[60px] leading-none select-none">{product.icon}</span>
+              )}
             </div>
           </div>
         </div>

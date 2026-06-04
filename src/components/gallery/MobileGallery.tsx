@@ -145,20 +145,24 @@ function SwipeCard({
           </div>
         </div>
 
-        {/* Icon — no blur, no drop-shadow filter */}
+        {/* Icon / Image */}
         <div className="flex items-center justify-center my-3">
           <div className="relative w-20 h-20">
-            {/* Simple flat circle behind emoji — no blur needed */}
-            <div
-              className={`absolute inset-0 rounded-full bg-gradient-to-br ${product.gradient} opacity-20`}
-            />
-            <div className="absolute inset-0 rounded-full ring-1 ring-white/[0.08]" />
-            <span
-              className="absolute inset-0 flex items-center justify-center text-5xl leading-none"
-              aria-hidden="true"
-            >
-              {product.icon}
-            </span>
+            {product.image_url ? (
+              <img
+                src={product.image_url}
+                alt={product.name}
+                className="w-full h-full object-cover rounded-full ring-1 ring-white/10"
+              />
+            ) : (
+              <>
+                <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${product.gradient} opacity-20`} />
+                <div className="absolute inset-0 rounded-full ring-1 ring-white/[0.08]" />
+                <span className="absolute inset-0 flex items-center justify-center text-5xl leading-none" aria-hidden="true">
+                  {product.icon}
+                </span>
+              </>
+            )}
           </div>
         </div>
 

@@ -1,14 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { Package, Image, Phone, User, Star, MessageSquare, ArrowLeft } from "lucide-react";
+import { Package, Image, Phone, User, MessageSquare, Star, ArrowRight } from "lucide-react";
 
 const SECTIONS = [
-  { href: "/admin/products",    label: "المنتجات",         icon: Package,       color: "from-sky-500 to-blue-600",     desc: "إضافة وتعديل وحذف المنتجات وأسعارها وصورها" },
-  { href: "/admin/hero",        label: "الصفحة الرئيسية",  icon: Image,         color: "from-teal-500 to-emerald-600", desc: "عنوان الموقع، الوصف، صورة الخلفية، أزرار CTA" },
-  { href: "/admin/about",       label: "عن د. حازم",       icon: User,          color: "from-violet-500 to-purple-600", desc: "السيرة الذاتية، الاقتباسات، الإحصائيات" },
-  { href: "/admin/contact",     label: "بيانات التواصل",   icon: Phone,         color: "from-amber-500 to-orange-600", desc: "رقم واتساب، الإيميل، ساعات العمل" },
-  { href: "/admin/testimonials",label: "التقييمات",         icon: Star,          color: "from-rose-500 to-pink-600",   desc: "إضافة وتعديل آراء العملاء" },
-  { href: "/admin/why-choose",  label: "لماذا نحن",        icon: MessageSquare, color: "from-indigo-500 to-blue-700",  desc: "أسباب اختيار Medix Healthcare" },
+  { href: "/admin/products",    label: "Products",        icon: Package,       color: "from-sky-500 to-blue-600",      desc: "Add, edit and delete products, prices, images and categories" },
+  { href: "/admin/hero",        label: "Hero Section",    icon: Image,         color: "from-teal-500 to-emerald-600",  desc: "Main headline, description, background and CTA buttons" },
+  { href: "/admin/about",       label: "About",           icon: User,          color: "from-violet-500 to-purple-600", desc: "Dr. Hazem biography, quotes and quality guarantees" },
+  { href: "/admin/contact",     label: "Contact Info",    icon: Phone,         color: "from-amber-500 to-orange-600",  desc: "WhatsApp number, email, working hours and DHA license" },
+  { href: "/admin/testimonials",label: "Testimonials",    icon: Star,          color: "from-rose-500 to-pink-600",     desc: "Add and edit customer reviews" },
+  { href: "/admin/why-choose",  label: "Why Choose Us",   icon: MessageSquare, color: "from-indigo-500 to-blue-700",   desc: "Edit the 6 reasons to choose Medix Healthcare" },
 ];
 
 export default async function AdminDashboard() {
@@ -19,31 +19,32 @@ export default async function AdminDashboard() {
     .eq("active", true);
 
   return (
-    <div className="p-8 max-w-5xl" dir="rtl">
+    <div className="p-8 max-w-5xl">
+
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-white font-black text-2xl mb-1">لوحة التحكم</h1>
-        <p className="text-white/40 text-sm">إدارة محتوى موقع Medix Healthcare</p>
+        <h1 className="text-white font-black text-2xl mb-1">Dashboard</h1>
+        <p className="text-white/40 text-sm">Manage your Medix Healthcare website content</p>
       </div>
 
-      {/* Quick stat */}
+      {/* Quick stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
         <div className="bg-sky-500/10 border border-sky-500/20 rounded-2xl p-5">
           <p className="text-sky-400 font-black text-3xl">{count ?? 0}</p>
-          <p className="text-white/50 text-sm mt-1">منتج نشط</p>
+          <p className="text-white/50 text-sm mt-1">Active Products</p>
         </div>
         <div className="bg-teal-500/10 border border-teal-500/20 rounded-2xl p-5">
           <p className="text-teal-400 font-black text-3xl">6</p>
-          <p className="text-white/50 text-sm mt-1">أقسام قابلة للتعديل</p>
+          <p className="text-white/50 text-sm mt-1">Editable Sections</p>
         </div>
         <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5 col-span-2">
-          <p className="text-emerald-400 font-black text-lg leading-snug">AR + EN</p>
-          <p className="text-white/50 text-sm mt-1">دعم اللغتين عربي وإنجليزي</p>
+          <p className="text-emerald-400 font-black text-lg">AR + EN</p>
+          <p className="text-white/50 text-sm mt-1">Bilingual content support</p>
         </div>
       </div>
 
       {/* Section cards */}
-      <h2 className="text-white/60 text-xs font-black uppercase tracking-widest mb-4">الأقسام</h2>
+      <p className="text-white/40 text-xs font-black uppercase tracking-widest mb-4">Sections</p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {SECTIONS.map(({ href, label, icon: Icon, color, desc }) => (
           <Link
@@ -55,7 +56,7 @@ export default async function AdminDashboard() {
               <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg`}>
                 <Icon className="w-5 h-5 text-white" />
               </div>
-              <ArrowLeft className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors duration-200" />
+              <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors duration-200" />
             </div>
             <div>
               <h3 className="text-white font-bold text-sm mb-1">{label}</h3>
@@ -63,19 +64,6 @@ export default async function AdminDashboard() {
             </div>
           </Link>
         ))}
-      </div>
-
-      {/* View site link */}
-      <div className="mt-10 pt-6 border-t border-white/8">
-        <a
-          href="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sky-400 hover:text-sky-300 text-sm font-semibold transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 rotate-180" />
-          عرض الموقع
-        </a>
       </div>
     </div>
   );

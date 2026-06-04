@@ -29,6 +29,7 @@ export interface Product {
   gradient: string;
   popular?: boolean;
   discount?: number;
+  image_url?: string; // Cloudinary / external image (overrides emoji icon when set)
 }
 
 export const CATEGORIES: ProductCategory[] = [
