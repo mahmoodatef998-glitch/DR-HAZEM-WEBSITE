@@ -62,7 +62,7 @@ function GalleryCard({
 
   const numStr = String(index + 1).padStart(2, "0");
 
-  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971500000000";
+  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971585335516";
   const { t: cardT } = useTranslation();
 
   const handleBook = (e: React.MouseEvent) => {

@@ -14,7 +14,7 @@ const schema = {
       "logo": `${BASE_URL}/logo.png`,
       "image": `${BASE_URL}/og-image.jpg`,
       "description": "Medix Healthcare imports certified, high-quality pharmaceuticals directly from licensed manufacturers in Spain and Italy. GCC approved, ISO certified. Based in Dubai, UAE.",
-      "telephone": "+971500000000", // TODO: replace
+      "telephone": "+971585335516", // TODO: replace
       "email": "info@drhazem.ae",   // TODO: replace
       "address": { "@type": "PostalAddress", "streetAddress": "Dubai Healthcare City", "addressLocality": "Dubai", "addressRegion": "Dubai", "addressCountry": "AE" },
       "geo": { "@type": "GeoCoordinates", "latitude": "25.2285", "longitude": "55.3273" },

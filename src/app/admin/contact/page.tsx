@@ -13,7 +13,7 @@ export default async function AdminContactPage() {
     .single();
 
   const defaults = {
-    whatsapp: "971500000000",
+    whatsapp: "971585335516",
     email: "info@drhazem.ae",
     location_en: "Dubai, UAE",
     location_ar: "دبي، الإمارات",

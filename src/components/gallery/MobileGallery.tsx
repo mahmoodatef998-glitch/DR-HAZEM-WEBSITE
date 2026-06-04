@@ -7,7 +7,7 @@ import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory 
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971500000000";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971585335516";
 const SWIPE_THRESHOLD = 30; // px — very snappy trigger
 
 /* ─── WhatsApp order button ─── */

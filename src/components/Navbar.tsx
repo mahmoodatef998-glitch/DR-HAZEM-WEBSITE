@@ -115,9 +115,9 @@ export default function Navbar() {
             {/* Desktop CTA + Language */}
             <div className="hidden lg:flex items-center gap-3">
               <LangToggle />
-              <a href="tel:+971500000000" className={cn("flex items-center gap-2 text-sm font-medium transition-colors duration-300", scrolled ? "text-slate-600 hover:text-sky-600" : "text-white/80 hover:text-white")}>
+              <a href="tel:+971585335516" className={cn("flex items-center gap-2 text-sm font-medium transition-colors duration-300", scrolled ? "text-slate-600 hover:text-sky-600" : "text-white/80 hover:text-white")}>
                 <Phone className="w-4 h-4" aria-hidden="true" />
-                <span>+971 50 000 0000</span>
+                <span>+971 58 533 5516</span>
               </a>
               <Button variant={scrolled ? "primary" : "outline"} size="sm" onClick={() => handleNavClick("#contact")}>
                 {t.nav.orderNow}

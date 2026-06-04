@@ -5,7 +5,7 @@ import { Phone, MessageCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // TODO: replace with real WhatsApp number (format: country code + number, no +/spaces)
-const WHATSAPP_NUMBER = "971500000000";
+const WHATSAPP_NUMBER = "971585335516";
 const WHATSAPP_MESSAGE = encodeURIComponent(
   "Hello Medix Healthcare, I would like to book an appointment."
 );
@@ -59,7 +59,7 @@ export default function FloatingCTA() {
 
         {/* Phone call */}
         <a
-          href="tel:+971500000000"
+          href="tel:+971585335516"
           className="flex items-center gap-3 bg-white text-slate-800 px-5 py-3 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 hover:shadow-2xl hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300 text-sm font-semibold whitespace-nowrap"
         >
           <div className="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center">

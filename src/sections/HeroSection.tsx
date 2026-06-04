@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971500000000";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971585335516";
 
 type BezierEase = [number, number, number, number];
 const E: BezierEase = [0.22, 1, 0.36, 1];
