@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
 import { useTranslation } from "@/contexts/LanguageContext";
+import Link from "next/link";
 
 export default function Navbar() {
   const { t, locale, setLocale, isRTL } = useTranslation();
@@ -121,6 +122,19 @@ export default function Navbar() {
               <Button variant={scrolled ? "primary" : "outline"} size="sm" onClick={() => handleNavClick("#contact")}>
                 {t.nav.orderNow}
               </Button>
+              {/* Admin button — subtle, only you know it's there */}
+              <Link
+                href="/admin"
+                aria-label="Admin"
+                className={cn(
+                  "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 opacity-20 hover:opacity-100",
+                  scrolled
+                    ? "text-slate-400 hover:text-sky-600 hover:bg-sky-50"
+                    : "text-white/60 hover:text-white hover:bg-white/10"
+                )}
+              >
+                <Settings className="w-4 h-4" />
+              </Link>
             </div>
 
             {/* Mobile Toggle */}
@@ -156,6 +170,14 @@ export default function Navbar() {
               <Button variant="primary" size="md" className="w-full" onClick={() => handleNavClick("#contact")}>
                 {t.nav.orderNow}
               </Button>
+              {/* Admin link — mobile */}
+              <Link
+                href="/admin"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-sky-600 hover:bg-sky-50 transition-colors duration-200 opacity-30 hover:opacity-100"
+              >
+                <Settings className="w-4 h-4" />
+                <span>Admin</span>
+              </Link>
             </div>
           </div>
         </div>
