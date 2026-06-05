@@ -66,7 +66,7 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                placeholder="hazem@medixhealthcare.co"
+                placeholder="info@medixhealthcare.co"
                 className="w-full bg-white/8 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-sky-500 transition-colors duration-200"
               />
             </div>

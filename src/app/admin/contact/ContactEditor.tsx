@@ -42,7 +42,7 @@ export default function ContactEditor({ initial }: { initial: Data }) {
       <div>
         <label className={labelClass}>البريد الإلكتروني</label>
         <input type="email" value={data.email} onChange={e => set("email", e.target.value)}
-          placeholder="hazem@medixhealthcare.co" className={inputClass} dir="ltr" />
+          placeholder="info@medixhealthcare.co" className={inputClass} dir="ltr" />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
