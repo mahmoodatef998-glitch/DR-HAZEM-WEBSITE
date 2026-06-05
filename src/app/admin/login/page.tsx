@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
           <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 shadow-xl bg-white">
             <img src="/logo.png" alt="Medix Healthcare" className="w-full h-full object-contain" />
           </div>
-          <MedixWordmark size="md" color="text-white" showTagline={true} className="mt-2" />
+          <MedixWordmark size="md" variant="light" showTagline={true} className="mt-2" />
           <p className="text-white/40 text-sm mt-2">Admin Panel</p>
         </div>
 
