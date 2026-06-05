@@ -14,7 +14,7 @@ export default async function AdminContactPage() {
 
   const defaults = {
     whatsapp: "971585335516",
-    email: "info@drhazem.ae",
+    email: "hazem@medixhealthcare.co",
     location_en: "Dubai, UAE",
     location_ar: "دبي، الإمارات",
     hours_en: "Sun–Thu: 9AM–6PM",

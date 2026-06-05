@@ -68,9 +68,9 @@ export default function FooterSection() {
                 <Phone className="w-4 h-4 text-sky-500 group-hover:scale-110 transition-transform flex-shrink-0" aria-hidden="true" />
                 +971 58 533 5516
               </a>
-              <a href="mailto:info@drhazem.ae" className={cn("flex items-center gap-2 text-slate-400 hover:text-sky-400 transition-colors duration-200 text-sm group", isRTL && "flex-row-reverse")}>
+              <a href="mailto:hazem@medixhealthcare.co" className={cn("flex items-center gap-2 text-slate-400 hover:text-sky-400 transition-colors duration-200 text-sm group", isRTL && "flex-row-reverse")}>
                 <Mail className="w-4 h-4 text-sky-500 group-hover:scale-110 transition-transform flex-shrink-0" aria-hidden="true" />
-                info@drhazem.ae
+                hazem@medixhealthcare.co
               </a>
               <div className={cn("flex items-start gap-2 text-slate-400 text-sm", isRTL && "flex-row-reverse")}>
                 <MapPin className="w-4 h-4 text-sky-500 flex-shrink-0 mt-0.5" aria-hidden="true" />

@@ -93,7 +93,7 @@ const en = {
     phone: "+971 58 533 5516 · Available Sun–Thu 9AM–8PM",
     contact: [
       { label: "WhatsApp / Phone", value: "+971 58 533 5516", colorKey: "green" },
-      { label: "Email", value: "info@drhazem.ae", colorKey: "sky" },
+      { label: "Email", value: "hazem@medixhealthcare.co", colorKey: "sky" },
       { label: "Location", value: "Dubai, UAE", colorKey: "teal" },
       { label: "Working Hours", value: "Sun–Thu: 9AM–6PM", colorKey: "amber" },
     ],
@@ -210,7 +210,7 @@ const ar: typeof en = {
     phone: "+971 58 533 5516 · متاح الأحد–الخميس 9ص–8م",
     contact: [
       { label: "واتساب / هاتف", value: "+971 58 533 5516", colorKey: "green" },
-      { label: "البريد الإلكتروني", value: "info@drhazem.ae", colorKey: "sky" },
+      { label: "البريد الإلكتروني", value: "hazem@medixhealthcare.co", colorKey: "sky" },
       { label: "الموقع", value: "دبي، الإمارات", colorKey: "teal" },
       { label: "ساعات العمل", value: "الأحد–الخميس: 9ص–6م", colorKey: "amber" },
     ],
