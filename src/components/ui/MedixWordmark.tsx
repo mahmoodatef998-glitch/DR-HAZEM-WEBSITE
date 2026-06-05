@@ -2,25 +2,41 @@
 
 import { cn } from "@/lib/utils";
 
+/* ─── Reversed-E and Reversed-I via CSS scaleX(-1) ─── */
+const RevE = () => (
+  <span
+    className="inline-block"
+    style={{ transform: "scaleX(-1)", display: "inline-block" }}
+    aria-hidden="true"
+  >
+    E
+  </span>
+);
+const RevI = () => (
+  <span
+    className="inline-block"
+    style={{ transform: "scaleX(-1)", display: "inline-block" }}
+    aria-hidden="true"
+  >
+    I
+  </span>
+);
+
 /**
- * Inline M3D!X text — uses "3" for E and "!" for I, matching the brand logo exactly.
- * Wrap in any colour class you need.
+ * Inline M[Ǝ]D[I]X — reversed E + I, matching brand logo.
  */
 export function MedixText({ className }: { className?: string }) {
   return (
-    <span className={cn("font-black tracking-tight", className)}>
-      M3D!X
+    <span className={cn("inline-flex items-baseline font-black tracking-tight", className)}>
+      M<RevE />D<RevI />X
     </span>
   );
 }
 
 /**
- * Full wordmark:
- *   M3D!X          ← white, bold
- *   HEALTHCARE TRADING  ← sky-400, small, spaced
- *
+ * Full wordmark block.
  * size: "sm" | "md" | "lg"
- * variant: "light" (for dark bg) | "dark" (for light bg)
+ * variant: "light" (dark bg) | "dark" (light bg)
  */
 export default function MedixWordmark({
   size = "md",
@@ -33,22 +49,27 @@ export default function MedixWordmark({
   showTagline?: boolean;
   className?: string;
 }) {
-  const wordSize = { sm: "text-xl", md: "text-3xl", lg: "text-5xl" }[size];
-  const tagSize  = { sm: "text-[7px]", md: "text-[9px]", lg: "text-xs" }[size];
+  /* ── M3D!X text size ── */
+  const wordSize  = { sm: "text-[22px]", md: "text-[32px]", lg: "text-[52px]" }[size];
+  /* ── HEALTHCARE TRADING size — roughly 38% of word size ── */
+  const tagSize   = { sm: "text-[8.5px]", md: "text-[12px]", lg: "text-[20px]" }[size];
 
-  const wordColor = variant === "light" ? "text-white"      : "text-slate-900";
-  const tagColor  = variant === "light" ? "text-sky-400"    : "text-sky-500";
+  const wordColor = variant === "light" ? "text-white"   : "text-slate-900";
+  const tagColor  = variant === "light" ? "text-sky-400" : "text-sky-500";
 
   return (
     <div className={cn("leading-none select-none", className)}>
+      {/* M[Ǝ]D[I]X */}
       <div className={cn("font-black tracking-tight leading-none", wordSize, wordColor)}>
-        M3D!X
+        M<RevE />D<RevI />X
       </div>
+
+      {/* HEALTHCARE TRADING */}
       {showTagline && (
-        <div className={cn(
-          "font-semibold tracking-[0.2em] uppercase mt-0.5",
-          tagSize, tagColor
-        )}>
+        <div
+          className={cn("font-semibold uppercase mt-1", tagSize, tagColor)}
+          style={{ letterSpacing: "0.18em" }}
+        >
           Healthcare Trading
         </div>
       )}
