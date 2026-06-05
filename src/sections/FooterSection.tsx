@@ -51,11 +51,8 @@ export default function FooterSection() {
           {/* Brand column */}
           <div className={cn("lg:col-span-1 space-y-6", isRTL && "text-right")}>
             <div className={cn("flex items-center gap-3", isRTL && "flex-row-reverse")}>
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center shadow-lg shadow-sky-500/30">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <rect x="3" y="10" width="18" height="4" rx="2" fill="white" opacity="0.9"/>
-                  <rect x="10" y="3" width="4" height="18" rx="2" fill="white" opacity="0.9"/>
-                </svg>
+              <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-white shadow-lg">
+                <img src="/logo.png" alt="Medix Healthcare Logo" className="w-full h-full object-contain" />
               </div>
               <div>
                 <span className="font-bold text-xl text-white block leading-none">Medix Healthcare</span>

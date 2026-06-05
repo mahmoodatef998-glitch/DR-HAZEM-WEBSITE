@@ -47,11 +47,8 @@ export default function AdminLoginPage() {
 
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-sky-500/30">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <rect x="3" y="10" width="18" height="4" rx="2" fill="white" opacity="0.9"/>
-              <rect x="10" y="3" width="4" height="18" rx="2" fill="white" opacity="0.9"/>
-            </svg>
+          <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 shadow-xl bg-white">
+            <img src="/logo.png" alt="Medix Healthcare" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-white font-black text-xl">Medix Healthcare</h1>
           <p className="text-white/40 text-sm mt-1">Admin Panel</p>
