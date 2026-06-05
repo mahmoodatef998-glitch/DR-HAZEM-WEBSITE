@@ -56,7 +56,7 @@ export default function FooterSection() {
                 <img src="/logo.png" alt="Medix Healthcare Logo" className="w-full h-full object-contain" />
               </div>
               <div>
-                <MedixWordmark size="sm" color="text-white" showTagline={false} />
+                <MedixWordmark size="sm" variant="light" showTagline={false} />
                 <span className="text-sky-400 text-xs font-medium block mt-0.5">{f.tagline}</span>
               </div>
             </div>

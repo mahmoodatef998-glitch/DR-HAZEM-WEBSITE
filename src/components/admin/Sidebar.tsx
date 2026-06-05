@@ -41,7 +41,7 @@ export default function Sidebar() {
             <img src="/logo.png" alt="Medix Healthcare" className="w-full h-full object-contain" />
           </div>
           <div>
-            <MedixWordmark size="sm" color="text-white" showTagline={false} />
+            <MedixWordmark size="sm" variant="light" showTagline={false} />
             <p className="text-sky-400 text-[10px] mt-0.5 font-medium">Admin Panel</p>
           </div>
         </div>

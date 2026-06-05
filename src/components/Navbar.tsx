@@ -78,7 +78,7 @@ export default function Navbar() {
               <MedixWordmark
                 size="sm"
                 showTagline={true}
-                color={scrolled ? "text-slate-900" : "text-white"}
+                variant={scrolled ? "dark" : "light"}
               />
             </a>
 

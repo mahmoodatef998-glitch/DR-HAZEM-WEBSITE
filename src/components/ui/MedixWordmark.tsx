@@ -3,58 +3,52 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Inline MEDIX text — E and I are mirrored (scaleX -1) to match the brand logo.
- * Use anywhere the word "MEDIX" appears.
+ * Inline M3D!X text — uses "3" for E and "!" for I, matching the brand logo exactly.
+ * Wrap in any colour class you need.
  */
 export function MedixText({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-baseline", className)}>
-      <span>M</span>
-      <span className="inline-block" style={{ transform: "scaleX(-1)" }}>E</span>
-      <span>D</span>
-      <span className="inline-block" style={{ transform: "scaleX(-1)" }}>I</span>
-      <span>X</span>
+    <span className={cn("font-black tracking-tight", className)}>
+      M3D!X
     </span>
   );
 }
 
 /**
- * Full wordmark block:
- *   M3DIX  (large, bold)
- *   HEALTHCARE TRADING  (small, spaced)
+ * Full wordmark:
+ *   M3D!X          ← white, bold
+ *   HEALTHCARE TRADING  ← sky-400, small, spaced
  *
- * Pass `color` prop for any Tailwind text colour class.
+ * size: "sm" | "md" | "lg"
+ * variant: "light" (for dark bg) | "dark" (for light bg)
  */
 export default function MedixWordmark({
-  color = "text-white",
-  showTagline = true,
   size = "md",
+  variant = "light",
+  showTagline = true,
   className,
 }: {
-  color?: string;
-  showTagline?: boolean;
   size?: "sm" | "md" | "lg";
+  variant?: "light" | "dark";
+  showTagline?: boolean;
   className?: string;
 }) {
-  const textSize = {
-    sm: "text-lg",
-    md: "text-2xl",
-    lg: "text-4xl",
-  }[size];
+  const wordSize = { sm: "text-xl", md: "text-3xl", lg: "text-5xl" }[size];
+  const tagSize  = { sm: "text-[7px]", md: "text-[9px]", lg: "text-xs" }[size];
 
-  const tagSize = {
-    sm: "text-[7px]",
-    md: "text-[8px]",
-    lg: "text-[11px]",
-  }[size];
+  const wordColor = variant === "light" ? "text-white"      : "text-slate-900";
+  const tagColor  = variant === "light" ? "text-sky-400"    : "text-sky-500";
 
   return (
-    <div className={cn("leading-none", color, className)}>
-      <div className={cn("font-black tracking-tight", textSize)}>
-        <MedixText />
+    <div className={cn("leading-none select-none", className)}>
+      <div className={cn("font-black tracking-tight leading-none", wordSize, wordColor)}>
+        M3D!X
       </div>
       {showTagline && (
-        <div className={cn("font-semibold tracking-[0.22em] mt-0.5 uppercase", tagSize)}>
+        <div className={cn(
+          "font-semibold tracking-[0.2em] uppercase mt-0.5",
+          tagSize, tagColor
+        )}>
           Healthcare Trading
         </div>
       )}
