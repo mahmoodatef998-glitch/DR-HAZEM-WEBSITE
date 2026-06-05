@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
 import { useTranslation } from "@/contexts/LanguageContext";
 import Link from "next/link";
+import MedixWordmark from "./ui/MedixWordmark";
 
 export default function Navbar() {
   const { t, locale, setLocale, isRTL } = useTranslation();
@@ -69,17 +70,16 @@ export default function Navbar() {
 
             {/* Logo */}
             <a href="#home" onClick={(e) => { e.preventDefault(); handleNavClick("#home"); }} className="flex items-center gap-3 group">
-              <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-lg">
+              {/* Circular badge logo */}
+              <div className="w-11 h-11 rounded-full overflow-hidden flex-shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-lg bg-white">
                 <img src="/logo.png" alt="Medix Healthcare Logo" className="w-full h-full object-contain" />
               </div>
-              <div>
-                <span className={cn("font-black text-base leading-none block transition-colors duration-300 tracking-tight", scrolled ? "text-slate-900" : "text-white")}>
-                  Medix Healthcare
-                </span>
-                <span className={cn("text-[10px] font-semibold transition-colors duration-300 uppercase tracking-wide", scrolled ? "text-sky-500" : "text-sky-200")}>
-                  {isRTL ? "استيراد وتوزيع طبي" : "Medical Import · Distribution"}
-                </span>
-              </div>
+              {/* Text wordmark */}
+              <MedixWordmark
+                size="sm"
+                showTagline={true}
+                color={scrolled ? "text-slate-900" : "text-white"}
+              />
             </a>
 
             {/* Desktop Nav */}

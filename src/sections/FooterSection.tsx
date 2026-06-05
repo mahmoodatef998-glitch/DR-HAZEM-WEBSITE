@@ -1,6 +1,7 @@
 "use client";
 
 import { Phone, Mail, MapPin, ArrowUp, Heart, Settings } from "lucide-react";
+import MedixWordmark from "@/components/ui/MedixWordmark";
 import Link from "next/link";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -55,8 +56,8 @@ export default function FooterSection() {
                 <img src="/logo.png" alt="Medix Healthcare Logo" className="w-full h-full object-contain" />
               </div>
               <div>
-                <span className="font-bold text-xl text-white block leading-none">Medix Healthcare</span>
-                <span className="text-sky-400 text-xs font-medium">{f.tagline}</span>
+                <MedixWordmark size="sm" color="text-white" showTagline={false} />
+                <span className="text-sky-400 text-xs font-medium block mt-0.5">{f.tagline}</span>
               </div>
             </div>
 

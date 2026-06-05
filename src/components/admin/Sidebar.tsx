@@ -8,6 +8,7 @@ import {
   LayoutDashboard, Package, Image, Phone, User,
   MessageSquare, Star, LogOut, ChevronRight, ExternalLink,
 } from "lucide-react";
+import MedixWordmark from "@/components/ui/MedixWordmark";
 
 const NAV = [
   { href: "/admin",             label: "Dashboard",       icon: LayoutDashboard },
@@ -40,7 +41,7 @@ export default function Sidebar() {
             <img src="/logo.png" alt="Medix Healthcare" className="w-full h-full object-contain" />
           </div>
           <div>
-            <p className="text-white font-bold text-sm leading-none">Medix Healthcare</p>
+            <MedixWordmark size="sm" color="text-white" showTagline={false} />
             <p className="text-sky-400 text-[10px] mt-0.5 font-medium">Admin Panel</p>
           </div>
         </div>

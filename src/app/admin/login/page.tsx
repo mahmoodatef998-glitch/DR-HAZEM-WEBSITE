@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import MedixWordmark from "@/components/ui/MedixWordmark";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -50,8 +51,8 @@ export default function AdminLoginPage() {
           <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 shadow-xl bg-white">
             <img src="/logo.png" alt="Medix Healthcare" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-white font-black text-xl">Medix Healthcare</h1>
-          <p className="text-white/40 text-sm mt-1">Admin Panel</p>
+          <MedixWordmark size="md" color="text-white" showTagline={true} className="mt-2" />
+          <p className="text-white/40 text-sm mt-2">Admin Panel</p>
         </div>
 
         {/* Card */}
