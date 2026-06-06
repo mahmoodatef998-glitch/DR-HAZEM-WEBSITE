@@ -1,105 +1,93 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import MedixWordmark from "@/components/ui/MedixWordmark";
+import { useState, FormEvent } from "react"
+import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 export default function AdminLoginPage() {
-  const router = useRouter();
-  const [email, setEmail]       = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState("");
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (authError) {
-      setError("Incorrect email or password. Please try again.");
-      setLoading(false);
-      return;
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      })
+      if (res.ok) {
+        router.push("/admin/dashboard")
+      } else {
+        setError("Invalid password")
+      }
+    } catch {
+      setError("Connection error. Please try again.")
+    } finally {
+      setLoading(false)
     }
-
-    router.push("/admin");
-    router.refresh();
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
-
-      {/* Back to site — top left */}
-      <Link
-        href="/"
-        className="absolute top-5 left-5 flex items-center gap-2 text-white/40 hover:text-white/80 text-sm font-medium transition-colors duration-200 group"
-      >
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200" />
-        Back to website
-      </Link>
-
-      <div className="w-full max-w-sm">
-
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 shadow-xl bg-white">
-            <img src="/logo.png" alt="Medix Healthcare" className="w-full h-full object-contain" />
-          </div>
-          <MedixWordmark size="md" variant="light" showTagline={true} className="mt-2" />
-          <p className="text-white/40 text-sm mt-2">Admin Panel</p>
-        </div>
-
-        {/* Card */}
-        <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
-          <h2 className="text-white font-bold text-lg mb-6">Sign in</h2>
-
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="text-white/60 text-sm block mb-1.5">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                placeholder="info@medixhealthcare.co"
-                className="w-full bg-white/8 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-sky-500 transition-colors duration-200"
-              />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-2xl shadow-slate-900/40 p-8">
+          <div className="flex justify-center mb-6">
+            <div className="w-20 h-20 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center p-2 shadow-sm">
+              <Image src="/logo.png" alt="Medix Healthcare" width={64} height={64} className="w-full h-full object-contain" />
             </div>
-
+          </div>
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
+            <p className="text-slate-500 text-sm mt-1">Medix Healthcare · Restricted Access</p>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="text-white/60 text-sm block mb-1.5">Password</label>
+              <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-2">Password</label>
               <input
+                id="password"
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter admin password"
                 required
-                placeholder="••••••••"
-                className="w-full bg-white/8 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-sky-500 transition-colors duration-200"
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 text-sm"
               />
             </div>
-
             {error && (
-              <p className="text-rose-400 text-sm bg-rose-500/10 border border-rose-500/20 rounded-xl px-4 py-2.5">
+              <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
                 {error}
-              </p>
+              </div>
             )}
-
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-sky-500 hover:bg-sky-400 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors duration-200 mt-2"
+              disabled={loading || !password}
+              className="w-full py-3 px-6 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors duration-200 text-sm flex items-center justify-center gap-2"
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Signing in...
+                </>
+              ) : (
+                "Sign In"
+              )}
             </button>
           </form>
+          <p className="text-center text-slate-400 text-xs mt-6">Medix Healthcare Admin &copy; {new Date().getFullYear()}</p>
         </div>
       </div>
     </div>
-  );
+  )
 }
