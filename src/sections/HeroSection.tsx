@@ -2,9 +2,11 @@
 
 import { useReducedMotion, motion, type Variants } from "framer-motion";
 import { ArrowRight, ShieldCheck, BadgeCheck, Package, Truck } from "lucide-react";
+import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971556153629";
 
@@ -34,6 +36,7 @@ export default function HeroSection() {
   const prefersReduced = useReducedMotion();
   const { t, isRTL } = useTranslation();
   const h = t.hero;
+  const config = useSiteConfig();
 
   const trustBadges = [
     { icon: ShieldCheck, label: h.trust.gcc,      color: "text-teal-400"    },
@@ -65,6 +68,16 @@ export default function HeroSection() {
 
       {/* ── Background ── */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-sky-950 to-slate-900" />
+      {config?.heroImage && (
+        <Image
+          src={config.heroImage}
+          alt=""
+          fill
+          className="absolute inset-0 object-cover opacity-40"
+          aria-hidden="true"
+          priority
+        />
+      )}
 
       {/* ── Radial glow ── */}
       <div

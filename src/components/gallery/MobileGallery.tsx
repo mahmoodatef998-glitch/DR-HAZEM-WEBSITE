@@ -6,17 +6,22 @@ import { Star, CheckCircle2, ChevronLeft, ChevronRight, Flame } from "lucide-rea
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
+import { useSiteConfig, type SiteConfig } from "@/hooks/useSiteConfig";
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971556153629";
 const SWIPE_THRESHOLD = 30; // px — very snappy trigger
 
 /* ─── WhatsApp order button ─── */
-function OrderButton({ product }: { product: Product }) {
+function OrderButton({ product, siteConfig }: { product: Product; siteConfig: SiteConfig | null }) {
   const { t, isRTL } = useTranslation();
+  const discountPct = siteConfig?.productDiscounts?.[product.id] ?? product.discount ?? 0;
+  const displayPrice = discountPct > 0
+    ? `AED ${Math.round(product.basePriceAED * (1 - discountPct / 100))}`
+    : product.price;
   const msg = encodeURIComponent(
     isRTL
-      ? `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${product.price}`
-      : `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${product.price}`
+      ? `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${displayPrice}`
+      : `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${displayPrice}`
   );
   return (
     <a
@@ -45,13 +50,14 @@ function OrderButton({ product }: { product: Product }) {
    • Tint overlays driven by motion values (no re-render on drag)
 ──────────────────────────────────────────────────────────────── */
 function SwipeCard({
-  product, index, total, direction, onSwipe,
+  product, index, total, direction, onSwipe, siteConfig,
 }: {
   product: Product;
   index: number;
   total: number;
   direction: number;
   onSwipe: (dir: 1 | -1) => void;
+  siteConfig: SiteConfig | null;
 }) {
   const x = useMotionValue(0);
   // Very subtle tilt — stays on compositor thread, doesn't fight the drag
@@ -198,18 +204,33 @@ function SwipeCard({
         </ul>
 
         {/* Price + Stars */}
+        {(() => {
+          const discountPct = siteConfig?.productDiscounts?.[product.id] ?? product.discount ?? 0;
+          const salePrice = discountPct > 0 ? Math.round(product.basePriceAED * (1 - discountPct / 100)) : null;
+          return (
         <div className="flex items-center justify-between mb-3">
           <div>
-            {product.originalPrice && (
-              <p className="text-white/25 text-xs line-through leading-none mb-0.5">
-                {product.originalPrice}
-              </p>
+            {salePrice !== null ? (
+              <>
+                <p className="text-white/25 text-xs line-through leading-none mb-0.5">
+                  AED {product.basePriceAED}
+                </p>
+                <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>
+                  AED {salePrice}
+                </span>
+              </>
+            ) : (
+              <>
+                {product.originalPrice && (
+                  <p className="text-white/25 text-xs line-through leading-none mb-0.5">
+                    {product.originalPrice}
+                  </p>
+                )}
+                <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>
+                  {product.price}
+                </span>
+              </>
             )}
-            <span
-              className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}
-            >
-              {product.price}
-            </span>
           </div>
           <div className="text-right">
             <div className="flex gap-0.5 justify-end mb-0.5">
@@ -229,10 +250,12 @@ function SwipeCard({
             <p className="text-white/30 text-[9px]">{product.reviews ?? 0} reviews</p>
           </div>
         </div>
+          );
+        })()}
 
         {/* CTA — z-30 so it sits above the tap zones */}
         <div className="relative z-30">
-          <OrderButton product={product} />
+          <OrderButton product={product} siteConfig={siteConfig} />
         </div>
       </div>
     </motion.div>
@@ -244,6 +267,7 @@ function SwipeCard({
 ──────────────────────────────────────────────────────────────── */
 export default function MobileGallery() {
   const { t, isRTL } = useTranslation();
+  const siteConfig = useSiteConfig();
   const [index, setIndex]     = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [activeCategory, setActiveCategory] = useState<ProductCategory>("All");
@@ -360,6 +384,7 @@ export default function MobileGallery() {
             total={total}
             direction={direction}
             onSwipe={go}
+            siteConfig={siteConfig}
           />
         </AnimatePresence>
       </div>
