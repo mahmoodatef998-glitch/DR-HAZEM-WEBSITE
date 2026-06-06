@@ -45,7 +45,8 @@ function GalleryCard({
   discountPct?: number;
 }) {
   const [hovered, setHovered] = useState(false);
-  const salePrice = discountPct > 0 ? Math.round(product.basePriceAED * (1 - discountPct / 100)) : null;
+  const base = product.basePriceAED;
+  const salePrice = discountPct > 0 && base ? Math.round(base * (1 - discountPct / 100)) : null;
 
   const offset  = useTransform(activeIndex, (v) => index - v);
   const x       = useTransform(offset, (v) => v * SPACING);
@@ -277,7 +278,7 @@ function GalleryCard({
                   <div>
                     {(salePrice !== null || product.originalPrice) && (
                       <div className="text-white/28 text-[9px] line-through leading-none mb-0.5">
-                        {salePrice !== null ? `AED ${product.basePriceAED}` : product.originalPrice}
+                        {salePrice !== null ? `AED ${product.basePriceAED ?? ""}` : product.originalPrice}
                       </div>
                     )}
                     <span className="text-white font-black text-xl leading-none">
@@ -512,7 +513,7 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
                 const p = filteredProducts[displayIndex];
                 if (!p) return null;
                 const dPct = config?.productDiscounts?.[p.id] ?? 0;
-                const sale = dPct > 0 ? Math.round(p.basePriceAED * (1 - dPct / 100)) : null;
+                const sale = dPct > 0 && p.basePriceAED ? Math.round(p.basePriceAED * (1 - dPct / 100)) : null;
                 return (
                   <p className="text-white/55 font-black text-base">
                     {sale !== null ? `AED ${sale}` : p.price.split(" / ")[0]}

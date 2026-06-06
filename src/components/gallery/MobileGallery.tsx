@@ -15,8 +15,9 @@ const SWIPE_THRESHOLD = 30; // px — very snappy trigger
 function OrderButton({ product, siteConfig }: { product: Product; siteConfig: SiteConfig | null }) {
   const { t, isRTL } = useTranslation();
   const discountPct = siteConfig?.productDiscounts?.[product.id] ?? product.discount ?? 0;
-  const displayPrice = discountPct > 0
-    ? `AED ${Math.round(product.basePriceAED * (1 - discountPct / 100))}`
+  const base = product.basePriceAED;
+  const displayPrice = discountPct > 0 && base
+    ? `AED ${Math.round(base * (1 - discountPct / 100))}`
     : product.price;
   const msg = encodeURIComponent(
     isRTL
@@ -181,7 +182,7 @@ function SwipeCard({
                 </div>
               </div>
               <div className="px-5 pb-4 relative z-30">
-                <OrderButton product={product} />
+                <OrderButton product={product} siteConfig={siteConfig} />
               </div>
             </div>
           </>
@@ -256,7 +257,7 @@ function SwipeCard({
             </div>
 
             <div className="relative z-30">
-              <OrderButton product={product} />
+              <OrderButton product={product} siteConfig={siteConfig} />
             </div>
           </div>
         )}
