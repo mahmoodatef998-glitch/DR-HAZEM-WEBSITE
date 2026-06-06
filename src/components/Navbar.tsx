@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Settings } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
 import { useTranslation } from "@/contexts/LanguageContext";
@@ -131,14 +132,26 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Toggle */}
-            <button
-              className={cn("lg:hidden p-2 rounded-lg transition-colors duration-300", scrolled ? "text-slate-700 hover:bg-slate-100" : "text-white hover:bg-white/10")}
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-            >
-              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            <div className="lg:hidden flex items-center gap-2">
+              <a
+                href="/admin/login"
+                aria-label="Admin settings"
+                className={cn(
+                  "p-2 rounded-lg transition-colors duration-300",
+                  scrolled ? "text-slate-400 hover:text-slate-700" : "text-white/30 hover:text-white/70"
+                )}
+              >
+                <Settings className="w-4 h-4" />
+              </a>
+              <button
+                className={cn("p-2 rounded-lg transition-colors duration-300", scrolled ? "text-slate-700 hover:bg-slate-100" : "text-white hover:bg-white/10")}
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+              >
+                {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
 

@@ -2,11 +2,13 @@
 
 import { ShieldCheck, BadgeCheck, Globe2, Award, CheckCircle2, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Button from "@/components/ui/Button";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 /* Icons for the 4 guarantee items — order matches translations.ts guarantees array */
 const GUARANTEE_ICONS = [ShieldCheck, BadgeCheck, Globe2, Award];
@@ -16,6 +18,7 @@ const E = [0.22, 1, 0.36, 1] as const;
 export default function AboutSection() {
   const { t, isRTL } = useTranslation();
   const a = t.about;
+  const config = useSiteConfig();
 
   const scrollTo = (id: string) =>
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
@@ -55,10 +58,14 @@ export default function AboutSection() {
                 "relative flex flex-col sm:flex-row gap-5 sm:gap-6 items-start",
                 isRTL && "sm:flex-row-reverse"
               )}>
-                {/* Avatar */}
+                {/* Logo / About Photo */}
                 <div className="flex-shrink-0">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-sky-400 to-teal-500 flex items-center justify-center shadow-xl shadow-sky-500/30 text-4xl">
-                    👨‍⚕️
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-xl shadow-sky-500/30 bg-white/10 flex items-center justify-center p-1">
+                    {config?.aboutImage ? (
+                      <Image src={config.aboutImage} alt="About photo" width={96} height={96} className="w-full h-full object-cover rounded-2xl" />
+                    ) : (
+                      <Image src="/logo.png" alt="Medix Healthcare Trading" width={96} height={96} className="w-full h-full object-contain drop-shadow-lg" />
+                    )}
                   </div>
                   <div className="mt-3 flex items-center justify-center gap-1">
                     <span className="text-xs text-amber-400/80 font-semibold">🇪🇸 🇮🇹</span>

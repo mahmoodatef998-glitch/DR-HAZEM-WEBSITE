@@ -72,6 +72,7 @@ export const products: Product[] = [
     icon: "🫀",
     gradient: "from-rose-500 to-red-600",
     popular: true,
+    basePriceAED: 189,
   },
   {
     id: 2,
@@ -93,6 +94,7 @@ export const products: Product[] = [
     reviews: 248,
     icon: "🦴",
     gradient: "from-amber-400 to-orange-500",
+    basePriceAED: 145,
   },
   {
     id: 3,
@@ -117,6 +119,7 @@ export const products: Product[] = [
     icon: "✨",
     gradient: "from-pink-400 to-rose-500",
     discount: 19,
+    basePriceAED: 270,
   },
   {
     id: 4,
@@ -138,6 +141,7 @@ export const products: Product[] = [
     reviews: 196,
     icon: "⚡",
     gradient: "from-yellow-400 to-amber-500",
+    basePriceAED: 115,
   },
   {
     id: 5,
@@ -161,6 +165,7 @@ export const products: Product[] = [
     icon: "🛡️",
     gradient: "from-sky-500 to-blue-600",
     popular: true,
+    basePriceAED: 175,
   },
   {
     id: 6,
@@ -182,6 +187,7 @@ export const products: Product[] = [
     reviews: 321,
     icon: "🧘",
     gradient: "from-violet-500 to-purple-600",
+    basePriceAED: 135,
   },
   {
     id: 7,
@@ -205,6 +211,7 @@ export const products: Product[] = [
     icon: "👶",
     gradient: "from-teal-400 to-green-500",
     popular: true,
+    basePriceAED: 98,
   },
   {
     id: 8,
@@ -228,6 +235,7 @@ export const products: Product[] = [
     icon: "🦿",
     gradient: "from-cyan-500 to-sky-600",
     discount: 18,
+    basePriceAED: 255,
   },
 
   /* ─── 🇮🇹 Italy ───────────────────────────────── */
@@ -252,6 +260,7 @@ export const products: Product[] = [
     reviews: 142,
     icon: "💓",
     gradient: "from-red-500 to-rose-700",
+    basePriceAED: 245,
   },
   {
     id: 10,
@@ -273,6 +282,7 @@ export const products: Product[] = [
     reviews: 119,
     icon: "🏋️",
     gradient: "from-stone-500 to-amber-700",
+    basePriceAED: 195,
   },
   {
     id: 11,
@@ -298,6 +308,7 @@ export const products: Product[] = [
     gradient: "from-amber-400 to-yellow-600",
     popular: true,
     discount: 16,
+    basePriceAED: 340,
   },
   {
     id: 12,
@@ -319,6 +330,7 @@ export const products: Product[] = [
     reviews: 334,
     icon: "🧬",
     gradient: "from-emerald-500 to-teal-600",
+    basePriceAED: 160,
   },
   {
     id: 13,
@@ -341,6 +353,7 @@ export const products: Product[] = [
     reviews: 201,
     icon: "🌿",
     gradient: "from-green-500 to-emerald-700",
+    basePriceAED: 155,
   },
   {
     id: 14,
@@ -362,6 +375,7 @@ export const products: Product[] = [
     reviews: 176,
     icon: "🍊",
     gradient: "from-orange-400 to-red-500",
+    basePriceAED: 88,
   },
   {
     id: 15,
@@ -385,6 +399,7 @@ export const products: Product[] = [
     icon: "⭐",
     gradient: "from-indigo-500 to-violet-600",
     popular: true,
+    basePriceAED: 125,
   },
   {
     id: 16,
@@ -406,5 +421,6 @@ export const products: Product[] = [
     reviews: 143,
     icon: "🔬",
     gradient: "from-sky-400 to-cyan-600",
+    basePriceAED: 175,
   },
 ];

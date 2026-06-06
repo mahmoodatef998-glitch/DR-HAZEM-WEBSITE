@@ -1,24 +1,34 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
 import { Star, CheckCircle2, ChevronLeft, ChevronRight, Flame } from "lucide-react";
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
+import { useSiteConfig, type SiteConfig } from "@/hooks/useSiteConfig";
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971585335516";
 const SWIPE_THRESHOLD = 30; // px — very snappy trigger
 
 /* ─── WhatsApp order button ─── */
-function OrderButton({ product }: { product: Product }) {
-  const { t } = useTranslation();
-  const msg = encodeURIComponent(`${t.products.whatsappMsg} ${product.name} (${product.brand})`);
+function OrderButton({ product, siteConfig }: { product: Product; siteConfig: SiteConfig | null }) {
+  const { t, isRTL } = useTranslation();
+  const discountPct = siteConfig?.productDiscounts?.[product.id] ?? product.discount ?? 0;
+  const displayPrice = discountPct > 0
+    ? `AED ${Math.round(product.basePriceAED * (1 - discountPct / 100))}`
+    : product.price;
+  const msg = encodeURIComponent(
+    isRTL
+      ? `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${displayPrice}`
+      : `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${displayPrice}`
+  );
   return (
     <a
       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
       className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-[#25D366] text-white font-black text-sm shadow-lg shadow-[#25D366]/25 active:scale-95 transition-transform duration-100"
     >
       <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -40,13 +50,14 @@ function OrderButton({ product }: { product: Product }) {
    • Tint overlays driven by motion values (no re-render on drag)
 ──────────────────────────────────────────────────────────────── */
 function SwipeCard({
-  product, index, total, direction, onSwipe,
+  product, index, total, direction, onSwipe, siteConfig,
 }: {
   product: Product;
   index: number;
   total: number;
   direction: number;
   onSwipe: (dir: 1 | -1) => void;
+  siteConfig: SiteConfig | null;
 }) {
   const x = useMotionValue(0);
   // Very subtle tilt — stays on compositor thread, doesn't fight the drag
@@ -86,7 +97,7 @@ function SwipeCard({
       exit={{ opacity: 0, x: direction > 0 ? -300 : 300 }}
       transition={{ type: "spring", stiffness: 480, damping: 40, mass: 0.5 }}
       style={{ x, rotate, willChange: "transform" }}
-      className="absolute inset-4 cursor-grab active:cursor-grabbing select-none touch-none rounded-3xl overflow-hidden"
+      className="absolute top-4 left-4 right-4 bottom-[100px] cursor-grab active:cursor-grabbing select-none touch-none rounded-3xl overflow-hidden"
       aria-label={`Product ${index + 1} of ${total}: ${product.name}`}
     >
       {/* ── Card base ── */}
@@ -118,13 +129,13 @@ function SwipeCard({
       {/* They sit above the card but below the CTA button (z-20 vs z-30 for button) */}
       <div className="absolute inset-0 flex z-20 pointer-events-none">
         <div
-          className="w-[30%] h-[82%] pointer-events-auto cursor-pointer"
+          className="w-[30%] h-[72%] pointer-events-auto cursor-pointer"
           onClick={() => onSwipe(-1)}
           aria-label="Previous product"
         />
         <div className="flex-1" /> {/* centre — passthrough */}
         <div
-          className="w-[30%] h-[82%] pointer-events-auto cursor-pointer"
+          className="w-[30%] h-[72%] pointer-events-auto cursor-pointer"
           onClick={() => onSwipe(1)}
           aria-label="Next product"
         />
@@ -260,6 +271,7 @@ function SwipeCard({
 export default function MobileGallery({ products: productsProp }: { products?: typeof products }) {
   const allProducts = productsProp ?? products;
   const { t, isRTL } = useTranslation();
+  const siteConfig = useSiteConfig();
   const [index, setIndex]     = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [activeCategory, setActiveCategory] = useState<ProductCategory>("All");
@@ -354,7 +366,7 @@ export default function MobileGallery({ products: productsProp }: { products?: t
         {/* Peek card (static, no animation) */}
         {peekProduct && (
           <div
-            className="absolute inset-4 rounded-3xl overflow-hidden opacity-25"
+            className="absolute top-4 left-4 right-4 bottom-[100px] rounded-3xl overflow-hidden opacity-25"
             style={{
               transform: "scale(0.94) translateY(10px)",
               background: "#111",
@@ -376,6 +388,7 @@ export default function MobileGallery({ products: productsProp }: { products?: t
             total={total}
             direction={direction}
             onSwipe={go}
+            siteConfig={siteConfig}
           />
         </AnimatePresence>
       </div>

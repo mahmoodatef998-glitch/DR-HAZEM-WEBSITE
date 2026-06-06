@@ -16,6 +16,7 @@ import {
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 /* ─────────────────────────────────────────────────────────
    CONSTANTS  (layout — never change)
@@ -35,13 +36,16 @@ function GalleryCard({
   index,
   activeIndex,
   orderLabel,
+  discountPct = 0,
 }: {
   product: Product;
   index: number;
   activeIndex: MotionValue<number>;
   orderLabel: string;
+  discountPct?: number;
 }) {
   const [hovered, setHovered] = useState(false);
+  const salePrice = discountPct > 0 ? Math.round(product.basePriceAED * (1 - discountPct / 100)) : null;
 
   const offset  = useTransform(activeIndex, (v) => index - v);
   const x       = useTransform(offset, (v) => v * SPACING);
@@ -67,7 +71,10 @@ function GalleryCard({
 
   const handleBook = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const msg = encodeURIComponent(`${cardT.products.whatsappMsg} ${product.name} (${product.brand})`);
+    const priceStr = salePrice ? `AED ${salePrice} (${discountPct}% OFF)` : product.price;
+    const msg = encodeURIComponent(
+      `${cardT.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${priceStr}`
+    );
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
@@ -268,12 +275,18 @@ function GalleryCard({
               <div className="flex-shrink-0 pt-3 mt-2 border-t border-white/12">
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    {product.originalPrice && (
-                      <div className="text-white/28 text-[9px] line-through leading-none mb-0.5">{product.originalPrice}</div>
+                    {(salePrice !== null || product.originalPrice) && (
+                      <div className="text-white/28 text-[9px] line-through leading-none mb-0.5">
+                        {salePrice !== null ? `AED ${product.basePriceAED}` : product.originalPrice}
+                      </div>
                     )}
-                    <span className="text-white font-black text-xl leading-none">{product.price.split(" / ")[0]}</span>
-                    {product.discount && (
-                      <span className="ml-2 text-rose-400 text-[9px] font-black">-{product.discount}%</span>
+                    <span className="text-white font-black text-xl leading-none">
+                      {salePrice !== null ? `AED ${salePrice}` : product.price.split(" / ")[0]}
+                    </span>
+                    {(salePrice !== null || product.discount) && (
+                      <span className="ml-2 text-emerald-400 text-[9px] font-black">
+                        -{salePrice !== null ? discountPct : product.discount}%
+                      </span>
                     )}
                   </div>
                   <div className="text-right text-white/38 text-[9px]">
@@ -315,6 +328,7 @@ function GalleryCard({
 export default function ScrollGallery({ products: productsProp }: { products?: typeof products }) {
   const allProducts = productsProp ?? products;
   const { t } = useTranslation();
+  const config = useSiteConfig();
   const containerRef = useRef<HTMLDivElement>(null);
   const [displayIndex, setDisplayIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState<ProductCategory>("All");
@@ -472,6 +486,7 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
                 index={index}
                 activeIndex={activeIndex}
                 orderLabel={t.products.orderButton}
+                discountPct={config?.productDiscounts?.[product.id] ?? 0}
               />
             ))}
           </div>
@@ -493,9 +508,17 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
               <p className="text-white font-black text-sm leading-tight mb-0.5">
                 {filteredProducts[displayIndex]?.name}
               </p>
-              <p className="text-white/55 font-black text-base">
-                {filteredProducts[displayIndex]?.price.split(" / ")[0]}
-              </p>
+              {(() => {
+                const p = filteredProducts[displayIndex];
+                if (!p) return null;
+                const dPct = config?.productDiscounts?.[p.id] ?? 0;
+                const sale = dPct > 0 ? Math.round(p.basePriceAED * (1 - dPct / 100)) : null;
+                return (
+                  <p className="text-white/55 font-black text-base">
+                    {sale !== null ? `AED ${sale}` : p.price.split(" / ")[0]}
+                  </p>
+                );
+              })()}
             </motion.div>
           </AnimatePresence>
         </div>
