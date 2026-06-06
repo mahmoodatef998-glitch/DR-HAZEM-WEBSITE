@@ -29,6 +29,7 @@ export interface Product {
   gradient: string;
   popular?: boolean;
   discount?: number;
+  basePriceAED?: number;
   image_url?: string; // Cloudinary / external image (overrides emoji icon when set)
 }
 

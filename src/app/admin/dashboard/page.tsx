@@ -91,7 +91,7 @@ export default function AdminDashboard() {
 
   const salePrice = (id: number) => {
     const p = products.find((x) => x.id === id)
-    if (!p) return null
+    if (!p || !p.basePriceAED) return null
     const d = discounts[id] ?? 0
     if (d <= 0) return null
     return Math.round(p.basePriceAED * (1 - d / 100))
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
                         <td className="px-4 py-4 text-gray-500 text-xs max-w-[140px] leading-tight">{p.brand}</td>
                         <td className="px-4 py-4 text-center">
                           <span className={`font-bold ${hasDiscount ? "text-gray-400 line-through text-xs" : "text-gray-900"}`}>
-                            AED {p.basePriceAED}
+                            {p.basePriceAED ? `AED ${p.basePriceAED}` : p.price}
                           </span>
                         </td>
                         <td className="px-4 py-4">
