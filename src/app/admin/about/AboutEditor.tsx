@@ -4,9 +4,10 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ImageUpload from "@/components/admin/ImageUpload";
 import type { Translations } from "@/lib/translations";
 
-type AboutData = { en: Translations["about"]; ar: Translations["about"] };
+type AboutData = { en: Translations["about"]; ar: Translations["about"]; photo?: string };
 
 export default function AboutEditor({ initial }: { initial: AboutData }) {
   const [data, setData] = useState<AboutData>(initial);
@@ -30,22 +31,34 @@ export default function AboutEditor({ initial }: { initial: AboutData }) {
   const sectionClass = "bg-white/3 border border-white/8 rounded-2xl p-5 space-y-4";
 
   const textFields: { key: keyof Translations["about"]; label: string; multiline?: boolean }[] = [
-    { key: "title",        label: "العنوان الرئيسي" },
-    { key: "titleHighlight", label: "الكلمة المميزة (gradient)" },
-    { key: "description",  label: "الوصف",           multiline: true },
-    { key: "profileName",  label: "اسم الشخصية"     },
-    { key: "profileTitle", label: "المسمى الوظيفي"  },
-    { key: "profileSub",   label: "وصف فرعي"        },
-    { key: "bio",          label: "السيرة الذاتية",  multiline: true },
-    { key: "quote",        label: "الاقتباس",        multiline: true },
-    { key: "quoteAuthor",  label: "صاحب الاقتباس"   },
-    { key: "promiseTitle", label: "عنوان وعود الجودة" },
-    { key: "promiseSub",   label: "وصف وعود الجودة"  },
+    { key: "title",         label: "العنوان الرئيسي"           },
+    { key: "titleHighlight",label: "الكلمة المميزة (gradient)" },
+    { key: "description",   label: "الوصف",       multiline: true },
+    { key: "profileName",   label: "اسم الشخصية"              },
+    { key: "profileTitle",  label: "المسمى الوظيفي"           },
+    { key: "profileSub",    label: "وصف فرعي"                 },
+    { key: "bio",           label: "السيرة الذاتية", multiline: true },
+    { key: "quote",         label: "الاقتباس",      multiline: true },
+    { key: "quoteAuthor",   label: "صاحب الاقتباس"            },
+    { key: "promiseTitle",  label: "عنوان وعود الجودة"        },
+    { key: "promiseSub",    label: "وصف وعود الجودة"          },
   ];
 
   return (
     <div className="space-y-6">
-      {(["en", "ar"] as const).map(lang => (
+
+      {/* ── Profile Photo ── */}
+      <div className={sectionClass}>
+        <h3 className="text-white/50 text-[11px] font-black uppercase tracking-widest">📸 صورة الملف الشخصي</h3>
+        <p className="text-white/35 text-xs">صورة الطبيب أو الشركة في قسم من نحن. مقاس مقترح: 400×400 بكسل.</p>
+        <ImageUpload
+          value={data.photo ?? ""}
+          onChange={(url) => setData(prev => ({ ...prev, photo: url }))}
+          folder="medix-about"
+        />
+      </div>
+
+      {([ "en", "ar"] as const).map(lang => (
         <div key={lang} className={sectionClass}>
           <h3 className="text-white/50 text-[11px] font-black uppercase tracking-widest">
             {lang === "en" ? "🇬🇧 الإنجليزي" : "🇸🇦 العربي"}
@@ -54,13 +67,9 @@ export default function AboutEditor({ initial }: { initial: AboutData }) {
             <div key={key}>
               <label className={labelClass}>{label}</label>
               {multiline ? (
-                <textarea rows={3} value={String(data[lang][key] ?? "")}
-                  onChange={e => setField(lang, key, e.target.value)}
-                  className={cn(inputClass, "resize-none")} dir={lang === "ar" ? "rtl" : "ltr"} />
+                <textarea rows={3} value={String(data[lang][key] ?? "")} onChange={e => setField(lang, key, e.target.value)} className={cn(inputClass, "resize-none")} dir={lang === "ar" ? "rtl" : "ltr"} />
               ) : (
-                <input value={String(data[lang][key] ?? "")}
-                  onChange={e => setField(lang, key, e.target.value)}
-                  className={inputClass} dir={lang === "ar" ? "rtl" : "ltr"} />
+                <input value={String(data[lang][key] ?? "")} onChange={e => setField(lang, key, e.target.value)} className={inputClass} dir={lang === "ar" ? "rtl" : "ltr"} />
               )}
             </div>
           ))}
