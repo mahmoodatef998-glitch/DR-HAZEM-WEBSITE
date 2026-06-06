@@ -1,18 +1,34 @@
 import { NextRequest, NextResponse } from "next/server"
-import path from "path"
-import fs from "fs/promises"
+import { createAdminClient } from "@/lib/supabase/admin"
 
-const CONFIG_PATH = path.join(process.cwd(), "public", "site-config.json")
+type ConfigRow = {
+  hero_image: string | null
+  about_image: string | null
+  product_discounts: Record<number, number>
+}
+
+function rowToConfig(row: ConfigRow) {
+  return {
+    heroImage: row.hero_image,
+    aboutImage: row.about_image,
+    productDiscounts: row.product_discounts ?? {},
+  }
+}
+
+const DEFAULT_CONFIG = { heroImage: null, aboutImage: null, productDiscounts: {} }
 
 export async function GET() {
   try {
-    const raw = await fs.readFile(CONFIG_PATH, "utf-8")
-    const config = JSON.parse(raw)
-    return NextResponse.json(config)
+    const supabase = createAdminClient()
+    const { data, error } = await supabase
+      .from("site_config")
+      .select("hero_image, about_image, product_discounts")
+      .eq("id", 1)
+      .single()
+    if (error || !data) return NextResponse.json(DEFAULT_CONFIG)
+    return NextResponse.json(rowToConfig(data as ConfigRow))
   } catch {
-    return NextResponse.json(
-      { heroImage: null, aboutImage: null, productDiscounts: {} },
-    )
+    return NextResponse.json(DEFAULT_CONFIG)
   }
 }
 
@@ -29,15 +45,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 })
   }
 
-  let existing: Record<string, unknown> = { heroImage: null, aboutImage: null, productDiscounts: {} }
-  try {
-    const raw = await fs.readFile(CONFIG_PATH, "utf-8")
-    existing = JSON.parse(raw)
-  } catch {
-    // file may not exist yet, use defaults
-  }
+  const update: Record<string, unknown> = {}
+  if ("heroImage" in body)       update.hero_image         = body.heroImage
+  if ("aboutImage" in body)      update.about_image        = body.aboutImage
+  if ("productDiscounts" in body) update.product_discounts = body.productDiscounts
+  update.updated_at = new Date().toISOString()
 
-  const updated = { ...existing, ...body }
-  await fs.writeFile(CONFIG_PATH, JSON.stringify(updated, null, 2), "utf-8")
-  return NextResponse.json(updated)
+  try {
+    const supabase = createAdminClient()
+    const { data, error } = await supabase
+      .from("site_config")
+      .upsert({ id: 1, ...update })
+      .select("hero_image, about_image, product_discounts")
+      .single()
+    if (error || !data) throw error
+    return NextResponse.json(rowToConfig(data as ConfigRow))
+  } catch (err) {
+    console.error("Config save error:", err)
+    return NextResponse.json({ error: "Failed to save config." }, { status: 500 })
+  }
 }

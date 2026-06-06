@@ -12,7 +12,7 @@ const DEFAULT: SiteConfig = { heroImage: null, aboutImage: null, productDiscount
 export function useSiteConfig(): SiteConfig {
   const [config, setConfig] = useState<SiteConfig>(DEFAULT)
   useEffect(() => {
-    fetch("/site-config.json")
+    fetch("/api/admin/config")
       .then((r) => r.json())
       .then(setConfig)
       .catch(() => setConfig(DEFAULT))
