@@ -16,43 +16,32 @@ import {
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
-import { useSiteConfig } from "@/hooks/useSiteConfig";
 
-/* ─────────────────────────────────────────────────────────
-   CONSTANTS  (layout — never change)
-───────────────────────────────────────────────────────── */
 const CARD_W      = 290;
 const CARD_H      = 450;
-const SPACING     = 162;   // increased 50%
-const STEP_Y      = 65;    // vertical rise per card step (staircase effect)
+const SPACING     = 162;
+const STEP_Y      = 65;
 const PERSPECTIVE = "1500px";
-const MAX_VISIBLE = 5;     // show more steps of the staircase
+const MAX_VISIBLE = 5;
 
-/* ─────────────────────────────────────────────────────────
-   GALLERY CARD  – large portrait card with cross-fade hover
-───────────────────────────────────────────────────────── */
 function GalleryCard({
   product,
   index,
   activeIndex,
   orderLabel,
-  discountPct = 0,
 }: {
   product: Product;
   index: number;
   activeIndex: MotionValue<number>;
   orderLabel: string;
-  discountPct?: number;
 }) {
   const [hovered, setHovered] = useState(false);
-  const base = product.basePriceAED;
-  const salePrice = discountPct > 0 && base ? Math.round(base * (1 - discountPct / 100)) : null;
 
   const offset  = useTransform(activeIndex, (v) => index - v);
   const x       = useTransform(offset, (v) => v * SPACING);
-  const y       = useTransform(offset, (v) => -v * STEP_Y); // staircase: each step higher
+  const y       = useTransform(offset, (v) => -v * STEP_Y);
   const z       = useTransform(offset, (v) => -Math.abs(v) * 140);
-  const rotateY = useTransform(offset, (v) => v * -9);      // subtle tilt to complement stairs
+  const rotateY = useTransform(offset, (v) => v * -9);
   const opacity = useTransform(offset, (v) =>
     Math.abs(v) > MAX_VISIBLE + 0.5 ? 0 : Math.max(0, 1 - Math.abs(v) * 0.18)
   );
@@ -72,10 +61,7 @@ function GalleryCard({
 
   const handleBook = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const priceStr = salePrice ? `AED ${salePrice} (${discountPct}% OFF)` : product.price;
-    const msg = encodeURIComponent(
-      `${cardT.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${priceStr}`
-    );
+    const msg = encodeURIComponent(`${cardT.products.whatsappMsg} ${product.name} (${product.brand})`);
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
@@ -96,13 +82,11 @@ function GalleryCard({
       }}
       className="cursor-pointer rounded-2xl overflow-hidden"
     >
-      {/* ── Card base ── */}
       <div
         className="absolute inset-0"
         style={{ background: "linear-gradient(145deg, #0c0c0c 0%, #141414 50%, #0a0a0a 100%)" }}
       />
 
-      {/* ── Full image (no overlay — stays clear) ── */}
       {product.image_url ? (
         <img
           src={product.image_url}
@@ -118,7 +102,6 @@ function GalleryCard({
 
       <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.07] pointer-events-none" />
 
-      {/* Active glow ring */}
       <motion.div
         animate={{ opacity: isActive ? 1 : 0 }}
         transition={{ duration: 0.5 }}
@@ -126,16 +109,14 @@ function GalleryCard({
         style={{ boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.18), 0 0 40px rgba(255,255,255,0.04)" }}
       />
 
-      {/* ── DEFAULT VIEW ── */}
+      {/* DEFAULT VIEW */}
       <motion.div
         animate={{ opacity: hovered ? 0 : 1 }}
         transition={{ duration: 0.18 }}
         className="absolute inset-0 flex flex-col pointer-events-none"
       >
         {product.image_url ? (
-          /* ── IMAGE MODE: badge top-right + name/price bottom ── */
           <>
-            {/* Badge — top right */}
             {product.badge && (
               <div className="flex justify-end p-4">
                 <span className={`text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full bg-gradient-to-r ${product.gradient} text-white shadow-lg`}>
@@ -143,8 +124,6 @@ function GalleryCard({
                 </span>
               </div>
             )}
-
-            {/* Name + Price — bottom with thin scrim */}
             <div className="mt-auto">
               <div className="bg-gradient-to-t from-black/85 to-transparent pt-10 pb-5 px-5">
                 <h3 className="text-white font-black text-[17px] leading-snug mb-2 line-clamp-2 drop-shadow-lg">
@@ -171,7 +150,6 @@ function GalleryCard({
             </div>
           </>
         ) : (
-          /* ── EMOJI MODE: original layout ── */
           <>
             <div className="flex items-start justify-between p-5">
               <span className="font-mono text-white/50 text-[11px] font-bold tracking-[0.2em]">{numStr}</span>
@@ -185,7 +163,6 @@ function GalleryCard({
                 )}
               </div>
             </div>
-
             <div className="flex-1 flex items-center justify-center">
               <div className="relative flex items-center justify-center">
                 <div className={`absolute rounded-full bg-gradient-to-br ${product.gradient}`}
@@ -196,7 +173,6 @@ function GalleryCard({
                 </div>
               </div>
             </div>
-
             <div className="p-5">
               {product.badge && (
                 <span className={`inline-block text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full mb-2 bg-gradient-to-r ${product.gradient} text-white`}>
@@ -228,7 +204,7 @@ function GalleryCard({
         )}
       </motion.div>
 
-      {/* ── HOVER OVERLAY ── */}
+      {/* HOVER OVERLAY */}
       <AnimatePresence>
         {hovered && (
           <motion.div
@@ -276,18 +252,12 @@ function GalleryCard({
               <div className="flex-shrink-0 pt-3 mt-2 border-t border-white/12">
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    {(salePrice !== null || product.originalPrice) && (
-                      <div className="text-white/28 text-[9px] line-through leading-none mb-0.5">
-                        {salePrice !== null ? `AED ${product.basePriceAED ?? ""}` : product.originalPrice}
-                      </div>
+                    {product.originalPrice && (
+                      <div className="text-white/28 text-[9px] line-through leading-none mb-0.5">{product.originalPrice}</div>
                     )}
-                    <span className="text-white font-black text-xl leading-none">
-                      {salePrice !== null ? `AED ${salePrice}` : product.price.split(" / ")[0]}
-                    </span>
-                    {(salePrice !== null || product.discount) && (
-                      <span className="ml-2 text-emerald-400 text-[9px] font-black">
-                        -{salePrice !== null ? discountPct : product.discount}%
-                      </span>
+                    <span className="text-white font-black text-xl leading-none">{product.price.split(" / ")[0]}</span>
+                    {product.discount && (
+                      <span className="ml-2 text-rose-400 text-[9px] font-black">-{product.discount}%</span>
                     )}
                   </div>
                   <div className="text-right text-white/38 text-[9px]">
@@ -309,7 +279,7 @@ function GalleryCard({
                   transition={{ delay: 0.28, duration: 0.2 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`w-full py-2.5 rounded-xl bg-[#25D366] text-white text-[11px] font-black flex items-center justify-center gap-2 shadow-xl tracking-wide uppercase`}
+                  className="w-full py-2.5 rounded-xl bg-[#25D366] text-white text-[11px] font-black flex items-center justify-center gap-2 shadow-xl tracking-wide uppercase"
                 >
                   {orderLabel}
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -323,25 +293,19 @@ function GalleryCard({
   );
 }
 
-/* ─────────────────────────────────────────────────────────
-   SCROLL GALLERY  –  sticky 3-D showcase driven by scroll
-───────────────────────────────────────────────────────── */
 export default function ScrollGallery({ products: productsProp }: { products?: typeof products }) {
   const allProducts = productsProp ?? products;
   const { t } = useTranslation();
-  const config = useSiteConfig();
   const containerRef = useRef<HTMLDivElement>(null);
   const [displayIndex, setDisplayIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState<ProductCategory>("All");
 
-  /* ── filtered products ── */
   const filteredProducts =
     activeCategory === "All"
       ? allProducts
       : allProducts.filter((p) => p.category === activeCategory);
   const TOTAL = filteredProducts.length;
 
-  /* ── category change: reset index + scroll to section top ── */
   const handleCategoryChange = useCallback((cat: ProductCategory) => {
     setActiveCategory(cat);
     setDisplayIndex(0);
@@ -349,7 +313,6 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
     window.scrollTo({ top: containerRef.current.offsetTop - 80, behavior: "smooth" });
   }, []);
 
-  /* ── scroll → activeIndex ── */
   const { scrollYProgress } = useScroll({ target: containerRef });
   const rawIndex = useTransform(scrollYProgress, [0, 1], [0, TOTAL - 1]);
   const activeIndex = useSpring(rawIndex, { stiffness: 280, damping: 38, restDelta: 0.01 });
@@ -358,7 +321,6 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
     return activeIndex.on("change", (v) => setDisplayIndex(Math.round(v)));
   }, [activeIndex]);
 
-  /* ── keyboard / button navigation ── */
   const scrollToIndex = useCallback(
     (targetIdx: number) => {
       const el = containerRef.current;
@@ -381,17 +343,8 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
   }, [displayIndex, scrollToIndex]);
 
   return (
-    <div
-      ref={containerRef}
-      style={{ height: `${TOTAL * 25}vh` }}
-      className="relative"
-    >
-      {/* ════════════════════════════════════════════
-          STICKY VIEWPORT
-      ════════════════════════════════════════════ */}
+    <div ref={containerRef} style={{ height: `${TOTAL * 25}vh` }} className="relative">
       <div className="sticky top-0 h-screen overflow-hidden bg-black">
-
-        {/* ── ambient radial glow ── */}
         <AnimatePresence mode="wait">
           <motion.div
             key={displayIndex}
@@ -403,16 +356,10 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
             style={{ background: `radial-gradient(ellipse 70% 60% at 50% 55%, rgba(14,165,233,0.07) 0%, transparent 70%)` }}
           />
         </AnimatePresence>
-
-        {/* ── scan lines ── */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.025]"
           style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 4px)" }}
         />
-
-        {/* ════════════════════════════════════════════
-            CATEGORY FILTER — animated pill (layoutId)
-        ════════════════════════════════════════════ */}
         <div className="absolute top-0 left-0 right-0 z-40 px-6 pt-4 pb-3 bg-gradient-to-b from-black/90 via-black/50 to-transparent">
           <div className="flex items-center gap-2 flex-wrap">
             {CATEGORIES.map((cat) => (
@@ -421,9 +368,7 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
                 onClick={() => handleCategoryChange(cat)}
                 className={cn(
                   "relative px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-colors duration-200",
-                  activeCategory === cat
-                    ? "text-black"
-                    : "text-white/40 hover:text-white/75"
+                  activeCategory === cat ? "text-black" : "text-white/40 hover:text-white/75"
                 )}
               >
                 {activeCategory === cat && (
@@ -438,12 +383,8 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
             ))}
           </div>
         </div>
-
-        {/* ── top-left brand / title ── */}
         <div className="absolute top-16 left-8 z-30 pointer-events-none select-none">
-          <p className="text-white/28 text-[9px] font-black uppercase tracking-[0.28em] mb-2">
-            Dr. Hazem · Dubai UAE
-          </p>
+          <p className="text-white/28 text-[9px] font-black uppercase tracking-[0.28em] mb-2">Dr. Hazem · Dubai UAE</p>
           <h2 className="text-white font-black leading-[0.92] tracking-tight">
             <span className="block text-[28px] sm:text-[38px] md:text-[46px]">{t.products.heading}</span>
             <span className="block text-[28px] sm:text-[38px] md:text-[46px] text-white/30">{t.products.headingSub}</span>
@@ -452,8 +393,6 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
             ({String(TOTAL).padStart(2, "0")}) {activeCategory === "All" ? t.products.total : activeCategory.toUpperCase()}
           </p>
         </div>
-
-        {/* ── current card index (top-right) ── */}
         <div className="absolute top-16 right-8 z-30 text-right pointer-events-none select-none">
           <AnimatePresence mode="wait">
             <motion.p
@@ -467,14 +406,8 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
               {String(displayIndex + 1).padStart(2, "0")}
             </motion.p>
           </AnimatePresence>
-          <p className="text-white/22 text-[10px] font-bold uppercase tracking-[0.22em] mt-1">
-            / {String(TOTAL).padStart(2, "0")}
-          </p>
+          <p className="text-white/22 text-[10px] font-bold uppercase tracking-[0.22em] mt-1">/ {String(TOTAL).padStart(2, "0")}</p>
         </div>
-
-        {/* ════════════════════
-            3-D CARD STAGE
-        ════════════════════ */}
         <div
           className="absolute inset-0 flex items-center justify-center"
           style={{ perspective: PERSPECTIVE, perspectiveOrigin: "50% 50%" }}
@@ -487,13 +420,10 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
                 index={index}
                 activeIndex={activeIndex}
                 orderLabel={t.products.orderButton}
-                discountPct={config?.productDiscounts?.[product.id] ?? 0}
               />
             ))}
           </div>
         </div>
-
-        {/* ── bottom info strip ── */}
         <div className="absolute bottom-[88px] right-8 z-30 text-right max-w-[220px] pointer-events-none select-none">
           <AnimatePresence mode="wait">
             <motion.div
@@ -503,88 +433,35 @@ export default function ScrollGallery({ products: productsProp }: { products?: t
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <p className="text-white/28 text-[8px] font-bold uppercase tracking-[0.22em] mb-1">
-                {filteredProducts[displayIndex]?.category}
-              </p>
-              <p className="text-white font-black text-sm leading-tight mb-0.5">
-                {filteredProducts[displayIndex]?.name}
-              </p>
-              {(() => {
-                const p = filteredProducts[displayIndex];
-                if (!p) return null;
-                const dPct = config?.productDiscounts?.[p.id] ?? 0;
-                const sale = dPct > 0 && p.basePriceAED ? Math.round(p.basePriceAED * (1 - dPct / 100)) : null;
-                return (
-                  <p className="text-white/55 font-black text-base">
-                    {sale !== null ? `AED ${sale}` : p.price.split(" / ")[0]}
-                  </p>
-                );
-              })()}
+              <p className="text-white/28 text-[8px] font-bold uppercase tracking-[0.22em] mb-1">{filteredProducts[displayIndex]?.category}</p>
+              <p className="text-white font-black text-sm leading-tight mb-0.5">{filteredProducts[displayIndex]?.name}</p>
+              <p className="text-white/55 font-black text-base">{filteredProducts[displayIndex]?.price.split(" / ")[0]}</p>
             </motion.div>
           </AnimatePresence>
         </div>
-
-        {/* ── prev / next buttons ── */}
         <div className="absolute bottom-6 left-8 z-30 flex items-center gap-3">
-          <motion.button
-            onClick={() => scrollToIndex(displayIndex - 1)}
-            disabled={displayIndex === 0}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.93 }}
-            aria-label="Previous product"
-            className="w-10 h-10 rounded-full border border-white/18 bg-white/6 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 disabled:opacity-20 disabled:cursor-not-allowed transition-colors duration-200 backdrop-blur-sm"
-          >
+          <motion.button onClick={() => scrollToIndex(displayIndex - 1)} disabled={displayIndex === 0} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.93 }} aria-label="Previous product" className="w-10 h-10 rounded-full border border-white/18 bg-white/6 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 disabled:opacity-20 disabled:cursor-not-allowed transition-colors duration-200 backdrop-blur-sm">
             <ChevronLeft className="w-4 h-4" />
           </motion.button>
-          <motion.button
-            onClick={() => scrollToIndex(displayIndex + 1)}
-            disabled={displayIndex === TOTAL - 1}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.93 }}
-            aria-label="Next product"
-            className="w-10 h-10 rounded-full border border-white/18 bg-white/6 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 disabled:opacity-20 disabled:cursor-not-allowed transition-colors duration-200 backdrop-blur-sm"
-          >
+          <motion.button onClick={() => scrollToIndex(displayIndex + 1)} disabled={displayIndex === TOTAL - 1} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.93 }} aria-label="Next product" className="w-10 h-10 rounded-full border border-white/18 bg-white/6 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 disabled:opacity-20 disabled:cursor-not-allowed transition-colors duration-200 backdrop-blur-sm">
             <ChevronRight className="w-4 h-4" />
           </motion.button>
         </div>
-
-        {/* ── progress dots ── */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-3">
           <div className="flex items-center gap-1">
             {filteredProducts.map((_, i) => (
-              <motion.button
-                key={i}
-                onClick={() => scrollToIndex(i)}
-                aria-label={`Go to product ${i + 1}`}
-                animate={{
-                  width: i === displayIndex ? 22 : 5,
-                  backgroundColor: i === displayIndex ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.18)",
-                }}
-                transition={{ duration: 0.3 }}
-                className="h-[5px] rounded-full cursor-pointer"
-              />
+              <motion.button key={i} onClick={() => scrollToIndex(i)} aria-label={`Go to product ${i + 1}`} animate={{ width: i === displayIndex ? 22 : 5, backgroundColor: i === displayIndex ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.18)" }} transition={{ duration: 0.3 }} className="h-[5px] rounded-full cursor-pointer" />
             ))}
           </div>
           <p className="text-white/22 text-[9px] font-black uppercase tracking-[0.24em]">{t.products.scrollToSurf}</p>
         </div>
-
-        {/* ── hover hint ── */}
         <AnimatePresence>
           {displayIndex !== undefined && (
-            <motion.div
-              key="hover-hint"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 1, duration: 0.5 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 z-20 pointer-events-none select-none"
-              style={{ marginTop: CARD_H / 2 + 16 }}
-            >
+            <motion.div key="hover-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ delay: 1, duration: 0.5 }} className="absolute top-1/2 left-1/2 -translate-x-1/2 z-20 pointer-events-none select-none" style={{ marginTop: CARD_H / 2 + 16 }}>
               <p className="text-white/20 text-[9px] font-bold uppercase tracking-[0.22em]">{t.products.hoverReveal}</p>
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
     </div>
   );
