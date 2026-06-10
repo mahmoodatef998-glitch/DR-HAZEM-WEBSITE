@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Upload, Link2, X, Loader2, Image as ImageIcon, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -10,9 +10,9 @@ interface ImageUploadProps {
   folder?: string;
 }
 
-const CLOUD_NAME     = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
-const UPLOAD_PRESET  = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
-const UPLOAD_URL     = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+const CLOUD_NAME    = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+const UPLOAD_URL    = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
 export default function ImageUpload({ value, onChange, folder = "dr-hazem" }: ImageUploadProps) {
   const [mode, setMode]           = useState<"upload" | "url">("upload");
@@ -21,13 +21,11 @@ export default function ImageUpload({ value, onChange, folder = "dr-hazem" }: Im
   const [error, setError]         = useState("");
   const [success, setSuccess]     = useState(false);
   const [progress, setProgress]   = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  /* ── Upload to Cloudinary (unsigned) ── */
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  /* ── Shared upload logic ── */
+  const uploadFile = useCallback(async (file: File) => {
     if (file.size > 10 * 1024 * 1024) {
       setError("الصورة أكبر من 10MB");
       return;
@@ -44,7 +42,6 @@ export default function ImageUpload({ value, onChange, folder = "dr-hazem" }: Im
       formData.append("upload_preset", UPLOAD_PRESET);
       formData.append("folder", folder);
 
-      // Use XMLHttpRequest to track upload progress
       const url = await new Promise<string>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
 
@@ -86,9 +83,47 @@ export default function ImageUpload({ value, onChange, folder = "dr-hazem" }: Im
     } finally {
       setUploading(false);
     }
+  }, [folder, onChange]);
+
+  /* ── File input change ── */
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadFile(file);
   };
 
-  /* ── Save URL directly ── */
+  /* ── Drag-and-drop handlers ── */
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    /* Only clear if leaving the drop zone itself, not a child element */
+    if (e.currentTarget === e.target) setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setError("الملف ليس صورة — JPG أو PNG أو WEBP فقط");
+      return;
+    }
+    uploadFile(file);
+  };
+
+  /* ── URL save ── */
   const handleUrlSave = () => {
     const url = urlInput.trim();
     if (!url) return;
@@ -152,15 +187,23 @@ export default function ImageUpload({ value, onChange, folder = "dr-hazem" }: Im
         ))}
       </div>
 
-      {/* ── File upload ── */}
+      {/* ── File upload + drag-and-drop zone ── */}
       {mode === "upload" && (
         <div className="space-y-2">
-          <label className={cn(
-            "block w-full py-3 rounded-xl border text-center text-sm font-semibold transition-all duration-150",
-            uploading
-              ? "border-sky-500/30 text-sky-400/50 cursor-wait"
-              : "border-sky-500/40 text-sky-400 hover:bg-sky-500/10 cursor-pointer"
-          )}>
+          <label
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={cn(
+              "block w-full py-5 rounded-xl border-2 border-dashed text-center text-sm font-semibold transition-all duration-200 cursor-pointer select-none",
+              uploading
+                ? "border-sky-500/30 text-sky-400/50 cursor-wait bg-sky-500/5"
+                : isDragging
+                ? "border-sky-400 text-sky-300 bg-sky-500/15 scale-[1.01] shadow-[0_0_0_3px_rgba(14,165,233,0.2)]"
+                : "border-sky-500/35 text-sky-400 hover:bg-sky-500/8 hover:border-sky-500/60"
+            )}
+          >
             {uploading ? (
               <span className="flex items-center justify-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -170,8 +213,17 @@ export default function ImageUpload({ value, onChange, folder = "dr-hazem" }: Im
               <span className="flex items-center justify-center gap-2 text-emerald-400">
                 <CheckCircle2 className="w-4 h-4" /> تم الرفع بنجاح!
               </span>
+            ) : isDragging ? (
+              <span className="flex flex-col items-center gap-1.5">
+                <Upload className="w-6 h-6 animate-bounce" />
+                <span>أفلت الصورة هنا</span>
+              </span>
             ) : (
-              "اختر صورة من جهازك (JPG · PNG · WEBP)"
+              <span className="flex flex-col items-center gap-1.5">
+                <Upload className="w-5 h-5 opacity-70" />
+                <span>اسحب وأفلت الصورة هنا</span>
+                <span className="text-white/30 text-[11px] font-normal">أو اضغط لاختيار ملف · JPG · PNG · WEBP</span>
+              </span>
             )}
             <input
               ref={fileRef}

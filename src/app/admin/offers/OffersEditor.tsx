@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Save, Loader2, Plus, Trash2, Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ProductRow } from "@/types/database";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 export interface OfferItem {
   id: string;
@@ -204,12 +205,11 @@ export default function OffersEditor({ initialOffers, products }: Props) {
             )}
 
             <div>
-              <label className={labelClass}>Image URL (optional override)</label>
-              <input
+              <label className={labelClass}>صورة المنتج</label>
+              <ImageUpload
                 value={form.imageUrl}
-                onChange={e => handleFormChange("imageUrl", e.target.value)}
-                placeholder="https://res.cloudinary.com/..."
-                className={inputClass}
+                onChange={url => handleFormChange("imageUrl", url)}
+                folder="medix-offers"
               />
             </div>
 
