@@ -1,34 +1,36 @@
-"use client"
+"use client";
 
-import { useState, FormEvent } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
+import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
+import MedixWordmark from "@/components/ui/MedixWordmark";
+import Link from "next/link";
 
 export default function AdminLoginPage() {
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      const res = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      })
-      if (res.ok) {
-        router.push("/admin/dashboard")
+      const supabase = createClient();
+      const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      if (authError) {
+        setError(authError.message);
       } else {
-        setError("Invalid password")
+        router.push("/admin");
+        router.refresh();
       }
     } catch {
-      setError("Connection error. Please try again.")
+      setError("Connection error. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -42,10 +44,23 @@ export default function AdminLoginPage() {
             </div>
           </div>
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
-            <p className="text-slate-500 text-sm mt-1">Medix Healthcare · Restricted Access</p>
+            <MedixWordmark size="md" showTagline={false} variant="dark" />
+            <p className="text-slate-500 text-sm mt-2">Admin Dashboard · Restricted Access</p>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@example.com"
+                required
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 text-sm"
+              />
+            </div>
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-2">Password</label>
               <input
@@ -53,9 +68,8 @@ export default function AdminLoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
+                placeholder="Enter your password"
                 required
-                autoFocus
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 text-sm"
               />
             </div>
@@ -69,7 +83,7 @@ export default function AdminLoginPage() {
             )}
             <button
               type="submit"
-              disabled={loading || !password}
+              disabled={loading || !email || !password}
               className="w-full py-3 px-6 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors duration-200 text-sm flex items-center justify-center gap-2"
             >
               {loading ? (
@@ -85,9 +99,13 @@ export default function AdminLoginPage() {
               )}
             </button>
           </form>
-          <p className="text-center text-slate-400 text-xs mt-6">Medix Healthcare Admin &copy; {new Date().getFullYear()}</p>
+          <div className="text-center mt-6">
+            <Link href="/" className="text-slate-400 text-xs hover:text-slate-600 transition-colors">
+              ← Back to website
+            </Link>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

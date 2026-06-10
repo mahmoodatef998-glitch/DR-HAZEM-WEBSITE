@@ -1,17 +1,2 @@
-import { NextRequest, NextResponse } from 'next/server'
-
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  if (pathname === '/admin/login') return NextResponse.next()
-  if (pathname.startsWith('/admin')) {
-    const token = request.cookies.get('admin-token')?.value
-    if (token !== process.env.ADMIN_TOKEN) {
-      return NextResponse.redirect(new URL('/admin/login', request.url))
-    }
-  }
-  return NextResponse.next()
-}
-
-export const config = {
-  matcher: ['/admin', '/admin/:path*'],
-}
+// Auth is handled by Supabase session check in src/app/admin/layout.tsx
+export {};

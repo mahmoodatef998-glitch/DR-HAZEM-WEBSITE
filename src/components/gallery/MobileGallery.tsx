@@ -6,19 +6,14 @@ import { Star, CheckCircle2, ChevronLeft, ChevronRight, Flame } from "lucide-rea
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
-import { useSiteConfig, type SiteConfig } from "@/hooks/useSiteConfig";
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971585335516";
 const SWIPE_THRESHOLD = 30; // px — very snappy trigger
 
 /* ─── WhatsApp order button ─── */
-function OrderButton({ product, siteConfig }: { product: Product; siteConfig: SiteConfig | null }) {
+function OrderButton({ product }: { product: Product }) {
   const { t, isRTL } = useTranslation();
-  const discountPct = siteConfig?.productDiscounts?.[product.id] ?? product.discount ?? 0;
-  const base = product.basePriceAED;
-  const displayPrice = discountPct > 0 && base
-    ? `AED ${Math.round(base * (1 - discountPct / 100))}`
-    : product.price;
+  const displayPrice = product.price;
   const msg = encodeURIComponent(
     isRTL
       ? `${t.products.whatsappMsg}\n🛍 ${product.name}\n🏷 ${product.brand}\n💊 ${product.category}\n💵 ${displayPrice}`
@@ -51,14 +46,13 @@ function OrderButton({ product, siteConfig }: { product: Product; siteConfig: Si
    • Tint overlays driven by motion values (no re-render on drag)
 ──────────────────────────────────────────────────────────────── */
 function SwipeCard({
-  product, index, total, direction, onSwipe, siteConfig,
+  product, index, total, direction, onSwipe,
 }: {
   product: Product;
   index: number;
   total: number;
   direction: number;
   onSwipe: (dir: 1 | -1) => void;
-  siteConfig: SiteConfig | null;
 }) {
   const x = useMotionValue(0);
   // Very subtle tilt — stays on compositor thread, doesn't fight the drag
@@ -182,7 +176,7 @@ function SwipeCard({
                 </div>
               </div>
               <div className="px-5 pb-4 relative z-30">
-                <OrderButton product={product} siteConfig={siteConfig} />
+                <OrderButton product={product} />
               </div>
             </div>
           </>
@@ -257,7 +251,7 @@ function SwipeCard({
             </div>
 
             <div className="relative z-30">
-              <OrderButton product={product} siteConfig={siteConfig} />
+              <OrderButton product={product} />
             </div>
           </div>
         )}
@@ -272,7 +266,6 @@ function SwipeCard({
 export default function MobileGallery({ products: productsProp }: { products?: typeof products }) {
   const allProducts = productsProp ?? products;
   const { t, isRTL } = useTranslation();
-  const siteConfig = useSiteConfig();
   const [index, setIndex]     = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [activeCategory, setActiveCategory] = useState<ProductCategory>("All");
@@ -389,7 +382,6 @@ export default function MobileGallery({ products: productsProp }: { products?: t
             total={total}
             direction={direction}
             onSwipe={go}
-            siteConfig={siteConfig}
           />
         </AnimatePresence>
       </div>

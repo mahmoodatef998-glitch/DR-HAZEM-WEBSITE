@@ -4,10 +4,12 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 interface HeroData {
   en: { line1: string; line2: string; line3: string; description: string; browseProducts: string; orderWhatsApp: string };
   ar: { line1: string; line2: string; line3: string; description: string; browseProducts: string; orderWhatsApp: string };
+  backgroundImage?: string;
 }
 
 export default function HeroEditor({ initial }: { initial: HeroData }) {
@@ -42,6 +44,16 @@ export default function HeroEditor({ initial }: { initial: HeroData }) {
 
   return (
     <div className="space-y-6">
+      {/* Background image */}
+      <div className={sectionClass}>
+        <h3 className="text-white/50 text-[11px] font-black uppercase tracking-widest">🖼️ صورة الخلفية</h3>
+        <ImageUpload
+          value={data.backgroundImage ?? ""}
+          onChange={(url) => setData(prev => ({ ...prev, backgroundImage: url }))}
+          folder="medix-hero"
+        />
+      </div>
+
       {/* English */}
       <div className={sectionClass}>
         <h3 className="text-white/50 text-[11px] font-black uppercase tracking-widest">🇬🇧 الإنجليزي</h3>

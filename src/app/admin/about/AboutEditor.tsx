@@ -5,8 +5,9 @@ import { createClient } from "@/lib/supabase/client";
 import { Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Translations } from "@/lib/translations";
+import ImageUpload from "@/components/admin/ImageUpload";
 
-type AboutData = { en: Translations["about"]; ar: Translations["about"] };
+type AboutData = { en: Translations["about"]; ar: Translations["about"]; photo?: string };
 
 export default function AboutEditor({ initial }: { initial: AboutData }) {
   const [data, setData] = useState<AboutData>(initial);
@@ -45,6 +46,16 @@ export default function AboutEditor({ initial }: { initial: AboutData }) {
 
   return (
     <div className="space-y-6">
+      {/* Profile photo */}
+      <div className={sectionClass}>
+        <h3 className="text-white/50 text-[11px] font-black uppercase tracking-widest">📸 صورة الملف الشخصي</h3>
+        <ImageUpload
+          value={data.photo ?? ""}
+          onChange={(url) => setData(prev => ({ ...prev, photo: url }))}
+          folder="medix-about"
+        />
+      </div>
+
       {(["en", "ar"] as const).map(lang => (
         <div key={lang} className={sectionClass}>
           <h3 className="text-white/50 text-[11px] font-black uppercase tracking-widest">
