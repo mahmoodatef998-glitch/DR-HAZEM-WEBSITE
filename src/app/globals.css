@@ -129,3 +129,33 @@ html {
 }
 
 /* Hero animations now handled by Framer Motion */
+
+/* Offer badge flash — appears, lingers, fades out, repeats */
+@keyframes offerFlash {
+  0%, 30%  { opacity: 1; transform: scale(1);    }
+  50%, 65% { opacity: 0; transform: scale(0.72); }
+  80%      { opacity: 1; transform: scale(1.08); }
+  100%     { opacity: 1; transform: scale(1);    }
+}
+
+.animate-offer-flash {
+  animation: offerFlash 2.8s ease-in-out infinite;
+}
+
+/* Offer card shimmer hover line */
+@keyframes offerShimmer {
+  0%   { transform: translateX(-100%) skewX(-12deg); }
+  100% { transform: translateX(250%)  skewX(-12deg); }
+}
+
+.offer-card-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+  transform: translateX(-100%) skewX(-12deg);
+}
+
+.offer-card-shimmer:hover::after {
+  animation: offerShimmer 0.7s ease forwards;
+}

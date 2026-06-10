@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, Package, Image, Phone, User,
-  MessageSquare, Star, LogOut, ChevronRight, ExternalLink,
+  MessageSquare, Star, LogOut, ChevronRight, ExternalLink, Tag,
 } from "lucide-react";
 import MedixWordmark from "@/components/ui/MedixWordmark";
 
@@ -16,6 +16,7 @@ const NAV = [
   { href: "/admin/hero",        label: "Hero Section",    icon: Image           },
   { href: "/admin/about",       label: "About",           icon: User            },
   { href: "/admin/contact",     label: "Contact Info",    icon: Phone           },
+  { href: "/admin/offers",       label: "Offers",          icon: Tag             },
   { href: "/admin/testimonials",label: "Testimonials",    icon: Star            },
   { href: "/admin/why-choose",  label: "Why Choose Us",   icon: MessageSquare   },
 ];

@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/sections/HeroSection";
 import TrustBarSection from "@/sections/TrustBarSection";
 import ProductsSection from "@/sections/ProductsSection";
+import OffersSection from "@/sections/OffersSection";
 import HowToOrderSection from "@/sections/HowToOrderSection";
 import AboutSection from "@/sections/AboutSection";
 import TestimonialsSection from "@/sections/TestimonialsSection";
@@ -23,6 +24,7 @@ export default function Home() {
       <HeroSection />
       <TrustBarSection />
       <ProductsSection />
+      <OffersSection />
       <HowToOrderSection />
       <AboutSection />
       <TestimonialsSection />
