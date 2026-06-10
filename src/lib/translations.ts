@@ -45,8 +45,8 @@ const en = {
   },
   about: {
     badge: "About Medix Healthcare",
-    title: "Your Trusted European ", titleHighlight: "Pharmaceutical Importer",
-    description: "Medix Healthcare was founded with one clear mission: to give patients and healthcare providers in the UAE direct access to premium, certified pharmaceuticals from the best European manufacturers.",
+    title: "About ", titleHighlight: "Medix Healthcare",
+    description: "Medix Healthcare is a UAE-based pharmaceutical import and distribution company specializing in certified medicines and health supplements sourced directly from licensed manufacturers in Spain and Italy. We are committed to delivering authentic European quality to healthcare providers and patients across the GCC.",
     profileName: "Dr. Hazem", profileTitle: "Founder — Medix Healthcare",
     profileSub: "Licensed Medical Importer · Dubai, UAE",
     badges: { dha: "DHA Licensed", gcc: "GCC Approved", eu: "EU Partner" },
@@ -162,8 +162,8 @@ const ar: typeof en = {
   },
   about: {
     badge: "عن Medix Healthcare",
-    title: "المستورد الأوروبي الموثوق ", titleHighlight: "للأدوية",
-    description: "تأسّست Medix Healthcare بمهمة واضحة: منح المرضى ومزوّدي الرعاية الصحية في الإمارات وصولاً مباشراً إلى أفضل الأدوية الأوروبية المعتمدة.",
+    title: "عن ", titleHighlight: "ميديكس هيلثكير",
+    description: "ميديكس هيلثكير شركة إماراتية متخصصة في استيراد وتوزيع الأدوية والمكملات الصحية المعتمدة، المصدرة مباشرةً من مصنّعين مرخّصين في إسبانيا وإيطاليا. نلتزم بتوفير جودة أوروبية أصيلة لمزودي الرعاية الصحية والمرضى في منطقة الخليج.",
     profileName: "د. حازم", profileTitle: "المؤسس — Medix Healthcare",
     profileSub: "مستورد طبي مرخّص · دبي، الإمارات",
     badges: { dha: "مرخّص من هيئة الصحة", gcc: "معتمد خليجياً", eu: "شريك أوروبي" },
