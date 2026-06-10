@@ -129,7 +129,7 @@ function OfferCard({
             src={offer.imageUrl}
             alt={name}
             fill
-            className="object-contain p-4 group-hover:scale-[1.06] transition-transform duration-500 ease-out"
+            className="object-cover group-hover:scale-[1.06] transition-transform duration-500 ease-out"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
