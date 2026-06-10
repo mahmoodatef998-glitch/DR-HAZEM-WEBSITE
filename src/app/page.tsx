@@ -11,13 +11,13 @@ import WhatsAppCTASection from "@/sections/WhatsAppCTASection";
 import FooterSection from "@/sections/FooterSection";
 import FloatingCTA from "@/components/FloatingCTA";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
   /* ── Fetch offers server-side (bypass client-fetch issues) ── */
   let offerItems: OfferItem[] = [];
   try {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { data } = await supabase
       .from("site_settings")
       .select("content")
