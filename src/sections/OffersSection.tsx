@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Tag, Zap } from "lucide-react";
@@ -20,22 +19,10 @@ export interface OfferItem {
 
 const E = [0.22, 1, 0.36, 1] as const;
 
-export default function OffersSection() {
+export default function OffersSection({ initialOffers }: { initialOffers: OfferItem[] }) {
   const { isRTL } = useTranslation();
-  const [offers, setOffers] = useState<OfferItem[]>([]);
-  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/offers")
-      .then(r => r.json())
-      .then(data => {
-        setOffers((data.items ?? []).filter((o: OfferItem) => o.active));
-        setLoaded(true);
-      })
-      .catch(() => setLoaded(true));
-  }, []);
-
-  if (!loaded || offers.length === 0) return null;
+  if (!initialOffers || initialOffers.length === 0) return null;
 
   return (
     <section id="offers" className="section-padding bg-slate-950 relative overflow-hidden">
@@ -91,7 +78,7 @@ export default function OffersSection() {
 
         {/* ── Cards grid ── */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
-          {offers.map((offer, i) => (
+          {initialOffers.map((offer, i) => (
             <OfferCard key={offer.id} offer={offer} index={i} isRTL={isRTL} />
           ))}
         </div>

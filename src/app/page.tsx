@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/sections/HeroSection";
 import TrustBarSection from "@/sections/TrustBarSection";
 import ProductsSection from "@/sections/ProductsSection";
-import OffersSection from "@/sections/OffersSection";
+import OffersSection, { type OfferItem } from "@/sections/OffersSection";
 import HowToOrderSection from "@/sections/HowToOrderSection";
 import AboutSection from "@/sections/AboutSection";
 import TestimonialsSection from "@/sections/TestimonialsSection";
@@ -11,8 +11,25 @@ import WhatsAppCTASection from "@/sections/WhatsAppCTASection";
 import FooterSection from "@/sections/FooterSection";
 import FloatingCTA from "@/components/FloatingCTA";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
+import { createAdminClient } from "@/lib/supabase/admin";
 
-export default function Home() {
+export default async function Home() {
+  /* ── Fetch offers server-side (bypass client-fetch issues) ── */
+  let offerItems: OfferItem[] = [];
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from("site_settings")
+      .select("content")
+      .eq("section", "offers")
+      .maybeSingle();
+
+    const all = (data?.content as { items?: OfferItem[] } | null)?.items ?? [];
+    offerItems = all.filter(o => o.active);
+  } catch {
+    /* silently fall back to empty — section won't render */
+  }
+
   return (
     <main id="main-content" className="min-h-screen">
       {/* Skip navigation for accessibility */}
@@ -24,7 +41,7 @@ export default function Home() {
       <HeroSection />
       <TrustBarSection />
       <ProductsSection />
-      <OffersSection />
+      <OffersSection initialOffers={offerItems} />
       <HowToOrderSection />
       <AboutSection />
       <TestimonialsSection />
