@@ -31,11 +31,13 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Optimize images from external sources when real images are added
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+    remotePatterns: [
+      { protocol: "https", hostname: "res.cloudinary.com" },
+    ],
   },
 };
 
