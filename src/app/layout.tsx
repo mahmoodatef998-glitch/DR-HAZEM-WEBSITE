@@ -49,20 +49,36 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: "Medix Healthcare",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Medix Healthcare – Premium Imported Medicines from Spain & Italy" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Medix Healthcare – Premium Imported Medicines from Spain & Italy" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Medix Healthcare | Premium Imported Medicines – Dubai, UAE",
     description: "Certified pharmaceuticals from Spain and Italy. GCC approved. Dubai, UAE.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
-  alternates: { canonical: BASE_URL },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
+  alternates: {
+    canonical: BASE_URL,
+    languages: {
+      "en-AE": BASE_URL,
+      "ar-AE": BASE_URL,
+      "x-default": BASE_URL,
+    },
+  },
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/logo.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/logo.png",
+  },
+  other: {
+    "geo.region": "AE-DU",
+    "geo.placename": "Dubai",
+    "geo.position": "25.2285;55.3273",
+    "ICBM": "25.2285, 55.3273",
   },
 };
 
