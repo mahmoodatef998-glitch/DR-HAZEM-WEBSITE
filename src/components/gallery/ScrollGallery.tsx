@@ -11,10 +11,10 @@ import {
 } from "framer-motion";
 import {
   Star, Clock, CheckCircle2, ArrowRight,
-  Flame, ChevronLeft, ChevronRight,
+  Flame, ChevronLeft, ChevronRight, ExternalLink,
 } from "lucide-react";
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
-import { cn } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
 const CARD_W      = 290;
@@ -272,18 +272,33 @@ function GalleryCard({
                     </div>
                   </div>
                 </div>
-                <motion.button
-                  onClick={handleBook}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.28, duration: 0.2 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="w-full py-2.5 rounded-xl bg-[#25D366] text-white text-[11px] font-black flex items-center justify-center gap-2 shadow-xl tracking-wide uppercase"
-                >
-                  {orderLabel}
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </motion.button>
+                <div className="flex gap-2">
+                  <motion.button
+                    onClick={handleBook}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.28, duration: 0.2 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="flex-1 py-2.5 rounded-xl bg-[#25D366] text-white text-[11px] font-black flex items-center justify-center gap-2 shadow-xl tracking-wide uppercase"
+                  >
+                    {orderLabel}
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </motion.button>
+                  <motion.a
+                    href={`/products/${slugify(product.name)}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.33, duration: 0.2 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/18 transition-colors duration-150"
+                    title="View full details"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </motion.a>
+                </div>
               </div>
             </div>
           </motion.div>
