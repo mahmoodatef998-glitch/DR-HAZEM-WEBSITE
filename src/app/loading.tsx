@@ -19,7 +19,7 @@ export default function Loading() {
         <div className="text-center">
           <p className="text-white font-black text-xl tracking-tight">Medix Healthcare</p>
           <p className="text-sky-400 text-xs font-semibold uppercase tracking-widest mt-1">
-            Medical Import · Distribution
+            Healthcare Trading
           </p>
         </div>
 

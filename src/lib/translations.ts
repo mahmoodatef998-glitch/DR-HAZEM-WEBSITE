@@ -112,7 +112,7 @@ const en = {
     ],
   },
   footer: {
-    tagline: "Medical Import · Distribution",
+    tagline: "Healthcare Trading",
     description: "Premium European pharmaceuticals imported directly from Spain and Italy. GCC certified, UAE licensed.",
     columns: {
       quickLinks: { title: "Quick Links", links: [{ label: "Home", href: "#home" }, { label: "Products", href: "#products" }, { label: "How to Order", href: "#how-to-order" }, { label: "About Us", href: "#about" }, { label: "Order Now", href: "#contact" }] },
@@ -229,7 +229,7 @@ const ar: typeof en = {
     ],
   },
   footer: {
-    tagline: "استيراد وتوزيع طبي",
+    tagline: "هيلثكير تريدينج",
     description: "أدوية أوروبية فاخرة مستوردة مباشرةً من إسبانيا وإيطاليا. معتمدة خليجياً، مرخّصة في الإمارات.",
     columns: {
       quickLinks: { title: "روابط سريعة", links: [{ label: "الرئيسية", href: "#home" }, { label: "المنتجات", href: "#products" }, { label: "كيفية الطلب", href: "#how-to-order" }, { label: "عن الشركة", href: "#about" }, { label: "اطلب الآن", href: "#contact" }] },
