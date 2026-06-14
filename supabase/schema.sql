@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.products (
   name          text        NOT NULL,
   name_ar       text,
   brand         text        NOT NULL,
-  origin        text        NOT NULL CHECK (origin IN ('ES','IT')),
+  origin        text        NOT NULL CHECK (origin IN ('ES','IT','EG')),
   category      text        NOT NULL,
   price         text        NOT NULL,
   original_price text,

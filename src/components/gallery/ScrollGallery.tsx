@@ -14,6 +14,7 @@ import {
   Flame, ChevronLeft, ChevronRight, ExternalLink,
 } from "lucide-react";
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
+import { getOriginFlag } from "@/lib/origins";
 import { cn, slugify } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
@@ -154,7 +155,7 @@ function GalleryCard({
             <div className="flex items-start justify-between p-5">
               <span className="font-mono text-white/50 text-[11px] font-bold tracking-[0.2em]">{numStr}</span>
               <div className="flex items-center gap-1.5">
-                <span className="text-[15px]">{product.origin === "ES" ? "🇪🇸" : "🇮🇹"}</span>
+                <span className="text-[15px]">{getOriginFlag(product.origin)}</span>
                 {product.popular && (
                   <div className="flex items-center gap-1 bg-amber-400/18 border border-amber-400/35 rounded-full px-2 py-0.5">
                     <Flame className="w-2.5 h-2.5 text-amber-400" />
@@ -223,7 +224,7 @@ function GalleryCard({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-white/40 text-[8px] font-bold uppercase tracking-[0.18em]">
-                    {product.origin === "ES" ? "🇪🇸" : "🇮🇹"} {ORIGIN_LABEL[product.origin]} · {product.category}
+                    {getOriginFlag(product.origin)} {ORIGIN_LABEL[product.origin]} · {product.category}
                   </p>
                   <h3 className="text-white font-black text-[13px] leading-tight line-clamp-2">{product.name}</h3>
                   <p className="text-white/30 text-[9px] mt-0.5">{product.brand}</p>

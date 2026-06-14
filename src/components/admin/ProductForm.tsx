@@ -7,6 +7,7 @@ import ImageUpload from "./ImageUpload";
 import { Loader2, Plus, X, Save } from "lucide-react";
 import type { ProductRow } from "@/types/database";
 import { cn } from "@/lib/utils";
+import { ORIGIN_OPTIONS, type ProductOrigin } from "@/lib/origins";
 
 type FormData = Omit<ProductRow, "id" | "created_at" | "updated_at">;
 
@@ -101,6 +102,8 @@ export default function ProductForm({ initialData }: ProductFormProps) {
   /* ── Field helpers ── */
   const labelClass = "text-white/60 text-xs font-semibold block mb-1.5";
   const inputClass = "w-full bg-white/6 border border-white/12 rounded-xl px-3.5 py-2.5 text-white text-sm placeholder-white/25 focus:outline-none focus:border-sky-500 transition-colors duration-200";
+  const selectClass = cn(inputClass, "admin-select bg-slate-900 cursor-pointer");
+  const optionClass = "bg-slate-900 text-slate-100";
   const sectionClass = "bg-white/3 border border-white/8 rounded-2xl p-5 space-y-4";
 
   return (
@@ -132,15 +135,16 @@ export default function ProductForm({ initialData }: ProductFormProps) {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelClass}>البلد</label>
-              <select value={data.origin} onChange={e => set("origin", e.target.value as "ES" | "IT")} className={inputClass}>
-                <option value="ES">🇪🇸 إسبانيا</option>
-                <option value="IT">🇮🇹 إيطاليا</option>
+              <select value={data.origin} onChange={e => set("origin", e.target.value as ProductOrigin)} className={selectClass}>
+                {ORIGIN_OPTIONS.map(o => (
+                  <option key={o.value} value={o.value} className={optionClass}>{o.label}</option>
+                ))}
               </select>
             </div>
             <div>
               <label className={labelClass}>التصنيف</label>
-              <select value={data.category} onChange={e => set("category", e.target.value)} className={inputClass}>
-                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+              <select value={data.category} onChange={e => set("category", e.target.value)} className={selectClass}>
+                {CATEGORIES.map(c => <option key={c} value={c} className={optionClass}>{c}</option>)}
               </select>
             </div>
           </div>

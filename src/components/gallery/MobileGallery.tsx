@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
 import { Star, CheckCircle2, ChevronLeft, ChevronRight, Flame, ExternalLink } from "lucide-react";
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
+import { getOriginFlag } from "@/lib/origins";
 import { cn, slugify } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
@@ -123,7 +124,7 @@ function SwipeCard({
           <div className="flex flex-col h-full p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <span className="text-xl leading-none">{product.origin === "ES" ? "🇪🇸" : "🇮🇹"}</span>
+                <span className="text-xl leading-none">{getOriginFlag(product.origin)}</span>
                 <div>
                   <p className="text-white/30 text-[9px] font-black uppercase tracking-[0.18em]">{ORIGIN_LABEL[product.origin]}</p>
                   <p className="text-white/50 text-[10px] font-semibold">{product.brand}</p>

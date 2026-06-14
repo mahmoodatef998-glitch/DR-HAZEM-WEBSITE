@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
 import { CheckCircle2, ArrowLeft, Star, MapPin, Package } from "lucide-react";
 import type { ProductRow } from "@/types/database";
+import { ORIGIN_OPTIONS } from "@/lib/origins";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://drhazem.ae";
 const WHATSAPP  = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971585335516";
@@ -26,7 +27,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!product) return { title: "Product Not Found" };
 
   const title = `${product.name} | Medix Healthcare`;
-  const description = product.description ?? `${product.name} by ${product.brand} — imported from ${product.origin === "ES" ? "Spain" : "Italy"}. Available in UAE.`;
+  const originLabel = ORIGIN_OPTIONS.find(o => o.value === product.origin)?.labelEn ?? product.origin;
+  const description = product.description ?? `${product.name} by ${product.brand} — imported from ${originLabel}. Available in UAE.`;
 
   return {
     title,
@@ -41,14 +43,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-const ORIGIN = { ES: { label: "Spain", flag: "🇪🇸" }, IT: { label: "Italy", flag: "🇮🇹" } };
-
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await getProduct(slug);
   if (!product) notFound();
 
-  const origin = ORIGIN[product.origin];
+  const originMeta = ORIGIN_OPTIONS.find(o => o.value === product.origin);
+  const origin = originMeta
+    ? { label: originMeta.labelEn, flag: originMeta.label.split(" ")[0] }
+    : { label: product.origin, flag: "🌍" };
   const whatsappMsg = encodeURIComponent(`Hello, I'm interested in ordering: ${product.name} (${product.brand}). Please provide availability and delivery details.`);
   const whatsappUrl = `https://wa.me/${WHATSAPP}?text=${whatsappMsg}`;
 

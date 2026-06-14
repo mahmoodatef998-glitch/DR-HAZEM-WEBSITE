@@ -1,4 +1,5 @@
-export type ProductOrigin = "ES" | "IT";
+import type { ProductOrigin } from "@/lib/origins";
+export type { ProductOrigin };
 
 export type ProductCategory =
   | "All"
@@ -43,10 +44,7 @@ export const CATEGORIES: ProductCategory[] = [
   "Pediatrics",
 ];
 
-export const ORIGIN_LABEL: Record<ProductOrigin, string> = {
-  ES: "🇪🇸 Spain",
-  IT: "🇮🇹 Italy",
-};
+export { ORIGIN_LABEL } from "@/lib/origins";
 
 export const products: Product[] = [
 

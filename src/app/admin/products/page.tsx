@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import DeleteProductButton from "./DeleteProductButton";
+import { getOriginLabel } from "@/lib/origins";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +69,7 @@ export default async function AdminProductsPage() {
                 </div>
                 <div className="flex items-center gap-3 mt-1">
                   <span className="text-white/40 text-xs">
-                    {product.origin === "ES" ? "🇪🇸 إسبانيا" : "🇮🇹 إيطاليا"}
+                    {getOriginLabel(product.origin)}
                   </span>
                   <span className="text-white/25 text-xs">•</span>
                   <span className="text-white/40 text-xs">{product.category}</span>

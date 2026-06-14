@@ -10,7 +10,7 @@ export interface Database {
           name: string;
           name_ar: string | null;
           brand: string;
-          origin: "ES" | "IT";
+          origin: "ES" | "IT" | "EG";
           category: string;
           price: string;
           original_price: string | null;

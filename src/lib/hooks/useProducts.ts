@@ -12,7 +12,7 @@ function rowToProduct(row: ProductRow): Product {
     id:            Number(row.sort_order) || 0,
     name:          row.name,
     brand:         row.brand,
-    origin:        row.origin as "ES" | "IT",
+    origin:        row.origin as "ES" | "IT" | "EG",
     category:      row.category as Product["category"],
     price:         row.price,
     originalPrice: row.original_price ?? undefined,
