@@ -113,7 +113,10 @@ function SwipeCard({
     >
       <div className="absolute inset-0 bg-[#111111]" />
       {product.image_url ? (
-        <img src={product.image_url} alt={product.name} className="absolute inset-0 w-full h-full object-contain" draggable={false} />
+        <>
+          <img src={product.image_url} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover scale-125 blur-2xl opacity-50 pointer-events-none" draggable={false} />
+          <img src={product.image_url} alt={product.name} className="absolute inset-0 w-full h-full object-contain" draggable={false} />
+        </>
       ) : (
         <>
           <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-[0.07]`} />
@@ -142,7 +145,7 @@ function SwipeCard({
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     {product.originalPrice && <p className="text-white/50 text-xs line-through leading-none mb-0.5">{product.originalPrice}</p>}
-                    <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>{product.price}</span>
+                    <span className={cn("font-black text-2xl leading-none", product.originalPrice ? "text-rose-400" : "text-white")}>{product.price}</span>
                   </div>
                   <div className="flex gap-0.5">{[...Array(5)].map((_, i) => (<Star key={i} className={cn("w-3 h-3", i < Math.round(product.rating ?? 5) ? "fill-yellow-300 text-yellow-300" : "fill-white/20 text-white/20")} aria-hidden="true" />))}</div>
                 </div>
@@ -182,7 +185,7 @@ function SwipeCard({
             <div className="flex items-center justify-between mb-3">
               <div>
                 {product.originalPrice && <p className="text-white/25 text-xs line-through leading-none mb-0.5">{product.originalPrice}</p>}
-                <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>{product.price}</span>
+                <span className={cn("font-black text-2xl leading-none", product.originalPrice ? "text-rose-400" : "text-white")}>{product.price}</span>
               </div>
               <div className="text-right">
                 <div className="flex gap-0.5 justify-end mb-0.5">{[...Array(5)].map((_, i) => (<Star key={i} className={cn("w-3 h-3", i < Math.round(product.rating ?? 5) ? "fill-yellow-300 text-yellow-300" : "fill-white/15 text-white/15")} aria-hidden="true" />))}</div>

@@ -19,10 +19,10 @@ import { getOriginFlag } from "@/lib/origins";
 import { cn, slugify } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
-const CARD_W      = 290;
-const CARD_H      = 450;
-const SPACING     = 162;
-const STEP_Y      = 65;
+const CARD_W      = 362;
+const CARD_H      = 562;
+const SPACING     = 202;
+const STEP_Y      = 81;
 const PERSPECTIVE = "1500px";
 const MAX_VISIBLE = 5;
 
@@ -92,11 +92,19 @@ function GalleryCard({
       />
 
       {product.image_url ? (
-        <img
-          src={product.image_url}
-          alt={product.name}
-          className="absolute inset-0 w-full h-full object-contain"
-        />
+        <>
+          <img
+            src={product.image_url}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover scale-125 blur-2xl opacity-50 pointer-events-none"
+          />
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="absolute inset-0 w-full h-full object-contain"
+          />
+        </>
       ) : (
         <>
           <div className={`absolute inset-0 bg-gradient-to-t ${product.gradient} opacity-[0.08]`} />
@@ -135,14 +143,20 @@ function GalleryCard({
                 </h3>
                 <div className="flex items-center justify-between">
                   <div>
-                    {product.originalPrice && (
-                      <span className="text-white/50 text-xs line-through block leading-none mb-0.5">
-                        {product.originalPrice}
+                    {product.originalPrice ? (
+                      <>
+                        <span className="text-white/50 text-xs line-through block leading-none mb-0.5">
+                          {product.originalPrice}
+                        </span>
+                        <span className="font-black text-2xl leading-none text-rose-400 drop-shadow-lg">
+                          {product.price.split(" / ")[0]}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="font-black text-2xl leading-none text-white drop-shadow-lg">
+                        {product.price.split(" / ")[0]}
                       </span>
                     )}
-                    <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent drop-shadow-lg`}>
-                      {product.price.split(" / ")[0]}
-                    </span>
                   </div>
                   <div className="flex gap-0.5">
                     {[...Array(5)].map((_, i) => (
@@ -190,7 +204,7 @@ function GalleryCard({
                   {product.originalPrice && (
                     <span className="text-white/40 text-xs line-through block">{product.originalPrice}</span>
                   )}
-                  <span className={`font-black text-2xl leading-none bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent`}>
+                  <span className={cn("font-black text-2xl leading-none", product.originalPrice ? "text-rose-400" : "text-white")}>
                     {product.price.split(" / ")[0]}
                   </span>
                 </div>
@@ -259,7 +273,9 @@ function GalleryCard({
                     {product.originalPrice && (
                       <div className="text-white/28 text-[9px] line-through leading-none mb-0.5">{product.originalPrice}</div>
                     )}
-                    <span className="text-white font-black text-xl leading-none">{product.price.split(" / ")[0]}</span>
+                    <span className={cn("font-black text-xl leading-none", product.originalPrice ? "text-rose-400" : "text-white")}>
+                      {product.price.split(" / ")[0]}
+                    </span>
                     {product.discount && (
                       <span className="ml-2 text-rose-400 text-[9px] font-black">-{product.discount}%</span>
                     )}
