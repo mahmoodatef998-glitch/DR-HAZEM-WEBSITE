@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   motion,
   useScroll,
@@ -14,7 +15,7 @@ import {
   Flame, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
-import { cn } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
 /* ─────────────────────────────────────────────────────────
@@ -42,6 +43,7 @@ function GalleryCard({
   orderLabel: string;
 }) {
   const [hovered, setHovered] = useState(false);
+  const router = useRouter();
 
   const offset  = useTransform(activeIndex, (v) => index - v);
   const x       = useTransform(offset, (v) => v * SPACING);
@@ -75,6 +77,7 @@ function GalleryCard({
 
   return (
     <motion.div
+      onClick={() => router.push(`/products/${slugify(product.name)}`)}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={()  => setHovered(false)}
       style={{

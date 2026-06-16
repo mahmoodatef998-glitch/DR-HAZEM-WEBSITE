@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
 import { Star, CheckCircle2, ChevronLeft, ChevronRight, Flame } from "lucide-react";
 import { products, CATEGORIES, ORIGIN_LABEL, type Product, type ProductCategory } from "@/data/products";
-import { cn } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 import { useTranslation } from "@/contexts/LanguageContext";
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971585335516";
@@ -61,20 +62,44 @@ function SwipeCard({
   const greenTint = useTransform(x, [0, 100], [0, 0.07]);
   const redTint   = useTransform(x, [-100, 0], [0.07, 0]);
 
+  const router = useRouter();
+  const maxDragRef  = useRef(0);
+  const tapZoneRef  = useRef<"left" | "center" | "right">("center");
+  const skipNavRef  = useRef(false);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    skipNavRef.current = !!(e.target as Element).closest("a, button");
+    maxDragRef.current = 0;
+    if (!skipNavRef.current) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const relX = (e.clientX - rect.left) / rect.width;
+      tapZoneRef.current = relX < 0.3 ? "left" : relX > 0.7 ? "right" : "center";
+    }
+  }, []);
+
+  const handleDrag = useCallback(
+    (_: unknown, info: { offset: { x: number } }) => {
+      maxDragRef.current = Math.max(maxDragRef.current, Math.abs(info.offset.x));
+    },
+    []
+  );
+
   const handleDragEnd = useCallback(
     (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
-      const isSwipe =
-        Math.abs(info.offset.x) > SWIPE_THRESHOLD ||
-        Math.abs(info.velocity.x) > 250; // lower velocity threshold too
-
+      const wasTap = maxDragRef.current < 5;
+      maxDragRef.current = 0;
+      const isSwipe = Math.abs(info.offset.x) > SWIPE_THRESHOLD || Math.abs(info.velocity.x) > 250;
       if (!isSwipe) {
         // Ultra-fast snap back — instant, zero bounce
         animate(x, 0, { type: "spring", stiffness: 1200, damping: 80 });
+        if (wasTap && tapZoneRef.current === "center" && !skipNavRef.current) {
+          router.push(`/products/${slugify(product.name)}`);
+        }
         return;
       }
       onSwipe((info.offset.x > 0 ? -1 : 1) as 1 | -1);
     },
-    [x, onSwipe]
+    [x, onSwipe, router, product.name]
   );
 
   const numStr = String(index + 1).padStart(2, "0");
@@ -83,8 +108,10 @@ function SwipeCard({
     <motion.div
       drag="x"
       dragConstraints={{ left: -400, right: 400 }}
-      dragElastic={0}           // zero lag — card sticks to finger perfectly
-      dragMomentum={false}      // no coasting after lift — instant stop
+      dragElastic={0}
+      dragMomentum={false}
+      onPointerDown={handlePointerDown}
+      onDrag={handleDrag}
       onDragEnd={handleDragEnd}
       // Spring transition: snappy arrival, no overshoot
       initial={{ opacity: 0, x: direction > 0 ? 300 : -300 }}
