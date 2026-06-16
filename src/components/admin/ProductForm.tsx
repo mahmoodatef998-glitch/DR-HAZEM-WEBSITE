@@ -36,16 +36,58 @@ interface ProductFormProps {
 export default function ProductForm({ initialData }: ProductFormProps) {
   const router = useRouter();
   const [data, setData] = useState<FormData>(
-    initialData
-      ? { ...initialData }
-      : DEFAULT
+    initialData ? { ...initialData } : DEFAULT
   );
-  const [saving, setSaving]   = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError]     = useState("");
+  const [saving, setSaving]     = useState(false);
+  const [success, setSuccess]   = useState(false);
+  const [error, setError]       = useState("");
+  const [hasDiscount, setHasDiscount] = useState(
+    !!(initialData?.original_price || initialData?.discount)
+  );
 
   const set = <K extends keyof FormData>(key: K, val: FormData[K]) =>
     setData(prev => ({ ...prev, [key]: val }));
+
+  /* ── Pricing helpers ── */
+  const parseNum = (val: string | null | undefined) =>
+    parseFloat((val ?? "").replace(/[^0-9.]/g, "")) || 0;
+
+  const handleOriginalPrice = (val: string) => {
+    set("original_price", val || null);
+    // recalculate discount % if current price is set
+    const orig = parseFloat(val.replace(/[^0-9.]/g, "")) || 0;
+    const curr = parseNum(data.price);
+    if (orig > 0 && curr > 0 && curr < orig) {
+      set("discount", Math.round(((orig - curr) / orig) * 100));
+    }
+  };
+
+  const handleDiscountedPrice = (val: string) => {
+    set("price", val);
+    const orig = parseNum(data.original_price);
+    const curr = parseFloat(val.replace(/[^0-9.]/g, "")) || 0;
+    if (orig > 0 && curr > 0 && curr < orig) {
+      set("discount", Math.round(((orig - curr) / orig) * 100));
+    }
+  };
+
+  const handleDiscountPct = (val: string) => {
+    const pct = Number(val);
+    set("discount", val ? pct : null);
+    const orig = parseNum(data.original_price);
+    if (orig > 0 && pct > 0 && pct < 100) {
+      const after = Math.round(orig * (1 - pct / 100));
+      set("price", String(after));
+    }
+  };
+
+  const toggleDiscount = (on: boolean) => {
+    setHasDiscount(on);
+    if (!on) {
+      set("original_price", null);
+      set("discount", null);
+    }
+  };
 
   /* Features helpers */
   const setFeature = (i: number, val: string, ar = false) => {
@@ -164,25 +206,85 @@ export default function ProductForm({ initialData }: ProductFormProps) {
 
       {/* ── Pricing ── */}
       <div className={sectionClass}>
-        <h3 className="text-white/50 text-[11px] font-black uppercase tracking-widest">السعر</h3>
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <label className={labelClass}>السعر الحالي *</label>
-            <input value={data.price} onChange={e => set("price", e.target.value)} required
-              placeholder="AED 189" className={inputClass} dir="ltr" />
-          </div>
-          <div>
-            <label className={labelClass}>السعر الأصلي (قبل الخصم)</label>
-            <input value={data.original_price ?? ""} onChange={e => set("original_price", e.target.value || null)}
-              placeholder="AED 229" className={inputClass} dir="ltr" />
-          </div>
-          <div>
-            <label className={labelClass}>نسبة الخصم %</label>
-            <input type="number" min={0} max={99} value={data.discount ?? ""}
-              onChange={e => set("discount", e.target.value ? Number(e.target.value) : null)}
-              placeholder="19" className={inputClass} dir="ltr" />
-          </div>
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-white/50 text-[11px] font-black uppercase tracking-widest">السعر</h3>
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <span className="text-white/50 text-xs font-semibold">فيه خصم؟</span>
+            <button
+              type="button"
+              onClick={() => toggleDiscount(!hasDiscount)}
+              className={cn(
+                "relative w-10 h-5 rounded-full transition-colors duration-200",
+                hasDiscount ? "bg-sky-500" : "bg-white/15"
+              )}
+            >
+              <span className={cn(
+                "absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200",
+                hasDiscount ? "translate-x-5" : "translate-x-0.5"
+              )} />
+            </button>
+          </label>
         </div>
+
+        {!hasDiscount ? (
+          /* ── No discount — single price ── */
+          <div>
+            <label className={labelClass}>السعر *</label>
+            <input
+              value={data.price}
+              onChange={e => set("price", e.target.value)}
+              required
+              placeholder="189"
+              className={inputClass}
+              dir="ltr"
+            />
+          </div>
+        ) : (
+          /* ── Has discount ── */
+          <div className="space-y-4">
+            <div>
+              <label className={labelClass}>السعر الأصلي (قبل الخصم) *</label>
+              <input
+                value={data.original_price ?? ""}
+                onChange={e => handleOriginalPrice(e.target.value)}
+                required={hasDiscount}
+                placeholder="229"
+                className={inputClass}
+                dir="ltr"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelClass}>السعر بعد الخصم</label>
+                <input
+                  value={data.price}
+                  onChange={e => handleDiscountedPrice(e.target.value)}
+                  placeholder="189"
+                  className={inputClass}
+                  dir="ltr"
+                />
+              </div>
+              <div className="relative">
+                <label className={labelClass}>نسبة الخصم %</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={99}
+                  value={data.discount ?? ""}
+                  onChange={e => handleDiscountPct(e.target.value)}
+                  placeholder="17"
+                  className={inputClass}
+                  dir="ltr"
+                />
+              </div>
+            </div>
+            {data.discount && data.discount > 0 && data.original_price && data.price && (
+              <p className="text-emerald-400 text-xs font-bold flex items-center gap-1.5">
+                ✓ خصم {data.discount}% — من {data.original_price} إلى {data.price}
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── Features ── */}
