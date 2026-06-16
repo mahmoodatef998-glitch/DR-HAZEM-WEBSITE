@@ -2,9 +2,10 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { Tag, Zap } from "lucide-react";
 import { useTranslation } from "@/contexts/LanguageContext";
-import { cn } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 
 export interface OfferItem {
   id: string;
@@ -99,76 +100,76 @@ function OfferCard({
   const name = isRTL && offer.productNameAr ? offer.productNameAr : offer.productName;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, ease: E, delay: index * 0.06 }}
-      whileHover={{ y: -5, transition: { duration: 0.22, ease: "easeOut" } }}
-      className="offer-card-shimmer group relative h-64 sm:h-72 bg-slate-900 border border-white/8 rounded-2xl overflow-hidden hover:border-red-500/30 hover:shadow-[0_12px_40px_rgba(239,68,68,0.18)] transition-[border-color,box-shadow] duration-300"
-    >
-      {/* ── Full-card background image ── */}
-      {offer.imageUrl ? (
-        <Image
-          src={offer.imageUrl}
-          alt={name}
-          fill
-          className="object-cover group-hover:scale-[1.08] transition-transform duration-500 ease-out"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
-      ) : (
-        <div className="absolute inset-0 flex items-center justify-center text-white/10 text-6xl select-none">
-          💊
+    <Link href={`/products/${slugify(offer.productName)}`} className="block">
+      <motion.div
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, ease: E, delay: index * 0.06 }}
+        whileHover={{ y: -5, transition: { duration: 0.22, ease: "easeOut" } }}
+        className="offer-card-shimmer group relative h-64 sm:h-72 bg-slate-900 border border-white/8 rounded-2xl overflow-hidden hover:border-red-500/30 hover:shadow-[0_12px_40px_rgba(239,68,68,0.18)] transition-[border-color,box-shadow] duration-300 cursor-pointer"
+      >
+        {/* ── Full-card background image ── */}
+        {offer.imageUrl ? (
+          <Image
+            src={offer.imageUrl}
+            alt={name}
+            fill
+            className="object-cover group-hover:scale-[1.08] transition-transform duration-500 ease-out"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-white/10 text-6xl select-none">
+            💊
+          </div>
+        )}
+
+        {/* ── Gradient overlays ── */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+
+        {/* ── OFFER badge — animated flash ── */}
+        <div className="absolute top-3 left-3 z-10">
+          <span className="animate-offer-flash inline-flex items-center gap-1 bg-red-500 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 sm:px-2.5 py-1 rounded-full shadow-lg shadow-red-500/50">
+            <Tag className="w-2.5 h-2.5" />
+            OFFER
+          </span>
         </div>
-      )}
 
-      {/* ── Gradient overlays ── */}
-      {/* Top fade — keeps badges readable */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
-      {/* Bottom fade — text area */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-
-      {/* ── OFFER badge — animated flash ── */}
-      <div className="absolute top-3 left-3 z-10">
-        <span className="animate-offer-flash inline-flex items-center gap-1 bg-red-500 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 sm:px-2.5 py-1 rounded-full shadow-lg shadow-red-500/50">
-          <Tag className="w-2.5 h-2.5" />
-          OFFER
-        </span>
-      </div>
-
-      {/* ── Discount pill ── */}
-      <div className="absolute top-3 right-3 z-10">
-        <span className="bg-black/60 backdrop-blur-sm border border-red-500/40 text-red-400 text-[10px] font-black px-2 py-1 rounded-lg">
-          -{offer.discountPct}%
-        </span>
-      </div>
-
-      {/* ── Card content — bottom overlay ── */}
-      <div className={cn("absolute bottom-0 left-0 right-0 z-10 p-3.5 sm:p-4", isRTL ? "text-right" : "")}>
-        <h3
-          className={cn(
-            "text-white font-bold text-sm leading-snug mb-2.5 line-clamp-2 drop-shadow-md",
-            isRTL ? "font-cairo" : ""
-          )}
-        >
-          {name}
-        </h3>
-
-        <div className={cn("flex items-center gap-2 flex-wrap", isRTL ? "flex-row-reverse" : "")}>
-          <p className="text-white/45 text-xs line-through leading-none drop-shadow">
-            {offer.originalPrice} AED
-          </p>
-          <p className="text-red-400 text-lg sm:text-xl font-black leading-none drop-shadow">
-            {offer.offerPrice}
-            <span className="text-red-400/70 text-[10px] font-semibold ml-0.5">AED</span>
-          </p>
-          {offer.discountPct > 0 && (
-            <span className="bg-red-500/20 border border-red-500/30 text-red-300 text-[10px] font-bold px-1.5 py-0.5 rounded-md backdrop-blur-sm">
-              {isRTL ? `وفّر ${offer.discountPct}%` : `Save ${offer.discountPct}%`}
-            </span>
-          )}
+        {/* ── Discount pill ── */}
+        <div className="absolute top-3 right-3 z-10">
+          <span className="bg-black/60 backdrop-blur-sm border border-red-500/40 text-red-400 text-[10px] font-black px-2 py-1 rounded-lg">
+            -{offer.discountPct}%
+          </span>
         </div>
-      </div>
-    </motion.div>
+
+        {/* ── Card content — bottom overlay ── */}
+        <div className={cn("absolute bottom-0 left-0 right-0 z-10 p-3.5 sm:p-4", isRTL ? "text-right" : "")}>
+          <h3
+            className={cn(
+              "text-white font-bold text-sm leading-snug mb-2.5 line-clamp-2 drop-shadow-md",
+              isRTL ? "font-cairo" : ""
+            )}
+          >
+            {name}
+          </h3>
+
+          <div className={cn("flex items-center gap-2 flex-wrap", isRTL ? "flex-row-reverse" : "")}>
+            <p className="text-white/45 text-xs line-through leading-none drop-shadow">
+              {offer.originalPrice} AED
+            </p>
+            <p className="text-red-400 text-lg sm:text-xl font-black leading-none drop-shadow">
+              {offer.offerPrice}
+              <span className="text-red-400/70 text-[10px] font-semibold ml-0.5">AED</span>
+            </p>
+            {offer.discountPct > 0 && (
+              <span className="bg-red-500/20 border border-red-500/30 text-red-300 text-[10px] font-bold px-1.5 py-0.5 rounded-md backdrop-blur-sm">
+                {isRTL ? `وفّر ${offer.discountPct}%` : `Save ${offer.discountPct}%`}
+              </span>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </Link>
   );
 }
