@@ -40,6 +40,10 @@ function GalleryCard({
   const [hovered, setHovered] = useState(false);
   const router = useRouter();
 
+  // Price logic: hasDiscount = both prices exist AND they differ
+  const mainPrice   = (product.price || product.originalPrice || "").split(" / ")[0];
+  const hasDiscount = !!(product.originalPrice && product.price && product.price !== product.originalPrice);
+
   const offset  = useTransform(activeIndex, (v) => index - v);
   const x       = useTransform(offset, (v) => v * SPACING);
   const y       = useTransform(offset, (v) => -v * STEP_Y);
@@ -143,18 +147,18 @@ function GalleryCard({
                 </h3>
                 <div className="flex items-center justify-between">
                   <div>
-                    {product.originalPrice ? (
+                    {hasDiscount ? (
                       <>
                         <span className="text-white/50 text-xs line-through block leading-none mb-0.5">
                           {product.originalPrice}
                         </span>
                         <span className="font-black text-2xl leading-none text-rose-400 drop-shadow-lg">
-                          {product.price.split(" / ")[0]}
+                          {mainPrice}
                         </span>
                       </>
                     ) : (
                       <span className="font-black text-2xl leading-none text-white drop-shadow-lg">
-                        {product.price.split(" / ")[0]}
+                        {mainPrice}
                       </span>
                     )}
                   </div>
@@ -201,11 +205,11 @@ function GalleryCard({
               <h3 className="text-white font-black text-[17px] leading-snug mb-3 line-clamp-2">{product.name}</h3>
               <div className="flex items-end justify-between">
                 <div>
-                  {product.originalPrice && (
+                  {hasDiscount && (
                     <span className="text-white/40 text-xs line-through block">{product.originalPrice}</span>
                   )}
-                  <span className={cn("font-black text-2xl leading-none", product.originalPrice ? "text-rose-400" : "text-white")}>
-                    {product.price.split(" / ")[0]}
+                  <span className={cn("font-black text-2xl leading-none", hasDiscount ? "text-rose-400" : "text-white")}>
+                    {mainPrice}
                   </span>
                 </div>
                 <div className="text-right">
@@ -270,11 +274,11 @@ function GalleryCard({
               <div className="flex-shrink-0 pt-3 mt-2 border-t border-white/12">
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    {product.originalPrice && (
+                    {hasDiscount && (
                       <div className="text-white/28 text-[9px] line-through leading-none mb-0.5">{product.originalPrice}</div>
                     )}
-                    <span className={cn("font-black text-xl leading-none", product.originalPrice ? "text-rose-400" : "text-white")}>
-                      {product.price.split(" / ")[0]}
+                    <span className={cn("font-black text-xl leading-none", hasDiscount ? "text-rose-400" : "text-white")}>
+                      {mainPrice}
                     </span>
                     {product.discount && (
                       <span className="ml-2 text-rose-400 text-[9px] font-black">-{product.discount}%</span>

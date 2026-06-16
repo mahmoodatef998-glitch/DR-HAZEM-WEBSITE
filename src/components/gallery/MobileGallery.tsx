@@ -54,6 +54,8 @@ function SwipeCard({
   const redTint   = useTransform(x, [-100, 0], [0.07, 0]);
 
   const router = useRouter();
+  const mainPrice   = product.price || product.originalPrice || "";
+  const hasDiscount = !!(product.originalPrice && product.price && product.price !== product.originalPrice);
   const maxDragRef  = useRef(0);
   const tapZoneRef  = useRef<"left" | "center" | "right">("center");
   const skipNavRef  = useRef(false);
@@ -144,8 +146,8 @@ function SwipeCard({
                 <h3 className="text-white font-black text-[18px] leading-snug mb-2 drop-shadow-lg">{product.name}</h3>
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    {product.originalPrice && <p className="text-white/50 text-xs line-through leading-none mb-0.5">{product.originalPrice}</p>}
-                    <span className={cn("font-black text-2xl leading-none", product.originalPrice ? "text-rose-400" : "text-white")}>{product.price}</span>
+                    {hasDiscount && <p className="text-white/50 text-xs line-through leading-none mb-0.5">{product.originalPrice}</p>}
+                    <span className={cn("font-black text-2xl leading-none", hasDiscount ? "text-rose-400" : "text-white")}>{mainPrice}</span>
                   </div>
                   <div className="flex gap-0.5">{[...Array(5)].map((_, i) => (<Star key={i} className={cn("w-3 h-3", i < Math.round(product.rating ?? 5) ? "fill-yellow-300 text-yellow-300" : "fill-white/20 text-white/20")} aria-hidden="true" />))}</div>
                 </div>
@@ -184,8 +186,8 @@ function SwipeCard({
             <ul className="space-y-1.5 mb-3 flex-1">{product.features.slice(0, 3).map((f, i) => (<li key={i} className="flex items-start gap-2 text-white/55 text-[11px]"><CheckCircle2 className="w-3 h-3 text-white/25 flex-shrink-0 mt-0.5" aria-hidden="true" /><span>{f}</span></li>))}</ul>
             <div className="flex items-center justify-between mb-3">
               <div>
-                {product.originalPrice && <p className="text-white/25 text-xs line-through leading-none mb-0.5">{product.originalPrice}</p>}
-                <span className={cn("font-black text-2xl leading-none", product.originalPrice ? "text-rose-400" : "text-white")}>{product.price}</span>
+                {hasDiscount && <p className="text-white/25 text-xs line-through leading-none mb-0.5">{product.originalPrice}</p>}
+                <span className={cn("font-black text-2xl leading-none", hasDiscount ? "text-rose-400" : "text-white")}>{mainPrice}</span>
               </div>
               <div className="text-right">
                 <div className="flex gap-0.5 justify-end mb-0.5">{[...Array(5)].map((_, i) => (<Star key={i} className={cn("w-3 h-3", i < Math.round(product.rating ?? 5) ? "fill-yellow-300 text-yellow-300" : "fill-white/15 text-white/15")} aria-hidden="true" />))}</div>
