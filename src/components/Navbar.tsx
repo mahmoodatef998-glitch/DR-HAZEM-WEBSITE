@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
 import { useTranslation } from "@/contexts/LanguageContext";
-import Link from "next/link";
 import MedixWordmark from "./ui/MedixWordmark";
 
 export default function Navbar() {
@@ -115,34 +114,10 @@ export default function Navbar() {
 <Button variant={scrolled ? "primary" : "outline"} size="sm" onClick={() => handleNavClick("#contact")}>
                 {t.nav.orderNow}
               </Button>
-              {/* Admin button */}
-              <Link
-                href="/admin"
-                aria-label="Admin Dashboard"
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all duration-300",
-                  scrolled
-                    ? "border-slate-200 text-slate-500 hover:border-sky-400 hover:text-sky-600 hover:bg-sky-50"
-                    : "border-white/30 text-white/70 hover:border-white hover:text-white hover:bg-white/10"
-                )}
-              >
-                <Settings className="w-3.5 h-3.5" />
-                <span>Admin</span>
-              </Link>
             </div>
 
             {/* Mobile Toggle */}
             <div className="lg:hidden flex items-center gap-2">
-              <a
-                href="/admin/login"
-                aria-label="Admin settings"
-                className={cn(
-                  "p-2 rounded-lg transition-colors duration-300",
-                  scrolled ? "text-slate-400 hover:text-slate-700" : "text-white/30 hover:text-white/70"
-                )}
-              >
-                <Settings className="w-4 h-4" />
-              </a>
               <button
                 className={cn("p-2 rounded-lg transition-colors duration-300", scrolled ? "text-slate-700 hover:bg-slate-100" : "text-white hover:bg-white/10")}
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -176,14 +151,6 @@ export default function Navbar() {
               <Button variant="primary" size="md" className="w-full" onClick={() => handleNavClick("#contact")}>
                 {t.nav.orderNow}
               </Button>
-              {/* Admin link — mobile */}
-              <Link
-                href="/admin"
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-sky-600 bg-sky-50 border border-sky-100 hover:bg-sky-100 transition-colors duration-200"
-              >
-                <Settings className="w-4 h-4" />
-                <span>لوحة التحكم</span>
-              </Link>
             </div>
           </div>
         </div>
