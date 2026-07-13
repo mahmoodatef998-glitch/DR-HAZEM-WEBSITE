@@ -47,8 +47,8 @@ export default function HeroSection() {
 
   const WHATSAPP_MSG = encodeURIComponent(
     isRTL
-      ? "مرحبا د. حازم، أريد الاستفسار عن منتجاتكم."
-      : "Hello Dr. Hazem, I'd like to inquire about your products."
+      ? "مرحبا الإدارة، أريد الاستفسار عن منتجاتكم."
+      : "Hello Admin, I'd like to inquire about your products."
   );
 
   const lineReveal: Variants = {

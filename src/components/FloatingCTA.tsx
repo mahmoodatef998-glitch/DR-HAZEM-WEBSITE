@@ -4,10 +4,9 @@ import { useState, useEffect } from "react";
 import { Phone, MessageCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// TODO: replace with real WhatsApp number (format: country code + number, no +/spaces)
-const WHATSAPP_NUMBER = "971585335516";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "971585335516";
 const WHATSAPP_MESSAGE = encodeURIComponent(
-  "Hello Medix Healthcare, I would like to book an appointment."
+  "Hello Admin, I'd like to inquire about your products."
 );
 
 const WhatsAppIcon = () => (

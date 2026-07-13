@@ -29,8 +29,8 @@ export default function HowToOrderSection() {
 
   const WHATSAPP_MSG = encodeURIComponent(
     isRTL
-      ? "مرحبا د. حازم، أريد تقديم طلب."
-      : "Hello Dr. Hazem, I'd like to place an order."
+      ? "مرحبا الإدارة، أريد تقديم طلب."
+      : "Hello Admin, I'd like to place an order."
   );
 
   const steps = [

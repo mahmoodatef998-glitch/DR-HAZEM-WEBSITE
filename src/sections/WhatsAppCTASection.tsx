@@ -39,8 +39,8 @@ export default function WhatsAppCTASection() {
 
   const WHATSAPP_MSG = encodeURIComponent(
     isRTL
-      ? "مرحبا د. حازم، أريد طلب منتج."
-      : "Hello Dr. Hazem, I'd like to order a product."
+      ? "مرحبا الإدارة، أريد طلب منتج."
+      : "Hello Admin, I'd like to order a product."
   );
 
   return (
